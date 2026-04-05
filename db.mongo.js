@@ -8,18 +8,7 @@
 (function () {
   'use strict';
 
-  var API_BASE = (function() {
-    if (typeof window !== 'undefined' && window.BC_API_BASE) {
-      return window.BC_API_BASE;
-    }
-    if (typeof window !== 'undefined') {
-      var hostname = window.location.hostname;
-      if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return 'http://localhost:3000/api';
-      }
-    }
-    return '/api';
-  })().replace(/\/$/, '');
+  var API_BASE = 'https://bluecart.onrender.com/api';
   
   var SESSION_KEY = 'bc_token';
 
