@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>My Account — BlueCart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <script src="db.mongo.js"></script>
+  <style>
+    .acc-hero{background:linear-gradient(120deg,#0f2d4a,#1a4a6e,#0ea5a0);padding:36px 4% 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+    .acc-avatar-wrap{position:relative;}
+    .acc-avatar{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,#0ea5a0,#0891b2);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:white;border:4px solid rgba(255,255,255,0.3);flex-shrink:0;font-family:'Syne',sans-serif;}
+    .acc-avatar-edit{position:absolute;bottom:2px;right:2px;background:var(--amber);border:none;border-radius:50%;width:26px;height:26px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .acc-hero-info h1{font-family:'Syne',sans-serif;font-size:26px;color:white;margin-bottom:4px;}
+    .acc-hero-info p{color:rgba(255,255,255,0.7);font-size:14px;}
+    .acc-hero-badges{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
+    .acc-badge{background:rgba(255,255,255,0.15);border-radius:20px;padding:5px 14px;font-size:12.5px;font-weight:700;color:white;border:1px solid rgba(255,255,255,0.2);}
+    .acc-badge.gold{background:rgba(255,183,3,0.25);border-color:var(--amber);color:var(--amber);}
+
+    .acc-layout{display:grid;grid-template-columns:240px 1fr;gap:24px;padding:28px 4% 60px;max-width:1100px;margin:0 auto;}
+    .acc-sidebar{display:flex;flex-direction:column;gap:6px;}
+    .acc-nav-btn{display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:10px;border:none;background:white;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;text-align:left;width:100%;box-shadow:0 1px 4px rgba(15,45,74,0.06);}
+    .acc-nav-btn .ic{font-size:18px;width:22px;text-align:center;}
+    .acc-nav-btn:hover{background:var(--teal-light);color:var(--teal-dark);}
+    .acc-nav-btn.active{background:var(--navy);color:white;}
+    .acc-logout{background:#fee2e2;color:#dc2626;margin-top:12px;}
+    .acc-logout:hover{background:#fca5a5;color:#b91c1c;}
+
+    .acc-panel{display:none;}
+    .acc-panel.active{display:block;}
+    .acc-card{background:white;border-radius:16px;padding:24px;box-shadow:0 2px 10px rgba(15,45,74,0.07);margin-bottom:20px;}
+    .acc-card-title{font-family:'Syne',sans-serif;font-size:17px;color:var(--navy);margin-bottom:18px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:1px solid #e5eaf0;}
+    .acc-card-title::before{content:'';width:4px;height:22px;border-radius:2px;background:var(--teal);}
+
+    .fg{margin-bottom:16px;}
+    .fg label{display:block;font-size:11.5px;font-weight:800;color:var(--navy);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+    .fg input,.fg select{width:100%;padding:11px 13px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:'Nunito',sans-serif;outline:none;color:var(--navy);background:white;transition:border-color .2s;}
+    .fg input:focus,.fg select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,165,160,.1);}
+    .fg input:disabled{background:var(--off);color:var(--muted);}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+    .save-btn{background:linear-gradient(90deg,var(--teal),#0891b2);color:white;border:none;padding:12px 28px;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;box-shadow:0 4px 14px rgba(14,165,160,.3);transition:all .2s;}
+    .save-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(14,165,160,.4);}
+    .cancel-btn{background:var(--off);color:var(--navy);border:1.5px solid #e0e7ef;padding:11px 22px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;margin-left:10px;}
+    .cancel-btn:hover{border-color:var(--coral);color:var(--coral);}
+
+    .msg-ok {background:#dcfce7;color:#16a34a;border:1px solid #86efac;padding:10px 14px;border-radius:8px;font-size:13.5px;font-weight:700;margin-bottom:14px;display:none;}
+    .msg-err{background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;padding:10px 14px;border-radius:8px;font-size:13.5px;font-weight:700;margin-bottom:14px;display:none;}
+
+    /* Address book */
+    .addr-card{background:var(--off);border-radius:12px;padding:16px 18px;border:1.5px solid #e5eaf0;margin-bottom:12px;position:relative;transition:border-color .2s;}
+    .addr-card.default{border-color:var(--teal);background:#f0fffe;}
+    .addr-card h4{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:4px;}
+    .addr-card p{font-size:13.5px;color:var(--muted);line-height:1.6;}
+    .addr-default-tag{background:var(--teal-light);color:var(--teal-dark);font-size:11px;font-weight:800;padding:2px 9px;border-radius:20px;margin-left:8px;}
+    .addr-actions{display:flex;gap:8px;margin-top:10px;}
+    .addr-btn{padding:5px 13px;border-radius:7px;border:none;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;}
+    .addr-edit{background:#dbeafe;color:#1d4ed8;}
+    .addr-edit:hover{background:#bfdbfe;}
+    .addr-del{background:#fee2e2;color:#dc2626;}
+    .addr-del:hover{background:#fca5a5;}
+    .addr-default-btn{background:var(--off);color:var(--navy);border:1.5px solid #e0e7ef;}
+    .addr-default-btn:hover{border-color:var(--teal);}
+
+    /* Security */
+    .sec-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #f0f4f8;}
+    .sec-row:last-child{border-bottom:none;}
+    .sec-row-label{font-size:14px;font-weight:700;color:var(--navy);}
+    .sec-row-val{font-size:13.5px;color:var(--muted);}
+    .sec-change-btn{background:var(--off);border:1.5px solid #e0e7ef;color:var(--navy);padding:7px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;}
+    .sec-change-btn:hover{border-color:var(--teal);color:var(--teal);}
+
+    /* Stats */
+    .acc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+    .acc-stat{background:white;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(15,45,74,0.06);border-top:3px solid var(--teal);}
+    .acc-stat:nth-child(2){border-top-color:var(--amber);}
+    .acc-stat:nth-child(3){border-top-color:var(--lime);}
+    .acc-stat-num{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--navy);}
+    .acc-stat-lbl{font-size:12px;color:var(--muted);font-weight:600;margin-top:3px;}
+
+    /* Preferences */
+    .pref-row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #f0f4f8;}
+    .pref-row:last-child{border-bottom:none;}
+    .pref-label{font-size:14px;font-weight:700;color:var(--navy);}
+    .pref-sub{font-size:12.5px;color:var(--muted);margin-top:2px;}
+    .toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+    .toggle input{opacity:0;width:0;height:0;}
+    .toggle-slider{position:absolute;inset:0;background:#e0e7ef;border-radius:24px;cursor:pointer;transition:all .3s;}
+    .toggle-slider::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:white;left:3px;top:3px;transition:all .3s;box-shadow:0 1px 4px rgba(0,0,0,0.15);}
+    .toggle input:checked + .toggle-slider{background:var(--teal);}
+    .toggle input:checked + .toggle-slider::before{transform:translateX(20px);}
+
+    @media(max-width:760px){
+      .acc-layout{grid-template-columns:1fr;}
+      .acc-sidebar{flex-direction:row;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;}
+      .acc-sidebar::-webkit-scrollbar{display:none;}
+      .acc-nav-btn{min-width:fit-content;white-space:nowrap;}
+      .form-row{grid-template-columns:1fr;}
+      .acc-stats{grid-template-columns:repeat(3,1fr);}
+    }
+    @media(max-width:480px){
+      .acc-stats{grid-template-columns:1fr 1fr;}
+      .acc-hero{padding:24px 4%;}
+      .acc-avatar{width:68px;height:68px;font-size:28px;}
+      .acc-hero-info h1{font-size:20px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<!-- NAVBAR WRAP -->
+<div class="navbar-wrap">
+<nav class="navbar">
+  <a href="index.html" class="logo" style="text-decoration:none;">Blue<span>Cart</span></a>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div style="flex:1;"></div>
+  <div class="nav-right">
+    <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
+    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+          <!-- Hamburger button -->
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div><!-- end .nav-right -->
+  </nav>
+  <!-- Search Row -->
+  <div class="navbar-search-row">
+    <div class="search-bar" style="flex:1;">
+      <input type="text" id="searchInput" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
+      <button onclick="doSearchNav()">&#128269;</button>
+    </div>
+  </div>
+</div><!-- end .navbar-wrap -->
+
+<!-- Hamburger overlay + slide-in menu (outside navbar-wrap) -->
+<div class="hm-overlay" id="hm-overlay" onclick="closeHamburger()"></div>
+<div class="hm-drawer" id="hm-drawer">
+  <div class="hm-drawer-head">
+    <span class="hm-drawer-logo">Blue<span>Cart</span></span>
+    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+  </div>
+  <div class="hm-drawer-body">
+    <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Categories</div>
+    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
+    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
+    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
+    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
+    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
+    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
+    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
+    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Offers</div>
+    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
+    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Account</div>
+    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
+    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
+    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
+    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+  </div>
+</div>
+
+<!-- NAV STRIP (desktop only) -->
+<div class="nav-strip"><div class="nav-strip-inner">
+  <div class="nav-item"><a href="index.html">&#9776; All</a></div>
+  <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
+  <div class="nav-item"><a href="electronics.html">Electronics</a></div>
+  <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
+  <div class="nav-item"><a href="laptops.html">Laptops</a></div>
+  <div class="nav-item"><a href="audio.html">Audio</a></div>
+  <div class="nav-item"><a href="cameras.html">Cameras</a></div>
+  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
+  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
+  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
+  <div class="nav-item"><a href="deals.html" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
+  <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
+</div></div>
+
+<!-- HERO -->
+<div class="acc-hero">
+  <div class="acc-avatar-wrap">
+    <div class="acc-avatar" id="hero-avatar">A</div>
+    <button class="acc-avatar-edit" title="Change avatar">✏️</button>
+  </div>
+  <div class="acc-hero-info">
+    <h1 id="hero-name">Loading...</h1>
+    <p id="hero-email">—</p>
+    <div class="acc-hero-badges">
+      <span class="acc-badge gold">⭐ BlueCart Member</span>
+      <span class="acc-badge" id="hero-joined">Joined —</span>
+      <span class="acc-badge" id="hero-orders-badge">0 Orders</span>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="acc-layout">
+
+  <!-- SIDEBAR -->
+  <div class="acc-sidebar">
+    <button class="acc-nav-btn active" onclick="showTab('profile',this)"><span class="ic">👤</span><span>Profile</span></button>
+    <button class="acc-nav-btn" onclick="showTab('security',this)"><span class="ic">🔒</span><span>Security</span></button>
+    <button class="acc-nav-btn" onclick="showTab('addresses',this)"><span class="ic">📍</span><span>Addresses</span></button>
+    <button class="acc-nav-btn" onclick="showTab('preferences',this)"><span class="ic">⚙️</span><span>Preferences</span></button>
+    <button class="acc-nav-btn" onclick="window.location.href='orders.html'"><span class="ic">📦</span><span>My Orders</span></button>
+    <button class="acc-nav-btn acc-logout" onclick="doLogout()"><span class="ic">🚪</span><span>Sign Out</span></button>
+  </div>
+
+  <!-- MAIN PANELS -->
+  <div>
+
+    <!-- ── PROFILE ── -->
+    <div class="acc-panel active" id="tab-profile">
+      <div class="acc-stats">
+        <div class="acc-stat"><div class="acc-stat-num" id="st-orders">0</div><div class="acc-stat-lbl">Total Orders</div></div>
+        <div class="acc-stat"><div class="acc-stat-num" id="st-delivered">0</div><div class="acc-stat-lbl">Delivered</div></div>
+        <div class="acc-stat"><div class="acc-stat-num" id="st-spent">₹0</div><div class="acc-stat-lbl">Total Spent</div></div>
+      </div>
+
+      <div class="acc-card">
+        <div class="acc-card-title">Personal Information</div>
+        <div class="msg-ok" id="profile-ok"></div>
+        <div class="msg-err" id="profile-err"></div>
+        <div class="form-row">
+          <div class="fg"><label>First Name *</label><input type="text" id="p-fname" placeholder="Arjun"/></div>
+          <div class="fg"><label>Last Name *</label><input type="text" id="p-lname" placeholder="Sharma"/></div>
+        </div>
+        <div class="fg"><label>Email Address</label><input type="email" id="p-email" disabled style="background:var(--off);color:var(--muted)"/></div>
+        <div class="fg"><label>Phone Number</label><input type="tel" id="p-phone" placeholder="+91 98765 43210"/></div>
+        <div class="form-row">
+          <div class="fg"><label>Date of Birth</label><input type="date" id="p-dob"/></div>
+          <div class="fg"><label>Gender</label>
+            <select id="p-gender">
+              <option value="">Prefer not to say</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+      </div>
+    </div>
+
+    <!-- ── SECURITY ── -->
+    <div class="acc-panel" id="tab-security">
+      <div class="acc-card">
+        <div class="acc-card-title">Account Security</div>
+        <div class="msg-ok" id="sec-ok"></div>
+        <div class="msg-err" id="sec-err"></div>
+
+        <div class="sec-row">
+          <div><div class="sec-row-label">Email Address</div><div class="sec-row-val" id="sec-email-val">—</div></div>
+          <button class="sec-change-btn" onclick="showSecField('email-change')">Change</button>
+        </div>
+        <div id="email-change" style="display:none;padding:14px 0;border-bottom:1px solid #f0f4f8;">
+          <div class="fg"><label>New Email</label><input type="email" id="new-email" placeholder="newemail@example.com"/></div>
+          <button class="save-btn" onclick="changeEmail()" style="font-size:13px;padding:9px 20px;">Update Email</button>
+        </div>
+
+        <div class="sec-row">
+          <div><div class="sec-row-label">Password</div><div class="sec-row-val">Last changed: —</div></div>
+          <button class="sec-change-btn" onclick="showSecField('pw-change')">Change</button>
+        </div>
+        <div id="pw-change" style="display:none;padding:14px 0;border-bottom:1px solid #f0f4f8;">
+          <div class="fg"><label>Current Password</label><input type="password" id="old-pw" placeholder="Your current password"/></div>
+          <div class="fg"><label>New Password</label><input type="password" id="new-pw" placeholder="Min 8 characters"/></div>
+          <div class="fg"><label>Confirm New Password</label><input type="password" id="confirm-pw" placeholder="Re-enter new password"/></div>
+          <button class="save-btn" onclick="changePassword()" style="font-size:13px;padding:9px 20px;">Update Password</button>
+        </div>
+
+        <div class="sec-row">
+          <div><div class="sec-row-label">Account Role</div><div class="sec-row-val" id="sec-role-val">Customer</div></div>
+          <span style="font-size:12px;color:var(--muted);">Cannot be changed</span>
+        </div>
+        <div class="sec-row">
+          <div><div class="sec-row-label">Member Since</div><div class="sec-row-val" id="sec-joined">—</div></div>
+        </div>
+      </div>
+
+      <div class="acc-card" style="border:1.5px solid #fee2e2;">
+        <div class="acc-card-title" style="border-color:#fee2e2;">Danger Zone</div>
+        <p style="font-size:13.5px;color:var(--muted);margin-bottom:16px;">Permanently delete your account and all associated data. This cannot be undone.</p>
+        <button style="background:#fee2e2;color:#dc2626;border:1.5px solid #fca5a5;padding:10px 22px;border-radius:9px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;" onclick="confirmDelete()">Delete My Account</button>
+      </div>
+    </div>
+
+    <!-- ── ADDRESSES ── -->
+    <div class="acc-panel" id="tab-addresses">
+      <div class="acc-card">
+        <div class="acc-card-title">Saved Addresses</div>
+        <div id="addresses-list"></div>
+        <button class="save-btn" style="margin-top:8px;" onclick="showAddressForm()">+ Add New Address</button>
+      </div>
+
+      <!-- Add address form (hidden) -->
+      <div class="acc-card" id="addr-form-card" style="display:none;">
+        <div class="acc-card-title">New Delivery Address</div>
+        <div class="msg-ok" id="addr-ok"></div>
+        <div class="fg"><label>Full Name *</label><input type="text" id="a-name" placeholder="Arjun Sharma"/></div>
+        <div class="fg"><label>Phone *</label><input type="tel" id="a-phone" placeholder="+91 98765 43210"/></div>
+        <div class="fg"><label>Address Line 1 *</label><input type="text" id="a-line1" placeholder="House No., Street, Area"/></div>
+        <div class="fg"><label>Address Line 2</label><input type="text" id="a-line2" placeholder="Landmark, Colony (optional)"/></div>
+        <div class="form-row">
+          <div class="fg"><label>City *</label><input type="text" id="a-city" placeholder="Bhilwara"/></div>
+          <div class="fg"><label>State *</label>
+            <select id="a-state">
+              <option value="">Select State</option>
+              <option>Rajasthan</option><option>Maharashtra</option><option>Delhi</option>
+              <option>Karnataka</option><option>Tamil Nadu</option><option>Gujarat</option>
+              <option>Uttar Pradesh</option><option>West Bengal</option><option>Telangana</option>
+              <option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option>
+              <option>Haryana</option><option>Bihar</option><option>Goa</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg"><label>Pincode *</label><input type="text" id="a-pin" maxlength="6" placeholder="311001"/></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <input type="checkbox" id="a-default" style="width:16px;height:16px;accent-color:var(--teal)"/>
+          <label for="a-default" style="font-size:14px;font-weight:700;color:var(--navy);cursor:pointer;">Set as default address</label>
+        </div>
+        <button class="save-btn" onclick="saveAddress()">Save Address</button>
+        <button class="cancel-btn" onclick="hideAddressForm()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- ── PREFERENCES ── -->
+    <div class="acc-panel" id="tab-preferences">
+      <div class="acc-card">
+        <div class="acc-card-title">Notifications</div>
+        <div class="pref-row">
+          <div><div class="pref-label">Order Updates</div><div class="pref-sub">Get notified about your order status</div></div>
+          <label class="toggle"><input type="checkbox" id="pref-orders" checked/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="pref-row">
+          <div><div class="pref-label">Deals &amp; Offers</div><div class="pref-sub">Flash sales, coupons and exclusive deals</div></div>
+          <label class="toggle"><input type="checkbox" id="pref-deals" checked/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="pref-row">
+          <div><div class="pref-label">New Arrivals</div><div class="pref-sub">Be first to know about new products</div></div>
+          <label class="toggle"><input type="checkbox" id="pref-arrivals"/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="pref-row">
+          <div><div class="pref-label">Email Newsletter</div><div class="pref-sub">Weekly tech digest and tips</div></div>
+          <label class="toggle"><input type="checkbox" id="pref-newsletter"/><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+
+      <div class="acc-card">
+        <div class="acc-card-title">Shopping Preferences</div>
+        <div class="pref-row">
+          <div><div class="pref-label">Save Cart on Exit</div><div class="pref-sub">Restore your cart when you return</div></div>
+          <label class="toggle"><input type="checkbox" id="pref-cart" checked/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="pref-row">
+          <div><div class="pref-label">Show Prices in ₹ INR</div><div class="pref-sub">Display all prices in Indian Rupees</div></div>
+          <label class="toggle"><input type="checkbox" id="pref-inr" checked/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="pref-row">
+          <div><div class="pref-label">Wishlist Privacy</div><div class="pref-sub">Keep my wishlist private</div></div>
+          <label class="toggle"><input type="checkbox" id="pref-wish" checked/><span class="toggle-slider"></span></label>
+        </div>
+        <div style="margin-top:16px;">
+          <button class="save-btn" onclick="savePreferences()">Save Preferences</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-col"><h5>BlueCart</h5><a href="index.html">Home</a><a href="#">About Us</a></div>
+    <div class="footer-col"><h5>Account</h5><a href="account.html">My Profile</a><a href="orders.html">My Orders</a></div>
+    <div class="footer-col"><h5>Help</h5><a href="customer-service.html">Customer Service</a><a href="#">Returns</a></div>
+    <div class="footer-col"><h5>Contact</h5><a href="#">1800-000-BLUE</a><a href="#"><span class="__cf_email__" data-cfemail="90e3e5e0e0ffe2e4d0f2fce5f5f3f1e2e4bef9fe">[email&#160;protected]</span></a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-logo">Blue<span>Cart</span></div>
+    <span>© 2026 BlueCart Store. All rights reserved.</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+var SESSION = null;
+var USER_DATA = null;
+
+// ── AUTH GUARD ────────────────────────────────────────────────────────────────
+BC.ready.then(function() {
+  return BC.getSession();
+}).then(function(sess) {
+  if (!sess) { sessionStorage.setItem('bc_redirect','account.html'); window.location.href='login.html'; return; }
+  SESSION = sess;
+  loadUserData();
+}).catch(function(){ window.location.href='login.html'; });
+
+function loadUserData() {
+  // Update hero
+  var name = SESSION.name;
+  var initials = name.split(' ').map(function(n){ return n[0]; }).join('').toUpperCase();
+  document.getElementById('hero-avatar').textContent    = initials;
+  document.getElementById('hero-name').textContent      = name;
+  document.getElementById('hero-email').textContent     = SESSION.email;
+  document.getElementById('account-greeting').textContent = 'Hello, ' + name.split(' ')[0];
+
+  // Load user from DB for full details
+  BC.getAllUsers().then(function(users) {
+    var user = users.find(function(u){ return u.email === SESSION.email; });
+    if (!user) return;
+    USER_DATA = user;
+
+    // Fill profile form
+    document.getElementById('p-fname').value  = user.firstName  || '';
+    document.getElementById('p-lname').value  = user.lastName   || '';
+    document.getElementById('p-email').value  = user.email      || '';
+    document.getElementById('p-phone').value  = user.phone      || '';
+    document.getElementById('p-dob').value    = user.dob        || '';
+    document.getElementById('p-gender').value = user.gender     || '';
+
+    // Security tab
+    document.getElementById('sec-email-val').textContent  = user.email;
+    document.getElementById('sec-role-val').textContent   = user.role === 'admin' ? '🛡️ Administrator' : '👤 Customer';
+    var joined = user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}) : '—';
+    document.getElementById('sec-joined').textContent     = joined;
+    document.getElementById('hero-joined').textContent    = 'Joined ' + joined;
+
+    // Preferences
+    var prefs = user.preferences || {};
+    document.getElementById('pref-orders').checked    = prefs.orders    !== false;
+    document.getElementById('pref-deals').checked     = prefs.deals     !== false;
+    document.getElementById('pref-arrivals').checked  = prefs.arrivals  || false;
+    document.getElementById('pref-newsletter').checked= prefs.newsletter|| false;
+    document.getElementById('pref-cart').checked      = prefs.cart      !== false;
+    document.getElementById('pref-inr').checked       = prefs.inr       !== false;
+    document.getElementById('pref-wish').checked      = prefs.wish      !== false;
+
+    // Addresses
+    renderAddresses(user.addresses || []);
+
+    // Stats
+    return BC.getOrdersByUser(user.email);
+  }).then(function(orders) {
+    if (!orders) return;
+    var delivered = orders.filter(function(o){ return o.deliveryStatus==='Delivered'; }).length;
+    var spent     = orders.reduce(function(a,o){ return a+(o.total||0); },0);
+    document.getElementById('st-orders').textContent    = orders.length;
+    document.getElementById('st-delivered').textContent = delivered;
+    document.getElementById('st-spent').textContent     = '₹'+spent.toLocaleString('en-IN');
+    document.getElementById('hero-orders-badge').textContent = orders.length + ' Order' + (orders.length!==1?'s':'');
+  });
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(id, btn) {
+  document.querySelectorAll('.acc-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('tab-'+id).classList.add('active');
+  document.querySelectorAll('.acc-nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+}
+
+// ── PROFILE SAVE ──────────────────────────────────────────────────────────────
+function saveProfile() {
+  var fname  = document.getElementById('p-fname').value.trim();
+  var lname  = document.getElementById('p-lname').value.trim();
+  var phone  = document.getElementById('p-phone').value.trim();
+  var dob    = document.getElementById('p-dob').value;
+  var gender = document.getElementById('p-gender').value;
+
+  if (!fname||!lname) { showMsg('profile-err','First name and last name are required.'); return; }
+
+  BC.getAllUsers().then(function(users) {
+    var idx = users.findIndex(function(u){ return u.email===SESSION.email; });
+    if (idx===-1) return;
+    users[idx].firstName = fname;
+    users[idx].lastName  = lname;
+    users[idx].phone     = phone;
+    users[idx].dob       = dob;
+    users[idx].gender    = gender;
+    localStorage.setItem('bc_users', JSON.stringify(users));
+    // Update session name display
+    var newName = fname + ' ' + lname;
+    document.getElementById('hero-name').textContent = newName;
+    document.getElementById('hero-avatar').textContent = (fname[0]+lname[0]).toUpperCase();
+    document.getElementById('account-greeting').textContent = 'Hello, ' + fname;
+    showMsg('profile-ok','✅ Profile updated successfully!','ok');
+  });
+}
+
+// ── CHANGE PASSWORD ───────────────────────────────────────────────────────────
+function changePassword() {
+  var oldPw  = document.getElementById('old-pw').value;
+  var newPw  = document.getElementById('new-pw').value;
+  var confPw = document.getElementById('confirm-pw').value;
+  if (!oldPw||!newPw)       { showMsg('sec-err','Please fill in all password fields.'); return; }
+  if (newPw !== confPw)     { showMsg('sec-err','New passwords do not match.'); return; }
+  if (newPw.length < 8)    { showMsg('sec-err','New password must be at least 8 characters.'); return; }
+
+  BC.getAllUsers().then(function(users) {
+    var idx = users.findIndex(function(u){ return u.email===SESSION.email; });
+    if (idx===-1) return;
+    return BC.loginUser({ email:SESSION.email, password:oldPw, role:SESSION.role, adminKey:'' }).then(function(res) {
+      if (!res.ok) { showMsg('sec-err','Current password is incorrect.'); return; }
+      // Hash and save new password
+      return hashPassword(newPw).then(function(hash) {
+        users[idx].passwordHash = hash;
+        localStorage.setItem('bc_users', JSON.stringify(users));
+        document.getElementById('old-pw').value='';
+        document.getElementById('new-pw').value='';
+        document.getElementById('confirm-pw').value='';
+        document.getElementById('pw-change').style.display='none';
+        showMsg('sec-ok','✅ Password updated successfully!','ok');
+      });
+    });
+  });
+}
+
+function hashPassword(password) {
+  var enc = new TextEncoder();
+  var salt = crypto.getRandomValues(new Uint8Array(16));
+  return crypto.subtle.importKey('raw', enc.encode(password),'PBKDF2',false,['deriveBits']).then(function(key){
+    return crypto.subtle.deriveBits({name:'PBKDF2',salt:salt,iterations:100000,hash:'SHA-256'},key,256);
+  }).then(function(bits){
+    return JSON.stringify({salt:Array.from(salt),hash:Array.from(new Uint8Array(bits))});
+  });
+}
+
+// ── CHANGE EMAIL ──────────────────────────────────────────────────────────────
+function changeEmail() {
+  var newEmail = document.getElementById('new-email').value.trim();
+  if (!newEmail||!/\S+@\S+\.\S+/.test(newEmail)){ showMsg('sec-err','Enter a valid email address.'); return; }
+  showMsg('sec-ok','✅ Email update request sent! Please verify your new email.','ok');
+  document.getElementById('email-change').style.display='none';
+}
+
+// ── ADDRESSES ─────────────────────────────────────────────────────────────────
+function renderAddresses(addrs) {
+  var container = document.getElementById('addresses-list');
+  if (!addrs.length) {
+    container.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:12px 0;">No saved addresses yet. Add one below.</p>';
+    return;
+  }
+  container.innerHTML = addrs.map(function(a, i) {
+    return '<div class="addr-card' + (a.isDefault?' default':'') + '">' +
+      '<h4>' + a.name + (a.isDefault?'<span class="addr-default-tag">Default</span>':'') + '</h4>' +
+      '<p>' + a.line1 + (a.line2?', '+a.line2:'') + '<br>' + a.city + ', ' + a.state + ' — ' + a.pincode + '<br>📞 ' + a.phone + '</p>' +
+      '<div class="addr-actions">' +
+        (!a.isDefault?'<button class="addr-btn addr-default-btn" onclick="setDefaultAddr('+i+')">Set Default</button>':'') +
+        '<button class="addr-btn addr-del" onclick="deleteAddr('+i+')">Delete</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function showAddressForm() { document.getElementById('addr-form-card').style.display='block'; }
+function hideAddressForm() { document.getElementById('addr-form-card').style.display='none'; }
+
+function saveAddress() {
+  var name  = document.getElementById('a-name').value.trim();
+  var phone = document.getElementById('a-phone').value.trim();
+  var line1 = document.getElementById('a-line1').value.trim();
+  var line2 = document.getElementById('a-line2').value.trim();
+  var city  = document.getElementById('a-city').value.trim();
+  var state = document.getElementById('a-state').value;
+  var pin   = document.getElementById('a-pin').value.trim();
+  var isDef = document.getElementById('a-default').checked;
+  if (!name||!phone||!line1||!city||!state||!pin){ showMsg('addr-ok','Please fill all required fields.','err'); return; }
+  BC.getAllUsers().then(function(users) {
+    var idx = users.findIndex(function(u){ return u.email===SESSION.email; });
+    if (idx===-1) return;
+    var addrs = users[idx].addresses || [];
+    if (isDef) addrs.forEach(function(a){ a.isDefault=false; });
+    addrs.push({name,phone,line1,line2,city,state,pincode:pin,isDefault:isDef});
+    users[idx].addresses = addrs;
+    localStorage.setItem('bc_users', JSON.stringify(users));
+    renderAddresses(addrs);
+    hideAddressForm();
+    showMsg('addr-ok','✅ Address saved!','ok');
+    ['a-name','a-phone','a-line1','a-line2','a-city','a-pin'].forEach(function(id){ document.getElementById(id).value=''; });
+    document.getElementById('a-state').value='';
+    document.getElementById('a-default').checked=false;
+  });
+}
+
+function deleteAddr(i) {
+  if (!confirm('Delete this address?')) return;
+  BC.getAllUsers().then(function(users) {
+    var idx = users.findIndex(function(u){ return u.email===SESSION.email; });
+    if (idx===-1) return;
+    var addrs = users[idx].addresses || [];
+    addrs.splice(i,1);
+    users[idx].addresses = addrs;
+    localStorage.setItem('bc_users', JSON.stringify(users));
+    renderAddresses(addrs);
+    showToast('Address deleted.');
+  });
+}
+
+function setDefaultAddr(i) {
+  BC.getAllUsers().then(function(users) {
+    var idx = users.findIndex(function(u){ return u.email===SESSION.email; });
+    if (idx===-1) return;
+    var addrs = users[idx].addresses || [];
+    addrs.forEach(function(a,j){ a.isDefault = (j===i); });
+    users[idx].addresses = addrs;
+    localStorage.setItem('bc_users', JSON.stringify(users));
+    renderAddresses(addrs);
+    showToast('Default address updated!');
+  });
+}
+
+// ── PREFERENCES ───────────────────────────────────────────────────────────────
+function savePreferences() {
+  BC.getAllUsers().then(function(users) {
+    var idx = users.findIndex(function(u){ return u.email===SESSION.email; });
+    if (idx===-1) return;
+    users[idx].preferences = {
+      orders:      document.getElementById('pref-orders').checked,
+      deals:       document.getElementById('pref-deals').checked,
+      arrivals:    document.getElementById('pref-arrivals').checked,
+      newsletter:  document.getElementById('pref-newsletter').checked,
+      cart:        document.getElementById('pref-cart').checked,
+      inr:         document.getElementById('pref-inr').checked,
+      wish:        document.getElementById('pref-wish').checked
+    };
+    localStorage.setItem('bc_users', JSON.stringify(users));
+    showToast('✅ Preferences saved!');
+  });
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function showSecField(id) {
+  var el = document.getElementById(id);
+  el.style.display = el.style.display==='none' ? 'block' : 'none';
+}
+
+function showMsg(id, msg, type) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = type==='ok' ? 'msg-ok' : 'msg-err';
+  el.style.display = 'block';
+  setTimeout(function(){ el.style.display='none'; }, 4000);
+}
+
+function showToast(msg) {
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); },2800);
+}
+
+function confirmDelete() {
+  if (confirm('This will permanently delete your account. Are you absolutely sure?')) {
+    BC.getAllUsers().then(function(users) {
+      var filtered = users.filter(function(u){ return u.email !== SESSION.email; });
+      localStorage.setItem('bc_users', JSON.stringify(filtered));
+      return BC.clearSession();
+    }).then(function(){ window.location.href='index.html'; });
+  }
+}
+
+function doLogout() {
+  BC.clearSession().then(function(){ window.location.href='login.html'; });
+}
+
+
+</script>
+<script src="shared.js"></script>
+<script>
+function toggleHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(!drawer)return;
+  var open=drawer.classList.contains('open');
+  drawer.classList.toggle('open',!open);
+  overlay.classList.toggle('open',!open);
+  btn.classList.toggle('open',!open);
+}
+function closeHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(drawer){drawer.classList.remove('open');}
+  if(overlay){overlay.classList.remove('open');}
+  if(btn){btn.classList.remove('open');}
+}
+</script>
+</body>
+</html>

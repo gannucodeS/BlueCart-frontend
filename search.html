@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Search — BlueCart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    /* ── SEARCH PAGE LAYOUT ── */
+    .search-page-wrap{display:grid;grid-template-columns:280px 1fr;gap:24px;padding:24px 4% 60px;max-width:1300px;margin:0 auto;}
+
+    /* ── SEARCH HERO ── */
+    .search-hero{background:linear-gradient(120deg,#0f2d4a,#1a4a6e);padding:28px 4%;}
+    .search-hero-inner{max-width:1300px;margin:0 auto;}
+    .search-hero h2{font-family:'Syne',sans-serif;font-size:20px;color:rgba(255,255,255,.7);font-weight:700;margin-bottom:14px;}
+    .search-hero h2 span{color:white;font-size:26px;}
+    .search-big-bar{display:flex;border-radius:12px;overflow:hidden;height:52px;box-shadow:0 4px 20px rgba(0,0,0,.3);max-width:700px;}
+    .search-big-bar input{flex:1;border:none;padding:0 20px;font-size:16px;font-family:'Nunito',sans-serif;outline:none;color:var(--navy);}
+    .search-big-bar button{background:var(--teal);border:none;padding:0 28px;font-size:22px;color:white;cursor:pointer;transition:background .2s;font-family:'Nunito',sans-serif;font-weight:800;}
+    .search-big-bar button:hover{background:var(--teal-dark);}
+    .search-meta{display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap;}
+    .result-count{font-size:14px;color:rgba(255,255,255,.75);font-weight:700;}
+    .search-tags{display:flex;gap:8px;flex-wrap:wrap;}
+    .search-tag{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;padding:4px 12px;border-radius:20px;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;}
+    .search-tag:hover{background:rgba(255,255,255,.3);}
+
+    /* ── SIDEBAR FILTERS ── */
+    .filter-sidebar{background:white;border-radius:16px;padding:0;box-shadow:0 2px 12px rgba(15,45,74,.07);border:1.5px solid #e5eaf0;height:fit-content;position:sticky;top:80px;}
+    .fs-header{padding:16px 20px;border-bottom:1px solid #e5eaf0;display:flex;justify-content:space-between;align-items:center;}
+    .fs-title{font-family:'Syne',sans-serif;font-size:16px;color:var(--navy);}
+    .fs-clear{font-size:12.5px;font-weight:800;color:var(--teal);cursor:pointer;border:none;background:none;font-family:'Nunito',sans-serif;}
+    .fs-clear:hover{text-decoration:underline;}
+    .fs-section{padding:16px 20px;border-bottom:1px solid #f0f4f8;}
+    .fs-section:last-child{border-bottom:none;}
+    .fs-section-title{font-size:12px;font-weight:900;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;}
+    .fs-section-title::after{content:'▾';font-size:10px;color:var(--muted);}
+    .fs-section-title.collapsed::after{content:'▸';}
+    .fs-body{display:flex;flex-direction:column;gap:8px;}
+    .fs-body.collapsed{display:none;}
+    .fs-check{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:13.5px;color:var(--navy);font-weight:600;}
+    .fs-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;flex-shrink:0;}
+    .fs-check span{flex:1;}
+    .fs-check .fs-count{font-size:11.5px;color:var(--muted);font-weight:700;}
+    .price-range-wrap{padding:4px 0;}
+    .price-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+    .price-inp{padding:8px 10px;border:1.5px solid #e0e7ef;border-radius:8px;font-size:13px;font-family:'Nunito',sans-serif;outline:none;color:var(--navy);width:100%;}
+    .price-inp:focus{border-color:var(--teal);}
+    .range-slider{width:100%;accent-color:var(--teal);margin-top:8px;}
+    .price-display{font-size:13px;font-weight:800;color:var(--navy);margin-top:6px;text-align:center;}
+    .star-row{display:flex;align-items:center;gap:8px;cursor:pointer;padding:3px 0;}
+    .star-row input[type=radio]{accent-color:var(--teal);}
+    .star-row .stars{color:var(--amber);font-size:14px;}
+    .star-row span{font-size:12.5px;color:var(--muted);}
+    .apply-filter-btn{width:100%;margin-top:4px;padding:11px;background:var(--teal);color:white;border:none;border-radius:9px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;}
+    .apply-filter-btn:hover{background:var(--teal-dark);}
+
+    /* ── RESULTS AREA ── */
+    .results-area{}
+    .results-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:white;border-radius:12px;padding:12px 16px;margin-bottom:18px;box-shadow:0 2px 8px rgba(15,45,74,.06);border:1.5px solid #e5eaf0;flex-wrap:wrap;}
+    .view-toggle{display:flex;gap:6px;}
+    .view-btn{background:var(--off);border:1.5px solid #e0e7ef;border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s;}
+    .view-btn.active{background:var(--teal);color:white;border-color:var(--teal);}
+    .sort-select{padding:7px 12px;border:1.5px solid #e0e7ef;border-radius:8px;font-size:13.5px;font-family:'Nunito',sans-serif;color:var(--navy);outline:none;cursor:pointer;transition:border-color .2s;background:white;}
+    .sort-select:focus{border-color:var(--teal);}
+    .results-count-text{font-size:13.5px;color:var(--muted);font-weight:700;}
+
+    /* Grid/List view toggle */
+    .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+    .results-grid.list-view{grid-template-columns:1fr;}
+    .results-grid.list-view .product-card{flex-direction:row;max-height:160px;}
+    .results-grid.list-view .prod-img-wrap{width:160px;min-width:160px;height:160px;}
+    .results-grid.list-view .prod-info{padding:14px 16px;}
+    .results-grid.list-view .add-to-cart{flex-direction:row;}
+
+    /* No results */
+    .no-results{text-align:center;padding:64px 20px;background:white;border-radius:16px;}
+    .no-results .icon{font-size:64px;margin-bottom:16px;opacity:.3;}
+    .no-results h3{font-family:'Syne',sans-serif;font-size:22px;color:var(--navy);margin-bottom:8px;}
+    .no-results p{font-size:15px;color:var(--muted);margin-bottom:20px;}
+
+    /* ── SIMILAR PRODUCTS SECTION ── */
+    .similar-section{margin-top:40px;}
+    .similar-header{font-family:'Syne',sans-serif;font-size:20px;color:var(--navy);display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+    .similar-header::before{content:'';width:5px;height:24px;border-radius:3px;background:var(--amber);flex-shrink:0;}
+    .similar-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;}
+    .similar-scroll::-webkit-scrollbar{height:4px;}
+    .similar-scroll::-webkit-scrollbar-track{background:#f0f4f8;border-radius:2px;}
+    .similar-scroll::-webkit-scrollbar-thumb{background:var(--teal);border-radius:2px;}
+    .sim-card{flex-shrink:0;width:180px;background:white;border-radius:12px;overflow:hidden;border:1.5px solid #e5eaf0;transition:all .25s;cursor:pointer;}
+    .sim-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(15,45,74,.12);border-color:var(--teal);}
+    .sim-img{width:100%;height:130px;object-fit:cover;}
+    .sim-info{padding:9px 11px 11px;}
+    .sim-name{font-size:12.5px;font-weight:800;color:var(--navy);line-height:1.3;margin-bottom:4px;}
+    .sim-price{font-size:15px;font-weight:900;color:var(--navy);}
+    .sim-price-old{font-size:11px;color:var(--muted);text-decoration:line-through;margin-left:4px;}
+
+    /* Active filter chips */
+    .active-filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+    .active-chip{background:var(--teal-light);color:var(--teal-dark);border-radius:20px;padding:4px 12px;font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:6px;}
+    .active-chip button{background:none;border:none;cursor:pointer;font-size:14px;color:var(--teal-dark);padding:0;line-height:1;}
+
+    /* Pagination */
+    .pagination{display:flex;justify-content:center;gap:8px;margin-top:28px;flex-wrap:wrap;}
+    .page-btn{width:38px;height:38px;border-radius:8px;border:1.5px solid #e0e7ef;background:white;font-size:14px;font-weight:700;cursor:pointer;color:var(--navy);transition:all .2s;display:flex;align-items:center;justify-content:center;}
+    .page-btn:hover{border-color:var(--teal);color:var(--teal);}
+    .page-btn.active{background:var(--teal);color:white;border-color:var(--teal);}
+    .page-btn.dots{cursor:default;border:none;background:none;}
+
+    /* Mobile filter toggle */
+    .mobile-filter-btn{display:none;align-items:center;gap:8px;background:var(--navy);color:white;border:none;padding:10px 18px;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;}
+    .filter-overlay{display:none;position:fixed;inset:0;background:rgba(15,45,74,.5);z-index:300;}
+    .filter-overlay.open{display:block;}
+    .filter-sidebar.mobile-open{display:block!important;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:400;width:300px;border-radius:0;}
+
+    /* Location panel */
+    #loc-overlay{display:none;position:fixed;inset:0;background:rgba(15,45,74,0.45);z-index:500;}
+    #loc-panel{display:none;position:fixed;top:0;left:0;width:100%;max-width:400px;height:100vh;background:white;z-index:600;box-shadow:8px 0 40px rgba(15,45,74,0.2);overflow-y:auto;font-family:'Nunito',sans-serif;}
+
+
+    /* ── FILTER CHIP ── */
+    .filter-chip{background:#f0f4f8;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:var(--navy);cursor:pointer;transition:all .2s;white-space:nowrap;display:inline-block;}
+    .filter-chip:hover,.filter-chip.active{background:var(--teal);color:white;border-color:var(--teal);}
+
+    /* ── MOBILE FILTER SHEET ── */
+    .filter-sheet-overlay{display:none;position:fixed;inset:0;background:rgba(15,45,74,.55);z-index:400;}
+    .filter-sheet-overlay.open{display:block;}
+    .filter-sheet{position:fixed;bottom:0;left:0;right:0;background:white;border-radius:20px 20px 0 0;z-index:500;max-height:85vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(15,45,74,.2);transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);}
+    .filter-sheet.open{transform:translateY(0);}
+    .filter-sheet-handle{width:40px;height:4px;background:#dde3ec;border-radius:2px;margin:12px auto 0;}
+    .filter-sheet-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 12px;border-bottom:1px solid #f0f4f8;position:sticky;top:0;background:white;z-index:1;}
+    .filter-sheet-title{font-family:'Syne',sans-serif;font-size:17px;color:var(--navy);font-weight:800;}
+    .filter-sheet-close{background:var(--off);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--navy);}
+    .filter-sheet-apply{display:block;width:calc(100% - 32px);margin:14px 16px 24px;padding:14px;background:linear-gradient(90deg,var(--teal),#0891b2);color:white;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+    /* ── MOBILE STICKY TOOLBAR ── */
+    .mobile-toolbar{display:none;align-items:center;gap:8px;padding:9px 14px;background:white;border-bottom:1.5px solid #f0f4f8;position:sticky;top:0;z-index:30;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+    .mobile-toolbar::-webkit-scrollbar{display:none;}
+    .mob-filter-btn{display:flex;align-items:center;gap:6px;white-space:nowrap;border:none;background:var(--navy);border-radius:20px;padding:8px 16px;font-size:13px;font-weight:800;color:white;cursor:pointer;font-family:'Nunito',sans-serif;flex-shrink:0;}
+    .mob-sort-select{border:1.5px solid #e0e7ef;border-radius:20px;padding:7px 13px;font-size:13px;font-weight:700;color:var(--navy);font-family:'Nunito',sans-serif;background:white;outline:none;cursor:pointer;flex-shrink:0;}
+    .mob-result-count{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;margin-left:auto;flex-shrink:0;}
+
+    /* ── RESPONSIVE BREAKPOINTS ── */
+    @media(max-width:900px){
+      .search-page-wrap{grid-template-columns:1fr;padding:12px 3% 60px;}
+      .filter-sidebar{display:none;}
+      .mobile-filter-btn{display:none;}
+      .mobile-toolbar{display:flex;}
+      .results-toolbar{display:none;}
+      .search-big-bar{max-width:100%;}
+      .search-hero{padding:18px 4% 14px;}
+      .search-hero h2{font-size:16px;margin-bottom:10px;}
+      .search-hero h2 span{font-size:20px;}
+      .results-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+      .active-filters{padding:0 2px;}
+      .sim-card{width:150px;}
+    }
+    @media(max-width:600px){
+      .search-big-bar{height:46px;}
+      .search-big-bar input{font-size:14px;padding:0 12px;}
+      .search-big-bar button{padding:0 16px;font-size:16px;}
+      .search-page-wrap{padding:10px 3% 56px;}
+      .results-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+      .results-grid.list-view .product-card{flex-direction:column;max-height:none;}
+      .results-grid.list-view .prod-img-wrap{width:100%;min-width:100%;height:160px;}
+      .no-results{padding:40px 16px;}
+      .page-btn{width:34px;height:34px;font-size:13px;}
+    }
+    @media(max-width:380px){
+      .results-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR (desktop only) -->
+<div class="topbar"><span>&#128230; Free shipping over <b>₹999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<!-- NAVBAR WRAP -->
+<div class="navbar-wrap">
+<nav class="navbar">
+  <a href="index.html" class="logo" style="text-decoration:none;">Blue<span>Cart</span></a>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div style="flex:1;"></div>
+  <div class="nav-right">
+    <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
+    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+          <!-- Hamburger button -->
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div><!-- end .nav-right -->
+  </nav>
+  <!-- Search Row -->
+  <div class="navbar-search-row">
+    <div class="search-bar" style="flex:1;">
+      <input type="text" id="navSearch" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')runSearch(this.value)"/>
+      <button onclick="runSearch(document.getElementById('navSearch').value)">&#128269;</button>
+    </div>
+  </div>
+</div><!-- end .navbar-wrap -->
+
+<!-- Hamburger overlay + slide-in menu (outside navbar-wrap) -->
+<div class="hm-overlay" id="hm-overlay" onclick="closeHamburger()"></div>
+<div class="hm-drawer" id="hm-drawer">
+  <div class="hm-drawer-head">
+    <span class="hm-drawer-logo">Blue<span>Cart</span></span>
+    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+  </div>
+  <div class="hm-drawer-body">
+    <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Categories</div>
+    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
+    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
+    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
+    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
+    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
+    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
+    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
+    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Offers</div>
+    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
+    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Account</div>
+    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
+    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
+    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
+    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+  </div>
+</div>
+
+<!-- NAV STRIP (desktop only) -->
+<div class="nav-strip"><div class="nav-strip-inner">
+  <div class="nav-item"><a href="index.html">&#9776; All</a></div>
+  <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
+  <div class="nav-item"><a href="electronics.html">Electronics</a></div>
+  <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
+  <div class="nav-item"><a href="laptops.html">Laptops</a></div>
+  <div class="nav-item"><a href="audio.html">Audio</a></div>
+  <div class="nav-item"><a href="cameras.html">Cameras</a></div>
+  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
+  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
+  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
+  <div class="nav-item"><a href="deals.html" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
+  <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
+</div></div>
+
+<!-- SEARCH HERO -->
+<div class="search-hero">
+  <div class="search-hero-inner">
+    <h2>Results for <span id="query-display">All Products</span></h2>
+    <div class="search-big-bar">
+      <input type="text" id="bigSearch" placeholder="Search products, brands and more..."
+             onkeydown="if(event.key==='Enter')runSearch(this.value)"/>
+      <button onclick="runSearch(document.getElementById('bigSearch').value)">&#128269; Search</button>
+    </div>
+    <div class="search-meta">
+      <span class="result-count" id="result-count">0 results</span>
+      <div class="search-tags" id="popular-tags"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE STICKY TOOLBAR -->
+<div class="mobile-toolbar" id="mobile-toolbar">
+  <button class="mob-filter-btn" onclick="openFilterSheet()">&#127775; Filters</button>
+  <select class="mob-sort-select" id="mob-sort-select" onchange="syncMobileSort(this.value)">
+    <option value="relevance">Relevance</option>
+    <option value="price-asc">Price: Low &#8594; High</option>
+    <option value="price-desc">Price: High &#8594; Low</option>
+    <option value="discount">Biggest Discount</option>
+    <option value="newest">Newest First</option>
+    <option value="name-asc">A &#8594; Z</option>
+    <option value="name-desc">Z &#8594; A</option>
+  </select>
+  <span class="mob-result-count" id="mob-result-count"></span>
+</div>
+
+<!-- MOBILE FILTER SHEET -->
+<div class="filter-sheet-overlay" id="filter-sheet-overlay" onclick="closeFilterSheet()"></div>
+<div class="filter-sheet" id="filter-sheet">
+  <div class="filter-sheet-handle"></div>
+  <div class="filter-sheet-head">
+    <span class="filter-sheet-title">&#127775; Filters</span>
+    <button class="filter-sheet-close" onclick="closeFilterSheet()">&#10005;</button>
+  </div>
+  <div id="filter-sheet-body">
+    <div class="fs-section">
+      <div class="fs-section-title" onclick="toggleSection(this)">Price Range</div>
+      <div class="fs-body">
+        <input type="range" class="range-slider" id="price-slider-mob" min="0" max="300000" value="300000" step="1000" oninput="syncMobilePrice(this.value)"/>
+        <div class="price-display" id="price-display-mob">Up to ₹3,00,000</div>
+        <div class="price-inputs">
+          <input type="text" class="price-inp" id="price-min-mob" placeholder="Min ₹" value="0"/>
+          <input type="text" class="price-inp" id="price-max-mob" placeholder="Max ₹" value="300000"/>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+          <span class="filter-chip" onclick="setMobilePriceRange(0,10000)">Under ₹10K</span>
+          <span class="filter-chip" onclick="setMobilePriceRange(10000,25000)">₹10K&#8211;25K</span>
+          <span class="filter-chip" onclick="setMobilePriceRange(25000,50000)">₹25K&#8211;50K</span>
+          <span class="filter-chip" onclick="setMobilePriceRange(50000,100000)">₹50K&#8211;1L</span>
+          <span class="filter-chip" onclick="setMobilePriceRange(100000,300000)">Above ₹1L</span>
+        </div>
+      </div>
+    </div>
+    <div class="fs-section">
+      <div class="fs-section-title" onclick="toggleSection(this)">Category</div>
+      <div class="fs-body" id="mob-cat-filters">
+        <label class="fs-check"><input type="checkbox" value="Smartphones" onchange="applyMobileFilters()"/> <span>Smartphones</span></label>
+        <label class="fs-check"><input type="checkbox" value="Laptops" onchange="applyMobileFilters()"/> <span>Laptops</span></label>
+        <label class="fs-check"><input type="checkbox" value="Audio" onchange="applyMobileFilters()"/> <span>Audio</span></label>
+        <label class="fs-check"><input type="checkbox" value="Cameras" onchange="applyMobileFilters()"/> <span>Cameras</span></label>
+        <label class="fs-check"><input type="checkbox" value="Gaming" onchange="applyMobileFilters()"/> <span>Gaming</span></label>
+        <label class="fs-check"><input type="checkbox" value="Accessories" onchange="applyMobileFilters()"/> <span>Accessories</span></label>
+        <label class="fs-check"><input type="checkbox" value="Smart Home" onchange="applyMobileFilters()"/> <span>Smart Home</span></label>
+        <label class="fs-check"><input type="checkbox" value="Monitors" onchange="applyMobileFilters()"/> <span>Monitors</span></label>
+        <label class="fs-check"><input type="checkbox" value="Tablets" onchange="applyMobileFilters()"/> <span>Tablets</span></label>
+        <label class="fs-check"><input type="checkbox" value="Wearables" onchange="applyMobileFilters()"/> <span>Wearables</span></label>
+      </div>
+    </div>
+    <div class="fs-section">
+      <div class="fs-section-title" onclick="toggleSection(this)">Discount</div>
+      <div class="fs-body">
+        <label class="fs-check"><input type="radio" name="mob-disc" value="0" onchange="applyMobileFilters()" checked/> <span>All</span></label>
+        <label class="fs-check"><input type="radio" name="mob-disc" value="10" onchange="applyMobileFilters()"/> <span>10% or more</span></label>
+        <label class="fs-check"><input type="radio" name="mob-disc" value="20" onchange="applyMobileFilters()"/> <span>20% or more</span></label>
+        <label class="fs-check"><input type="radio" name="mob-disc" value="30" onchange="applyMobileFilters()"/> <span>30% or more</span></label>
+        <label class="fs-check"><input type="radio" name="mob-disc" value="50" onchange="applyMobileFilters()"/> <span>50% or more</span></label>
+      </div>
+    </div>
+    <div class="fs-section">
+      <div class="fs-section-title" onclick="toggleSection(this)">Availability</div>
+      <div class="fs-body">
+        <label class="fs-check"><input type="checkbox" id="mob-instock" onchange="applyMobileFilters()"/> <span>In Stock Only</span></label>
+        <label class="fs-check"><input type="checkbox" id="mob-deal" onchange="applyMobileFilters()"/> <span>On Sale / Deal</span></label>
+      </div>
+    </div>
+  </div>
+  <button class="filter-sheet-apply" onclick="closeFilterSheet()">Show Results</button>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="search-page-wrap">
+
+  <!-- FILTER OVERLAY (mobile) -->
+  <div class="filter-overlay" id="filter-overlay" onclick="closeMobileFilter()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="filter-sidebar" id="filter-sidebar">
+    <div class="fs-header">
+      <span class="fs-title">&#127775; Filters</span>
+      <button class="fs-clear" onclick="clearAllFilters()">Clear All</button>
+    </div>
+
+    <!-- Price Range -->
+    <div class="fs-section">
+      <div class="fs-section-title" onclick="toggleSection(this)">Price Range</div>
+      <div class="fs-body">
+        <div class="price-range-wrap">
+          <input type="range" class="range-slider" id="price-slider" min="0" max="300000" value="300000" step="1000" oninput="updatePriceDisplay()"/>
+          <div class="price-display" id="price-display">Up to ₹3,00,000</div>
+          <div class="price-inputs">
+            <input type="text" class="price-inp" id="price-min" placeholder="Min ₹" value="0"/>
+            <input type="text" class="price-inp" id="price-max" placeholder="Max ₹" value="300000"/>
+          </div>
+        </div>
+        <!-- Quick price chips -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+          <span class="filter-chip" onclick="setPriceRange(0,10000)">Under ₹10K</span>
+          <span class="filter-chip" onclick="setPriceRange(10000,25000)">₹10K–25K</span>
+          <span class="filter-chip" onclick="setPriceRange(25000,50000)">₹25K–50K</span>
+          <span class="filter-chip" onclick="setPriceRange(50000,100000)">₹50K–1L</span>
+          <span class="filter-chip" onclick="setPriceRange(100000,300000)">Above ₹1L</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="fs-section">
+      <div class="fs-section-title" onclick="toggleSection(this)">Category</div>
+      <div class="fs-body" id="cat-filters">
+        <label class="fs-check"><input type="checkbox" value="Smartphones" onchange="applyFilters()"/> <span>Smartphones</span></label>
+        <label class="fs-check"><input type="checkbox" value="Laptops" onchange="applyFilters()"/> <span>Laptops</span></label>
+        <label class="fs-check"><input type="checkbox" value="Audio" onchange="applyFilters()"/> <span>Audio</span></label>
+        <label class="fs-check"><input type="checkbox" value="Cameras" onchange="applyFilters()"/> <span>Cameras</span></label>
+        <label class="fs-check"><input type="checkbox" value="Gaming" onchange="applyFilters()"/> <span>Gaming</span></label>
+        <label class="fs-check"><input type="checkbox" value="Accessories" onchange="applyFilters()"/> <span>Accessories</span></label>
+        <label class="fs-check"><input type="checkbox" value="Smart Home" onchange="applyFilters()"/> <span>Smart Home</span></label>
+        <label class="fs-check"><input type="checkbox" value="Monitors" onchange="applyFilters()"/> <span>Monitors</span></label>
+        <label class="fs-check"><input type="checkbox" value="Tablets" onchange="applyFilters()"/> <span>Tablets</span></label>
+        <label class="fs-check"><input type="checkbox" value="Wearables" onchange="applyFilters()"/> <span>Wearables</span></label>
+      </div>
+    </div>
+
+    <!-- Brand -->
+    <div class="fs-section">
+      <div class="fs-section-title" onclick="toggleSection(this)">Brand</div>
+      <div class="fs-body" id="brand-filters">
+        <!-- populated dynamically -->
+        <div style="font-size:13px;color:var(--muted);">Search to see brands</div>
+      </div>
+    </div>
+
+    <!-- Discount -->
+    <div class="fs-section">
+      <div class="fs-section-title" onclick="toggleSection(this)">Discount</div>
+      <div class="fs-body">
+        <label class="fs-check"><input type="radio" name="disc" value="0" onchange="applyFilters()" checked/> <span>All Discounts</span></label>
+        <label class="fs-check"><input type="radio" name="disc" value="10" onchange="applyFilters()"/> <span>10% or more</span></label>
+        <label class="fs-check"><input type="radio" name="disc" value="20" onchange="applyFilters()"/> <span>20% or more</span></label>
+        <label class="fs-check"><input type="radio" name="disc" value="30" onchange="applyFilters()"/> <span>30% or more</span></label>
+        <label class="fs-check"><input type="radio" name="disc" value="50" onchange="applyFilters()"/> <span>50% or more</span></label>
+      </div>
+    </div>
+
+    <!-- Availability -->
+    <div class="fs-section">
+      <div class="fs-section-title" onclick="toggleSection(this)">Availability</div>
+      <div class="fs-body">
+        <label class="fs-check"><input type="checkbox" id="instock-only" onchange="applyFilters()"/> <span>In Stock Only</span></label>
+        <label class="fs-check"><input type="checkbox" id="deal-only" onchange="applyFilters()"/> <span>On Sale / Deal</span></label>
+      </div>
+    </div>
+
+    <div style="padding:16px;">
+      <button class="apply-filter-btn" onclick="applyFilters()">Apply Filters</button>
+    </div>
+  </aside>
+
+  <!-- RESULTS -->
+  <div class="results-area">
+
+    <!-- Mobile filter button -->
+    <button class="mobile-filter-btn" onclick="openMobileFilter()" style="margin-bottom:14px;">
+      &#127775; Filters &amp; Sort
+    </button>
+
+    <!-- Active filter chips -->
+    <div class="active-filters" id="active-filters"></div>
+
+    <!-- Toolbar -->
+    <div class="results-toolbar">
+      <div class="results-count-text" id="toolbar-count">0 results</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <select class="sort-select" id="sort-select" onchange="applyFilters()">
+          <option value="relevance">Sort: Relevance</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="discount">Biggest Discount</option>
+          <option value="newest">Newest First</option>
+          <option value="name-asc">Name: A to Z</option>
+          <option value="name-desc">Name: Z to A</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="btn-grid" onclick="setView('grid')" title="Grid View">&#9783;</button>
+          <button class="view-btn" id="btn-list" onclick="setView('list')" title="List View">&#9776;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Grid -->
+    <div class="results-grid products-grid" id="results-grid"></div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+
+    <!-- Similar Products -->
+    <div class="similar-section" id="similar-section" style="display:none;">
+      <div class="similar-header">&#128161; You Might Also Like</div>
+      <div class="similar-scroll" id="similar-scroll"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div id="cart">
+  <div class="cart-header"><h3>&#128722; Your Cart</h3><button class="cart-close" onclick="toggleCart()">&#10005;</button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cart-total">₹0</span></div>
+    <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout &#8594;</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- LOCATION PANEL -->
+<div id="loc-overlay" onclick="closeLocationPanel()"></div>
+<div id="loc-panel">
+  <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">&#128205; Set Delivery Location</div>
+    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">&#10005;</button>
+  </div>
+  <div style="padding:18px;">
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Enter Pincode</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="loc-pincode" maxlength="6" placeholder="e.g. 311001" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="flex:1;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;"/>
+        <button onclick="applyPincode()" style="background:#0ea5a0;color:white;border:none;padding:10px 16px;border-radius:9px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">Apply</button>
+      </div>
+      <div id="pin-result" style="margin-top:7px;font-size:13px;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><div style="flex:1;height:1px;background:#e5eaf0;"></div><span style="font-size:11.5px;color:#6b7a8d;font-weight:700;">OR SELECT</span><div style="flex:1;height:1px;background:#e5eaf0;"></div></div>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">State</label>
+      <select id="loc-state" onchange="loadCities()" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select State</option><option>Rajasthan</option><option>Maharashtra</option><option>Delhi</option><option>Karnataka</option><option>Tamil Nadu</option><option>Gujarat</option><option>Uttar Pradesh</option><option>West Bengal</option><option>Telangana</option><option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option><option>Haryana</option><option>Bihar</option><option>Goa</option></select>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
+      <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
+    </div>
+    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">&#128205; Set Location</button>
+  </div>
+</div>
+
+<script src="db.mongo.js"></script>
+<script src="shared.js"></script>
+<script>
+// ── STATIC PRODUCT DATABASE ──────────────────────────────────────────────────
+// All static products from every category page
+var STATIC_PRODUCTS = [
+  // Smartphones
+  {name:'iPhone 15 Pro Max 256GB',brand:'Apple',category:'Smartphones',price:119900,mrp:199900,img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop',badge:'sale'},
+  {name:'Samsung Galaxy S24 Ultra 512GB',brand:'Samsung',category:'Smartphones',price:114999,mrp:149999,img:'https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=400&h=300&fit=crop',badge:'hot'},
+  {name:'OnePlus 12 16GB RAM',brand:'OnePlus',category:'Smartphones',price:64999,mrp:74999,img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop',badge:''},
+  {name:'Google Pixel 8 Pro 256GB',brand:'Google',category:'Smartphones',price:79999,mrp:99999,img:'https://images.unsplash.com/photo-1570654639102-bdd95efeca7a?w=400&h=300&fit=crop',badge:''},
+  {name:'Xiaomi Redmi Note 13 Pro+',brand:'Xiaomi',category:'Smartphones',price:29999,mrp:39999,img:'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=400&h=300&fit=crop',badge:''},
+  {name:'Realme GT 6 256GB',brand:'Realme',category:'Smartphones',price:34999,mrp:44999,img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop',badge:''},
+  {name:'Nothing Phone 2a 128GB',brand:'Nothing',category:'Smartphones',price:23999,mrp:29999,img:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400&h=300&fit=crop',badge:'new'},
+  {name:'Motorola Edge 50 Ultra',brand:'Motorola',category:'Smartphones',price:31999,mrp:44999,img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop',badge:''},
+  // Laptops
+  {name:'MacBook Air M3 13"',brand:'Apple',category:'Laptops',price:114900,mrp:134900,img:'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop',badge:'new'},
+  {name:'Dell XPS 15 OLED',brand:'Dell',category:'Laptops',price:149900,mrp:189900,img:'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&h=300&fit=crop',badge:''},
+  {name:'Asus ROG Zephyrus G16',brand:'Asus',category:'Laptops',price:149900,mrp:209900,img:'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=300&fit=crop',badge:'hot'},
+  {name:'HP Spectre x360 14',brand:'HP',category:'Laptops',price:149900,mrp:189900,img:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop',badge:''},
+  {name:'Lenovo ThinkPad X1 Carbon',brand:'Lenovo',category:'Laptops',price:129900,mrp:164900,img:'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=300&fit=crop',badge:''},
+  {name:'Samsung Galaxy Book4 Ultra',brand:'Samsung',category:'Laptops',price:149900,mrp:194990,img:'https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=400&h=300&fit=crop',badge:'new'},
+  {name:'Acer Predator Helios 16',brand:'Acer',category:'Laptops',price:99990,mrp:139990,img:'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=300&fit=crop',badge:'sale'},
+  {name:'Microsoft Surface Pro 11',brand:'Microsoft',category:'Laptops',price:124999,mrp:149999,img:'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&h=300&fit=crop',badge:'new'},
+  // Audio
+  {name:'Sony WH-1000XM5 ANC',brand:'Sony',category:'Audio',price:24990,mrp:34990,img:'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=300&fit=crop',badge:'hot'},
+  {name:'Apple AirPods Pro 2nd Gen',brand:'Apple',category:'Audio',price:24900,mrp:29900,img:'https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=400&h=300&fit=crop',badge:''},
+  {name:'Bose QuietComfort 45',brand:'Bose',category:'Audio',price:23990,mrp:32990,img:'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=300&fit=crop',badge:''},
+  {name:'JBL Charge 5 Speaker',brand:'JBL',category:'Audio',price:11999,mrp:17999,img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',badge:''},
+  {name:'Samsung Galaxy Buds 3 Pro',brand:'Samsung',category:'Audio',price:14999,mrp:19999,img:'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=300&fit=crop',badge:'new'},
+  {name:'boAt Rockerz 550 Pro',brand:'boAt',category:'Audio',price:2499,mrp:4999,img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop',badge:'sale'},
+  {name:'Sennheiser HD 560S',brand:'Sennheiser',category:'Audio',price:8999,mrp:13999,img:'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=300&fit=crop',badge:''},
+  {name:'Marshall Emberton II',brand:'Marshall',category:'Audio',price:9499,mrp:14499,img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',badge:''},
+  // Cameras
+  {name:'Sony Alpha A7 IV Mirrorless',brand:'Sony',category:'Cameras',price:249990,mrp:289990,img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=300&fit=crop',badge:'hot'},
+  {name:'Canon EOS R8 Mirrorless',brand:'Canon',category:'Cameras',price:119990,mrp:149990,img:'https://images.unsplash.com/photo-1502920917128-1aa500764bec?w=400&h=300&fit=crop',badge:''},
+  {name:'Nikon Z6 III Full Frame',brand:'Nikon',category:'Cameras',price:189990,mrp:224990,img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=300&fit=crop',badge:'new'},
+  {name:'GoPro Hero 12 Black',brand:'GoPro',category:'Cameras',price:34990,mrp:46490,img:'https://images.unsplash.com/photo-1529539795054-3c162aab037a?w=400&h=300&fit=crop',badge:''},
+  {name:'DJI Osmo Pocket 3',brand:'DJI',category:'Cameras',price:44990,mrp:52990,img:'https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=400&h=300&fit=crop',badge:''},
+  {name:'Fujifilm X-T5 APS-C',brand:'Fujifilm',category:'Cameras',price:169990,mrp:199990,img:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=300&fit=crop',badge:''},
+  // Gaming
+  {name:'PS5 DualSense Controller',brand:'Sony',category:'Gaming',price:5990,mrp:9190,img:'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop',badge:'hot'},
+  {name:'Razer DeathAdder V3 Pro',brand:'Razer',category:'Gaming',price:7499,mrp:11999,img:'https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=300&fit=crop',badge:''},
+  {name:'Xbox Series X Controller',brand:'Microsoft',category:'Gaming',price:5990,mrp:7490,img:'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=400&h=300&fit=crop',badge:''},
+  {name:'SteelSeries Arctis Nova Pro',brand:'SteelSeries',category:'Gaming',price:24999,mrp:32999,img:'https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&h=300&fit=crop',badge:''},
+  {name:'Asus ROG Swift OLED Monitor',brand:'Asus',category:'Gaming',price:54999,mrp:74999,img:'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=300&fit=crop',badge:'sale'},
+  {name:'Logitech G Pro X Keyboard',brand:'Logitech',category:'Gaming',price:8999,mrp:12999,img:'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=300&fit=crop',badge:''},
+  {name:'MSI Katana 15 Gaming Laptop',brand:'MSI',category:'Gaming',price:79999,mrp:109999,img:'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=300&fit=crop',badge:''},
+  // Accessories
+  {name:'Anker 65W GaN Charger',brand:'Anker',category:'Accessories',price:2499,mrp:3999,img:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400&h=300&fit=crop',badge:''},
+  {name:'Apple MagSafe Charger',brand:'Apple',category:'Accessories',price:3900,mrp:4500,img:'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=400&h=300&fit=crop',badge:''},
+  {name:'Samsung 25W Wireless Charger',brand:'Samsung',category:'Accessories',price:2999,mrp:4499,img:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400&h=300&fit=crop',badge:''},
+  {name:'Baseus 20000mAh Power Bank',brand:'Baseus',category:'Accessories',price:2499,mrp:3999,img:'https://images.unsplash.com/photo-1609592426237-03a5c59d2b8f?w=400&h=300&fit=crop',badge:''},
+  {name:'Logitech MX Master 3S Mouse',brand:'Logitech',category:'Accessories',price:9495,mrp:12999,img:'https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=300&fit=crop',badge:''},
+  {name:'Spigen iPhone 15 Case',brand:'Spigen',category:'Accessories',price:1299,mrp:1999,img:'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=400&h=300&fit=crop',badge:''},
+  {name:'Belkin USB-C Hub 7-in-1',brand:'Belkin',category:'Accessories',price:5999,mrp:8999,img:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400&h=300&fit=crop',badge:''},
+  // Smart Home
+  {name:'Amazon Echo Dot 5th Gen',brand:'Amazon',category:'Smart Home',price:3499,mrp:6299,img:'https://images.unsplash.com/photo-1512446816042-444d641267d4?w=400&h=300&fit=crop',badge:'sale'},
+  {name:'Google Nest Hub 2nd Gen',brand:'Google',category:'Smart Home',price:8999,mrp:12999,img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',badge:''},
+  {name:'Philips Hue Starter Kit',brand:'Philips',category:'Smart Home',price:7999,mrp:10999,img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',badge:''},
+  {name:'Ring Video Doorbell Pro 2',brand:'Ring',category:'Smart Home',price:19999,mrp:27999,img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',badge:''},
+  {name:'TP-Link Tapo C200 Camera',brand:'TP-Link',category:'Smart Home',price:2499,mrp:3999,img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',badge:''},
+  {name:'Nest Learning Thermostat',brand:'Nest',category:'Smart Home',price:14999,mrp:19999,img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',badge:''},
+  {name:'Arlo Pro 4 Security Camera',brand:'Arlo',category:'Smart Home',price:17999,mrp:24999,img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',badge:''}
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+var allProducts  = [];   // static + DB combined
+var filteredProds= [];
+var currentQuery = '';
+var currentPage  = 1;
+var ITEMS_PER_PAGE = 12;
+var isListView   = false;
+
+// ── CART ─────────────────────────────────────────────────────────────────────
+var cartItems = [], cartOpen = false;
+function toggleCart(){cartOpen=!cartOpen;document.getElementById('cart').classList.toggle('active',cartOpen);document.getElementById('cart-overlay').classList.toggle('open',cartOpen);}
+function addToCart(name,price){cartItems.push({name:name,price:price});renderCart();showToast('Added: '+name);}
+function removeFromCart(i){cartItems.splice(i,1);renderCart();}
+function renderCart(){
+  var list=document.getElementById('cart-items'),total=document.getElementById('cart-total'),count=document.getElementById('cart-count');
+  if(count)count.textContent=cartItems.length;
+  if(!list)return;
+  if(!cartItems.length){list.innerHTML='<div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div>';if(total)total.textContent='₹0';return;}
+  list.innerHTML=cartItems.map(function(item,i){return '<li class="cart-item"><div><div class="cart-item-name">'+item.name+'</div><div class="cart-item-price">₹'+item.price.toLocaleString('en-IN')+'</div></div><button class="remove-btn" onclick="removeFromCart('+i+')">Remove</button></li>';}).join('');
+  var sum=cartItems.reduce(function(a,b){return a+b.price;},0);
+  if(total)total.textContent='₹'+sum.toLocaleString('en-IN');
+}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
+function buyNow(name,img,price){window.location.href='product.html?name='+encodeURIComponent(name)+'&img='+encodeURIComponent(img||'')+'&price='+price+'&cat=Electronics';}
+function checkoutCart(){if(!cartItems.length){showToast('Cart is empty!');return;}var p=new URLSearchParams();p.set('mode','cart');p.set('items',JSON.stringify(cartItems));window.location.href='checkout.html?'+p.toString();}
+function goOrders(){BC.ready.then(function(){return BC.getSession();}).then(function(sess){if(!sess){sessionStorage.setItem('bc_redirect','orders.html');window.location.href='login.html';}else window.location.href='orders.html';});}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+BC.ready.then(function() {
+  return BC.getSession();
+}).then(function(sess) {
+  if (sess) {
+    var g=document.getElementById('account-greeting'),l=document.getElementById('account-label'),lk=document.getElementById('account-link');
+    if(g)g.textContent='Hello, '+sess.name.split(' ')[0];
+    if(l)l.textContent='My Account';
+    if(lk)lk.href=sess.role==='admin'?'admin.html':'account.html';
+  }
+  var saved=localStorage.getItem('bc_location');
+  if(saved){var el=document.getElementById('location-display');if(el)el.textContent='\u{1F4CD} '+saved;}
+  return BC.getAllProducts();
+}).then(function(dbProds) {
+  // Merge DB products with static ones
+  var dbMapped = (dbProds||[]).filter(function(p){return p.status==='active';}).map(function(p){
+    return {id:p.id,name:p.name,brand:p.brand,category:p.category,price:p.price,mrp:p.mrp||p.price,img:p.imageUrl||'',badge:p.badge||'',stock:p.stock,fromDB:true};
+  });
+  allProducts = STATIC_PRODUCTS.concat(dbMapped);
+
+  // Get query from URL
+  var params = new URLSearchParams(window.location.search);
+  currentQuery = params.get('q') || '';
+  document.getElementById('navSearch').value = currentQuery;
+  document.getElementById('bigSearch').value = currentQuery;
+  document.getElementById('query-display').textContent = currentQuery ? '\u201C'+currentQuery+'\u201D' : 'All Products';
+  document.title = currentQuery ? 'Search: '+currentQuery+' \u2014 BlueCart' : 'All Products \u2014 BlueCart';
+
+  buildBrandFilters();
+  applyFilters();
+  renderPopularTags();
+}).catch(function(e){ console.error(e); });
+
+// ── SEARCH ───────────────────────────────────────────────────────────────────
+function runSearch(q) {
+  q = q.trim();
+  if (!q) return;
+  window.location.href = 'search.html?q=' + encodeURIComponent(q);
+}
+
+// ── BUILD BRAND FILTERS FROM RESULTS ─────────────────────────────────────────
+function buildBrandFilters() {
+  var brands = {};
+  allProducts.forEach(function(p){
+    brands[p.brand] = (brands[p.brand]||0)+1;
+  });
+  var sorted = Object.keys(brands).sort();
+  var html = sorted.map(function(b){
+    return '<label class="fs-check"><input type="checkbox" value="'+b+'" onchange="applyFilters()"/> <span>'+b+'</span><span class="fs-count">'+brands[b]+'</span></label>';
+  }).join('');
+  document.getElementById('brand-filters').innerHTML = html || '<div style="font-size:13px;color:var(--muted);">No brands found</div>';
+}
+
+// ── FILTER + SORT + RENDER ────────────────────────────────────────────────────
+function applyFilters() {
+  var query   = currentQuery.toLowerCase().trim();
+  var minPrice= parseInt(document.getElementById('price-min').value)||0;
+  var maxPrice= parseInt(document.getElementById('price-max').value)||300000;
+  var minDisc = parseInt(document.querySelector('input[name=disc]:checked').value)||0;
+  var instock = document.getElementById('instock-only').checked;
+  var onSale  = document.getElementById('deal-only').checked;
+  var sortVal = document.getElementById('sort-select').value;
+
+  // Checked categories
+  var checkedCats = Array.from(document.querySelectorAll('#cat-filters input:checked')).map(function(e){return e.value;});
+  // Checked brands
+  var checkedBrands = Array.from(document.querySelectorAll('#brand-filters input:checked')).map(function(e){return e.value;});
+
+  filteredProds = allProducts.filter(function(p) {
+    // Text match
+    if (query) {
+      var searchIn = (p.name+' '+p.brand+' '+p.category).toLowerCase();
+      if (searchIn.indexOf(query) === -1) return false;
+    }
+    // Price
+    if (p.price < minPrice || p.price > maxPrice) return false;
+    // Category
+    if (checkedCats.length && checkedCats.indexOf(p.category) === -1) return false;
+    // Brand
+    if (checkedBrands.length && checkedBrands.indexOf(p.brand) === -1) return false;
+    // Discount
+    if (minDisc > 0) {
+      var disc = p.mrp > p.price ? Math.round((1-p.price/p.mrp)*100) : 0;
+      if (disc < minDisc) return false;
+    }
+    // In stock
+    if (instock && p.stock !== undefined && p.stock <= 0) return false;
+    // On sale
+    if (onSale && !(p.mrp > p.price)) return false;
+    return true;
+  });
+
+  // Sort
+  filteredProds.sort(function(a,b) {
+    if (sortVal==='price-asc')  return a.price-b.price;
+    if (sortVal==='price-desc') return b.price-a.price;
+    if (sortVal==='discount')   return (b.mrp-b.price)-(a.mrp-a.price);
+    if (sortVal==='name-asc')   return a.name.localeCompare(b.name);
+    if (sortVal==='name-desc')  return b.name.localeCompare(a.name);
+    // relevance — query matches name more strongly
+    if (query) {
+      var aName = a.name.toLowerCase().indexOf(query)!==-1 ? 0:1;
+      var bName = b.name.toLowerCase().indexOf(query)!==-1 ? 0:1;
+      return aName-bName;
+    }
+    return 0;
+  });
+
+  currentPage = 1;
+  renderResults();
+  renderActiveFilters(checkedCats, checkedBrands, minPrice, maxPrice, minDisc);
+  renderSimilar();
+}
+
+function renderResults() {
+  var total = filteredProds.length;
+  var start = (currentPage-1)*ITEMS_PER_PAGE;
+  var end   = Math.min(start+ITEMS_PER_PAGE, total);
+  var page  = filteredProds.slice(start, end);
+
+  document.getElementById('result-count').textContent = total + ' result' + (total!==1?'s':'') + (currentQuery?' for "'+currentQuery+'"':'');
+  document.getElementById('toolbar-count').textContent = total + ' product' + (total!==1?'s':'') + ' found';
+  var mc=document.getElementById('mob-result-count');if(mc)mc.textContent=total+' result'+(total!==1?'s':'');
+
+  var grid = document.getElementById('results-grid');
+  if (!total) {
+    grid.innerHTML = '<div class="no-results" style="grid-column:1/-1">' +
+      '<div class="icon">&#128269;</div>' +
+      '<h3>No results found</h3>' +
+      '<p>Try different keywords or clear some filters.</p>' +
+      '<button class="apply-filter-btn" style="width:auto;padding:11px 28px;" onclick="clearAllFilters()">Clear Filters</button>' +
+      '</div>';
+    document.getElementById('pagination').innerHTML='';
+    return;
+  }
+
+  grid.innerHTML = page.map(function(p) {
+    var disc = p.mrp > p.price ? Math.round((1-p.price/p.mrp)*100) : 0;
+    var oldHtml = p.mrp > p.price ? '<span class="price-old">₹'+p.mrp.toLocaleString('en-IN')+'</span>' : '';
+    var offHtml = disc>0 ? '<span class="price-off">'+disc+'% off</span>' : '';
+    var badgeCls = p.badge==='hot'?'badge-hot':p.badge==='sale'?'badge-sale':p.badge==='new'?'badge-new':'badge-new';
+    var badgeHtml = (p.badge||disc>0) ? '<span class="prod-badge '+(disc>0?'badge-sale':badgeCls)+'">'+(disc>0?'-'+disc+'%':p.badge)+'</span>' : '';
+    var pName = p.name.replace(/'/g,"\\'");
+    var pImg  = (p.img||'').replace(/'/g,"\\'");
+    var viewUrl = p.id ? ('product.html?id='+encodeURIComponent(p.id)) : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category));
+
+    return '<div class="product-card">' +
+      '<div class="prod-img-wrap" style="cursor:pointer" onclick="window.location.href=\''+viewUrl+'\'">' +
+        badgeHtml +
+        '<button class="wishlist-btn" onclick="event.stopPropagation();this.textContent=this.textContent===\'&#129293;\'?\'&#10084;&#65039;\':\'&#129293;\'">&#129293;</button>' +
+        '<img src="'+(p.img||'https://placehold.co/400x300?text=Product')+'" alt="'+p.name+'" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
+      '</div>' +
+      '<div class="prod-info">' +
+        '<span class="prod-category">'+p.category+'</span>' +
+        '<div class="prod-name" style="cursor:pointer" onclick="window.location.href=\''+viewUrl+'\'">'+p.name+'</div>' +
+        '<div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8</div>' +
+        '<div class="prod-price"><span class="price-now">₹'+p.price.toLocaleString('en-IN')+'</span>'+oldHtml+offHtml+'</div>' +
+        '<div class="add-to-cart">' +
+          '<button class="btn-cart" onclick="addToCart(\''+pName+'\','+p.price+')">Add to Cart</button>' +
+          '<button class="btn-buy"  onclick="buyNow(\''+pName+'\',\''+pImg+'\','+p.price+')">Buy Now</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  renderPagination(total);
+}
+
+function renderPagination(total) {
+  var pages = Math.ceil(total / ITEMS_PER_PAGE);
+  if (pages <= 1) { document.getElementById('pagination').innerHTML=''; return; }
+  var html = '';
+  if (currentPage>1) html += '<button class="page-btn" onclick="goPage('+(currentPage-1)+')">&#8249;</button>';
+  for (var i=1;i<=pages;i++) {
+    if (i===1||i===pages||Math.abs(i-currentPage)<=1) {
+      html += '<button class="page-btn'+(i===currentPage?' active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
+    } else if (Math.abs(i-currentPage)===2) {
+      html += '<span class="page-btn dots">...</span>';
+    }
+  }
+  if (currentPage<pages) html += '<button class="page-btn" onclick="goPage('+(currentPage+1)+')">&#8250;</button>';
+  document.getElementById('pagination').innerHTML = html;
+}
+function goPage(n) { currentPage=n; renderResults(); window.scrollTo({top:300,behavior:'smooth'}); }
+
+// ── SIMILAR PRODUCTS ─────────────────────────────────────────────────────────
+function renderSimilar() {
+  var sec = document.getElementById('similar-section');
+  if (!currentQuery && !filteredProds.length) { sec.style.display='none'; return; }
+
+  // Find categories of top results
+  var topCats = {};
+  filteredProds.slice(0,5).forEach(function(p){ topCats[p.category]=(topCats[p.category]||0)+1; });
+  var mainCat = Object.keys(topCats).sort(function(a,b){return topCats[b]-topCats[a];})[0];
+
+  // Similar = same category, not in current results
+  var resultIds = filteredProds.map(function(p){return p.name;});
+  var similar = allProducts.filter(function(p){
+    return p.category===mainCat && resultIds.indexOf(p.name)===-1;
+  }).slice(0,10);
+
+  // If not enough, add from other categories
+  if (similar.length < 5) {
+    var more = allProducts.filter(function(p){
+      return resultIds.indexOf(p.name)===-1 && similar.indexOf(p)===-1;
+    }).slice(0, 10-similar.length);
+    similar = similar.concat(more);
+  }
+
+  if (!similar.length) { sec.style.display='none'; return; }
+  sec.style.display='block';
+
+  document.getElementById('similar-scroll').innerHTML = similar.map(function(p) {
+    var disc = p.mrp > p.price ? Math.round((1-p.price/p.mrp)*100) : 0;
+    var viewUrl = p.id ? ('product.html?id='+encodeURIComponent(p.id)) : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category));
+    return '<div class="sim-card" onclick="window.location.href=\''+viewUrl+'\'">' +
+      '<img class="sim-img" src="'+(p.img||'https://placehold.co/300x200?text=Product')+'" alt="'+p.name+'" onerror="this.src=\'https://placehold.co/300x200?text=Product\'"/>' +
+      '<div class="sim-info">' +
+        '<div class="sim-name">'+p.name+'</div>' +
+        '<div><span class="sim-price">₹'+p.price.toLocaleString('en-IN')+'</span>'+(p.mrp>p.price?'<span class="sim-price-old">₹'+p.mrp.toLocaleString('en-IN')+'</span>':'')+'</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ── POPULAR SEARCH TAGS ───────────────────────────────────────────────────────
+function renderPopularTags() {
+  var tags = ['iPhone','Samsung','Sony','Laptop','Headphones','Camera','Gaming','Smart Home','AirPods','OnePlus'];
+  document.getElementById('popular-tags').innerHTML = tags.map(function(t){
+    return '<span class="search-tag" onclick="runSearch(\''+t+'\')">'+t+'</span>';
+  }).join('');
+}
+
+// ── ACTIVE FILTER CHIPS ───────────────────────────────────────────────────────
+function renderActiveFilters(cats, brands, minP, maxP, disc) {
+  var chips = [];
+  if (minP > 0 || maxP < 300000) chips.push({label:'₹'+minP.toLocaleString('en-IN')+' – ₹'+maxP.toLocaleString('en-IN'),action:'resetPrice()'});
+  cats.forEach(function(c){ chips.push({label:c,action:'removeCatFilter(\''+c+'\')'}); });
+  brands.forEach(function(b){ chips.push({label:b,action:'removeBrandFilter(\''+b+'\')'}); });
+  if (disc>0) chips.push({label:disc+'%+ off',action:'resetDiscount()'});
+
+  document.getElementById('active-filters').innerHTML = chips.map(function(ch){
+    return '<div class="active-chip">'+ch.label+'<button onclick="'+ch.action+'">&#10005;</button></div>';
+  }).join('');
+}
+
+function removeCatFilter(cat) {
+  document.querySelectorAll('#cat-filters input').forEach(function(inp){if(inp.value===cat)inp.checked=false;});
+  applyFilters();
+}
+function removeBrandFilter(b) {
+  document.querySelectorAll('#brand-filters input').forEach(function(inp){if(inp.value===b)inp.checked=false;});
+  applyFilters();
+}
+function resetPrice() {
+  document.getElementById('price-min').value=0;
+  document.getElementById('price-max').value=300000;
+  document.getElementById('price-slider').value=300000;
+  updatePriceDisplay(); applyFilters();
+}
+function resetDiscount() {
+  document.querySelector('input[name=disc][value="0"]').checked=true;
+  applyFilters();
+}
+function clearAllFilters() {
+  document.querySelectorAll('#cat-filters input, #brand-filters input').forEach(function(i){i.checked=false;});
+  document.querySelector('input[name=disc][value="0"]').checked=true;
+  document.getElementById('instock-only').checked=false;
+  document.getElementById('deal-only').checked=false;
+  resetPrice();
+}
+
+// ── PRICE RANGE ───────────────────────────────────────────────────────────────
+function updatePriceDisplay() {
+  var v = parseInt(document.getElementById('price-slider').value);
+  document.getElementById('price-max').value = v;
+  document.getElementById('price-display').textContent = 'Up to \u20B9'+v.toLocaleString('en-IN');
+  applyFilters();
+}
+function setPriceRange(min, max) {
+  document.getElementById('price-min').value = min;
+  document.getElementById('price-max').value = max;
+  document.getElementById('price-slider').value = max;
+  document.getElementById('price-display').textContent = '\u20B9'+min.toLocaleString('en-IN')+' \u2013 \u20B9'+max.toLocaleString('en-IN');
+  document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active');});
+  event.target.classList.add('active');
+  applyFilters();
+}
+
+// ── VIEW TOGGLE ───────────────────────────────────────────────────────────────
+function setView(v) {
+  isListView = (v==='list');
+  document.getElementById('results-grid').classList.toggle('list-view', isListView);
+  document.getElementById('btn-grid').classList.toggle('active', !isListView);
+  document.getElementById('btn-list').classList.toggle('active', isListView);
+}
+
+// ── SECTION COLLAPSE ──────────────────────────────────────────────────────────
+function toggleSection(titleEl) {
+  titleEl.classList.toggle('collapsed');
+  var body = titleEl.nextElementSibling;
+  if (body) body.classList.toggle('collapsed');
+}
+
+// ── MOBILE FILTER ─────────────────────────────────────────────────────────────
+function openMobileFilter() {
+  document.getElementById('filter-sidebar').classList.add('mobile-open');
+  document.getElementById('filter-overlay').classList.add('open');
+}
+function closeMobileFilter() {
+  document.getElementById('filter-sidebar').classList.remove('mobile-open');
+  document.getElementById('filter-overlay').classList.remove('open');
+}
+
+// ── LOCATION PANEL ────────────────────────────────────────────────────────────
+var _CITIES={'Rajasthan':['Jaipur','Jodhpur','Udaipur','Bhilwara'],'Maharashtra':['Mumbai','Pune','Nagpur'],'Delhi':['New Delhi','Dwarka'],'Karnataka':['Bengaluru','Mysuru'],'Tamil Nadu':['Chennai','Coimbatore'],'Gujarat':['Ahmedabad','Surat'],'Uttar Pradesh':['Lucknow','Noida','Agra'],'West Bengal':['Kolkata','Howrah'],'Telangana':['Hyderabad'],'Goa':['Panaji']};
+var _PINS={'311001':'Bhilwara','302001':'Jaipur','400001':'Mumbai','110001':'Delhi','560001':'Bengaluru','500001':'Hyderabad'};
+function toggleLocationPanel(){var p=document.getElementById('loc-panel'),o=document.getElementById('loc-overlay');var open=p.style.display==='block';p.style.display=open?'none':'block';o.style.display=open?'none':'block';}
+function closeLocationPanel(){document.getElementById('loc-panel').style.display='none';document.getElementById('loc-overlay').style.display='none';}
+function setLocationDisplay(city){var el=document.getElementById('location-display');if(el)el.textContent='\u{1F4CD} '+city;localStorage.setItem('bc_location',city);closeLocationPanel();}
+function applyPincode(){var pin=document.getElementById('loc-pincode').value.trim(),res=document.getElementById('pin-result');if(pin.length!==6){res.innerHTML='<span style="color:#dc2626">Invalid pincode.</span>';return;}var city=_PINS[pin];city?setLocationDisplay(city):setLocationDisplay(pin);}
+function loadCities(){var s=document.getElementById('loc-state'),c=document.getElementById('loc-city');c.innerHTML='<option value="">Select City</option>';(_CITIES[s.value]||[]).forEach(function(ct){var o=document.createElement('option');o.value=ct;o.textContent=ct;c.appendChild(o);});}
+function applyStateCity(){var s=document.getElementById('loc-state'),c=document.getElementById('loc-city');if(!s.value||!c.value)return;setLocationDisplay(c.value);}
+
+// ── MOBILE FILTER SHEET ──────────────────────────────────────────────────────
+function openFilterSheet(){
+  document.getElementById('filter-sheet').classList.add('open');
+  document.getElementById('filter-sheet-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeFilterSheet(){
+  document.getElementById('filter-sheet').classList.remove('open');
+  document.getElementById('filter-sheet-overlay').classList.remove('open');
+  document.body.style.overflow='';
+  syncMobileToDesktop();
+  applyFilters();
+}
+function syncMobileToDesktop(){
+  var mobMin=document.getElementById('price-min-mob'),mobMax=document.getElementById('price-max-mob');
+  if(mobMin)document.getElementById('price-min').value=mobMin.value;
+  if(mobMax)document.getElementById('price-max').value=mobMax.value;
+  document.querySelectorAll('#mob-cat-filters input').forEach(function(inp){
+    var d=document.querySelector('#cat-filters input[value="'+inp.value+'"]');
+    if(d)d.checked=inp.checked;
+  });
+  var md=document.querySelector('input[name="mob-disc"]:checked');
+  if(md){var d=document.querySelector('input[name="disc"][value="'+md.value+'"]');if(d)d.checked=true;}
+  var mi=document.getElementById('mob-instock'),mde=document.getElementById('mob-deal');
+  if(mi)document.getElementById('instock-only').checked=mi.checked;
+  if(mde)document.getElementById('deal-only').checked=mde.checked;
+}
+function applyMobileFilters(){syncMobileToDesktop();applyFilters();}
+function syncMobileSort(val){document.getElementById('sort-select').value=val;applyFilters();}
+function syncMobilePrice(val){
+  document.getElementById('price-display-mob').textContent='Up to ₹'+parseInt(val).toLocaleString('en-IN');
+  document.getElementById('price-max-mob').value=val;
+  applyMobileFilters();
+}
+function setMobilePriceRange(min,max){
+  document.getElementById('price-min-mob').value=min;
+  document.getElementById('price-max-mob').value=max;
+  document.getElementById('price-slider-mob').value=max;
+  document.getElementById('price-display-mob').textContent='₹'+min.toLocaleString('en-IN')+' – ₹'+max.toLocaleString('en-IN');
+  applyMobileFilters();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Login — BlueCart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--navy:#0f2d4a;--teal:#0ea5a0;--teal-dark:#0c8f8b;--teal-light:#ccf2f1;--amber:#ffb703;--coral:#ff5f5f;--off:#f4f7fb;--muted:#6b7a8d;}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;}
+    .page-bg{flex:1;background:linear-gradient(135deg,#0f2d4a 0%,#1a5f7a 50%,#0ea5a0 100%);display:flex;flex-direction:column;align-items:center;padding:28px 16px 48px;}
+    .mini-logo{font-family:'Syne',sans-serif;font-size:26px;color:white;text-align:center;padding:0 0 20px;}
+    .mini-logo span{color:#ccf2f1;}
+    .mini-logo p{font-size:13px;font-weight:600;color:rgba(255,255,255,0.65);margin-top:4px;font-family:'Nunito',sans-serif;}
+    .auth-card{width:100%;max-width:460px;background:white;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,.25);overflow:hidden;}
+    .db-tag{text-align:center;padding:9px;background:rgba(14,165,160,.1);border-bottom:1px solid rgba(14,165,160,.2);font-size:12px;font-weight:700;color:#0c8f8b;}
+    .tabs{display:flex;border-bottom:1px solid #e5eaf0;}
+    .tab{flex:1;padding:17px;text-align:center;font-weight:800;font-size:15px;cursor:pointer;color:#6b7a8d;background:#f4f7fb;transition:all .2s;border:none;font-family:'Nunito',sans-serif;}
+    .tab.active{background:white;color:#0f2d4a;border-bottom:3px solid #0ea5a0;}
+    .role-row{display:flex;gap:10px;padding:18px 24px 4px;}
+    .role-btn{flex:1;padding:10px;border-radius:10px;border:2px solid #e0e7ef;background:#f4f7fb;font-size:13.5px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#0f2d4a;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;}
+    .role-btn.active{background:#0f2d4a;color:white;border-color:#0f2d4a;}
+    .body{padding:18px 24px 24px;}
+    .fg{margin-bottom:15px;}
+    .fg label{display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+    .fg input{width:100%;padding:11px 13px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:'Nunito',sans-serif;outline:none;color:#0f2d4a;transition:border-color .2s;}
+    .fg input:focus{border-color:#0ea5a0;box-shadow:0 0 0 3px rgba(14,165,160,.1);}
+    .pw-wrap{position:relative;}
+    .pw-wrap input{padding-right:44px;}
+    .pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:17px;color:#6b7a8d;}
+    .admin-field{display:none;}
+    .submit-btn{width:100%;padding:13px;border-radius:11px;border:none;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;box-shadow:0 4px 16px rgba(14,165,160,.35);transition:all .2s;}
+    .submit-btn:hover{transform:translateY(-2px);}
+    .submit-btn:disabled{opacity:.65;cursor:not-allowed;transform:none;}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .msg{padding:10px 13px;border-radius:8px;font-size:13.5px;font-weight:700;margin-bottom:13px;display:none;}
+    .msg-err{background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;}
+    .msg-ok{background:#dcfce7;color:#16a34a;border:1px solid #86efac;}
+    .pane{display:none;}
+    .pane.active{display:block;}
+    .note{text-align:center;font-size:13px;color:#6b7a8d;padding:0 24px 18px;}
+    .note a{color:#0ea5a0;font-weight:700;cursor:pointer;}
+    .hint{background:#f4f7fb;border-radius:9px;padding:11px 13px;font-size:12.5px;color:#6b7a8d;margin-top:12px;line-height:1.75;}
+    .hint b{color:#0f2d4a;}
+    .divider{display:flex;align-items:center;gap:10px;margin:12px 0;}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:#e5eaf0;}
+    .divider span{font-size:11px;color:#6b7a8d;font-weight:700;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .spin{display:inline-block;width:15px;height:15px;border:2.5px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;vertical-align:middle;}
+  </style>
+</head>
+<body>
+
+
+<div class="page-bg">
+  <div class="mini-logo"><div>Blue<span>Cart</span></div><p>Sign in or create your account</p></div>
+  <div class="auth-card">
+    <div class="db-tag">&#128204; Secured with IndexedDB + PBKDF2 Encryption</div>
+    <div class="tabs">
+      <button class="tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+      <button class="tab" id="tab-register" onclick="switchTab('register')">Create Account</button>
+    </div>
+    <div class="role-row">
+      <button class="role-btn active" id="role-user" onclick="setRole('user')">&#128100; Customer</button>
+      <button class="role-btn" id="role-admin" onclick="setRole('admin')">&#128737; Admin</button>
+    </div>
+    <!-- LOGIN PANE -->
+    <div class="pane active" id="pane-login">
+      <div class="body">
+        <div class="msg msg-err" id="login-err"></div>
+        <div class="msg msg-ok" id="login-ok"></div>
+        <div class="fg"><label>Email Address</label><input type="email" id="l-email" placeholder="you@email.com" autocomplete="email"/></div>
+        <div class="fg"><label>Password</label><div class="pw-wrap"><input type="password" id="l-pass" placeholder="Your password" autocomplete="current-password"/><button class="pw-eye" type="button" onclick="togglePw('l-pass',this)">&#128065;</button></div></div>
+        <div class="fg admin-field" id="l-key-group"><label>Admin Secret Key</label><input type="password" id="l-key" placeholder="Required for admin login"/></div>
+        <button class="submit-btn" id="login-btn" onclick="doLogin()">Sign In</button>
+        <div class="divider"><span>Test Credentials</span></div>
+        <div class="hint"><b>Admin:</b> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dbbabfb6b2b59bb9b7aebeb8baa9aff5b2b5">[email&#160;protected]</a> / Admin@123 / Key: bluecart@admin2026<br><b>User:</b> Register a new account using the tab above</div>
+      </div>
+      <div class="note">New here? <a onclick="switchTab('register')">Create a free account</a></div>
+    </div>
+    <!-- REGISTER PANE -->
+    <div class="pane" id="pane-register">
+      <div class="body">
+        <div class="msg msg-err" id="reg-err"></div>
+        <div class="msg msg-ok" id="reg-ok"></div>
+        <div class="two-col">
+          <div class="fg"><label>First Name *</label><input type="text" id="r-fname" placeholder="Arjun"/></div>
+          <div class="fg"><label>Last Name *</label><input type="text" id="r-lname" placeholder="Sharma"/></div>
+        </div>
+        <div class="fg"><label>Email *</label><input type="email" id="r-email" placeholder="you@email.com"/></div>
+        <div class="fg"><label>Phone *</label><input type="tel" id="r-phone" placeholder="+91 98765 43210"/></div>
+        <div class="fg"><label>Password * (min 8 chars)</label><div class="pw-wrap"><input type="password" id="r-pass" placeholder="Create a strong password"/><button class="pw-eye" type="button" onclick="togglePw('r-pass',this)">&#128065;</button></div></div>
+        <div class="fg"><label>Confirm Password *</label><div class="pw-wrap"><input type="password" id="r-confirm" placeholder="Re-enter password"/><button class="pw-eye" type="button" onclick="togglePw('r-confirm',this)">&#128065;</button></div></div>
+        <div class="fg admin-field" id="r-key-group"><label>Admin Secret Key *</label><input type="password" id="r-key" placeholder="Contact super-admin for this key"/></div>
+        <button class="submit-btn" id="reg-btn" onclick="doRegister()">Create Account</button>
+      </div>
+      <div class="note">Already have an account? <a onclick="switchTab('login')">Sign in here</a></div>
+    </div>
+  </div>
+</div>
+
+
+<script src="db.mongo.js"></script>
+<script src="shared.js"></script>
+<script>
+var currentRole = 'user';
+
+function switchTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-register').classList.toggle('active', tab==='register');
+  document.getElementById('pane-login').classList.toggle('active', tab==='login');
+  document.getElementById('pane-register').classList.toggle('active', tab==='register');
+  clearMsgs();
+}
+function setRole(role) {
+  currentRole = role;
+  document.getElementById('role-user').classList.toggle('active', role==='user');
+  document.getElementById('role-admin').classList.toggle('active', role==='admin');
+  document.querySelectorAll('.admin-field').forEach(function(el){ el.style.display = role==='admin'?'block':'none'; });
+  clearMsgs();
+}
+function togglePw(id, btn) {
+  var inp = document.getElementById(id);
+  if (inp.type==='password'){ inp.type='text'; btn.innerHTML='&#128584;'; }
+  else { inp.type='password'; btn.innerHTML='&#128065;'; }
+}
+function showMsg(id, msg, type) {
+  var el = document.getElementById(id);
+  el.textContent = msg; el.style.display='block';
+  el.className = 'msg '+(type==='ok'?'msg-ok':'msg-err');
+}
+function clearMsgs() {
+  document.querySelectorAll('.msg').forEach(function(m){ m.style.display='none'; m.textContent=''; });
+}
+function setBtnLoading(id) {
+  var btn=document.getElementById(id); btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span>Please wait...';
+}
+function setBtnNormal(id, text) {
+  var btn=document.getElementById(id); btn.disabled=false; btn.textContent=text;
+}
+function doLogin() {
+  clearMsgs();
+  var email=document.getElementById('l-email').value.trim();
+  var pass=document.getElementById('l-pass').value;
+  var key=document.getElementById('l-key').value.trim();
+  if (!email||!pass){ showMsg('login-err','Please enter your email and password.'); return; }
+  setBtnLoading('login-btn');
+  BC.ready.then(function(){
+    return BC.loginUser({email:email,password:pass,role:currentRole,adminKey:key});
+  }).then(function(res){
+    if (!res.ok){ showMsg('login-err',res.error); setBtnNormal('login-btn','Sign In'); return; }
+    showMsg('login-ok','Welcome back, '+res.user.name.split(' ')[0]+'! Redirecting...','ok');
+    setTimeout(function(){
+      if (res.user.role==='admin'){ window.location.href='admin.html'; return; }
+      var rd=sessionStorage.getItem('bc_redirect')||'index.html';
+      sessionStorage.removeItem('bc_redirect');
+      window.location.href=rd;
+    },1000);
+  }).catch(function(e){
+    showMsg('login-err','Something went wrong. Please try again.');
+    setBtnNormal('login-btn','Sign In');
+  });
+}
+function doRegister() {
+  clearMsgs();
+  var fname=document.getElementById('r-fname').value.trim();
+  var lname=document.getElementById('r-lname').value.trim();
+  var email=document.getElementById('r-email').value.trim();
+  var phone=document.getElementById('r-phone').value.trim();
+  var pass=document.getElementById('r-pass').value;
+  var confirm=document.getElementById('r-confirm').value;
+  var key=document.getElementById('r-key').value.trim();
+  if (!fname||!lname||!email||!phone||!pass||!confirm){ showMsg('reg-err','Please fill all required fields.'); return; }
+  if (pass!==confirm){ showMsg('reg-err','Passwords do not match.'); return; }
+  if (pass.length<8){ showMsg('reg-err','Password must be at least 8 characters.'); return; }
+  if (!/\S+@\S+\.\S+/.test(email)){ showMsg('reg-err','Enter a valid email address.'); return; }
+  setBtnLoading('reg-btn');
+  BC.ready.then(function(){
+    return BC.registerUser({firstName:fname,lastName:lname,email:email,phone:phone,password:pass,role:currentRole,adminKey:key});
+  }).then(function(res){
+    if (!res.ok){ showMsg('reg-err',res.error); setBtnNormal('reg-btn','Create Account'); return; }
+    showMsg('reg-ok','Account created! Please sign in.','ok');
+    setTimeout(function(){ switchTab('login'); setBtnNormal('reg-btn','Create Account'); },1400);
+  }).catch(function(e){
+    showMsg('reg-err','Registration failed. Please try again.');
+    setBtnNormal('reg-btn','Create Account');
+  });
+}
+// Auto-redirect if already logged in
+BC.ready.then(function(){
+  return BC.getSession();
+}).then(function(sess){
+  if (!sess) return;
+  if (sess.role==='admin'){ window.location.href='admin.html'; return; }
+  var rd=sessionStorage.getItem('bc_redirect')||'index.html';
+  window.location.href=rd;
+}).catch(function(){});
+// Enter key handlers
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('l-pass').addEventListener('keydown',function(e){ if(e.key==='Enter')doLogin(); });
+  document.getElementById('r-confirm').addEventListener('keydown',function(e){ if(e.key==='Enter')doRegister(); });
+});
+</script>
+</body>
+</html>

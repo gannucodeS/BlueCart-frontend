@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Customer Service — BlueCart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .service-hero{background:linear-gradient(120deg,#0f2d4a,#1e4f7a,#2563eb);}
+    .service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;padding:24px 4%;}
+    .service-card{background:white;border-radius:16px;padding:28px 24px;box-shadow:0 2px 12px rgba(15,45,74,0.08);transition:all var(--trans);cursor:pointer;border:1.5px solid transparent;}
+    .service-card:hover{transform:translateY(-6px);box-shadow:0 14px 32px rgba(15,45,74,0.14);border-color:var(--teal);}
+    .service-icon{font-size:42px;margin-bottom:14px;}
+    .service-card h3{font-family:'Syne',sans-serif;font-size:18px;color:var(--navy);margin-bottom:8px;}
+    .service-card p{font-size:14px;color:var(--muted);line-height:1.6;}
+    .service-card a{display:inline-block;margin-top:14px;color:var(--teal);font-weight:700;font-size:14px;}
+    .faq-section{padding:24px 4% 48px;}
+    .faq-item{background:white;border-radius:12px;margin-bottom:10px;overflow:hidden;box-shadow:0 2px 8px rgba(15,45,74,0.06);}
+    .faq-q{padding:18px 20px;font-weight:800;font-size:15px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+    .faq-q:hover{color:var(--teal);}
+    .faq-a{padding:0 20px 18px;font-size:14px;color:var(--muted);line-height:1.7;display:none;}
+    .faq-a.open{display:block;}
+    .contact-form{background:white;border-radius:16px;padding:32px;max-width:560px;margin:0 auto 48px;box-shadow:0 2px 16px rgba(15,45,74,0.1);}
+    .contact-form h3{font-family:'Syne',sans-serif;font-size:22px;margin-bottom:20px;}
+    .form-group{margin-bottom:16px;}
+    .form-group label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--navy);}
+    .form-group input,.form-group textarea,.form-group select{width:100%;padding:11px 14px;border:1.5px solid #e0e7ef;border-radius:8px;font-size:14px;font-family:'Nunito',sans-serif;outline:none;transition:border-color var(--trans);}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--teal);}
+    .form-group textarea{height:100px;resize:vertical;}
+    .submit-btn{background:var(--teal);color:white;border:none;padding:13px 32px;border-radius:8px;font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;width:100%;transition:all var(--trans);}
+    .submit-btn:hover{background:#0c8f8b;transform:translateY(-1px);}
+    </style>
+</head>
+<body>
+<!-- TOPBAR -->
+<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<!-- NAVBAR WRAP -->
+<div class="navbar-wrap">
+<nav class="navbar">
+  <a href="index.html" class="logo" style="text-decoration:none;">Blue<span>Cart</span></a>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div style="flex:1;"></div>
+  <div class="nav-right">
+    <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
+    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+          <!-- Hamburger button -->
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div><!-- end .nav-right -->
+  </nav>
+  <!-- Search Row -->
+  <div class="navbar-search-row">
+    <div class="search-bar" style="flex:1;">
+      <input type="text" id="searchInput" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
+      <button onclick="doSearchNav()">&#128269;</button>
+    </div>
+  </div>
+</div><!-- end .navbar-wrap -->
+
+<!-- Hamburger overlay + slide-in menu (outside navbar-wrap) -->
+<div class="hm-overlay" id="hm-overlay" onclick="closeHamburger()"></div>
+<div class="hm-drawer" id="hm-drawer">
+  <div class="hm-drawer-head">
+    <span class="hm-drawer-logo">Blue<span>Cart</span></span>
+    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+  </div>
+  <div class="hm-drawer-body">
+    <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Categories</div>
+    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
+    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
+    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
+    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
+    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
+    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
+    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
+    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Offers</div>
+    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
+    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Account</div>
+    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
+    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
+    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
+    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+  </div>
+</div>
+
+<!-- NAV STRIP (desktop only) -->
+<div class="nav-strip"><div class="nav-strip-inner">
+  <div class="nav-item"><a href="index.html">&#9776; All</a></div>
+  <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
+  <div class="nav-item"><a href="electronics.html">Electronics</a></div>
+  <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
+  <div class="nav-item"><a href="laptops.html">Laptops</a></div>
+  <div class="nav-item"><a href="audio.html">Audio</a></div>
+  <div class="nav-item"><a href="cameras.html">Cameras</a></div>
+  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
+  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
+  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
+  <div class="nav-item"><a href="deals.html" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
+  <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
+</div></div>
+
+<div class="breadcrumb"><a href="index.html">Home</a> <span>›</span> Customer Service</div>
+    <div class="page-hero service-hero">
+      <div class="hero-decor hd1"></div><div class="hero-decor hd2"></div>
+      <div class="page-hero-content">
+        <div class="page-hero-tag" style="background:var(--sky);color:#0f2d4a">💬 Help Centre</div>
+        <h1 class="fade-up">How Can We Help?</h1>
+        <p class="fade-up d1">We're here 24/7. Find answers fast or reach our team directly — your satisfaction is our priority.</p>
+        <div style="display:flex;gap:12px;margin-top:10px;" class="fade-up d2">
+          <button class="btn-primary" style="padding:10px 22px;font-size:14px">Chat with Us</button>
+          <button class="btn-outline" style="padding:10px 22px;font-size:14px">📞 Call Support</button>
+        </div>
+      </div>
+      <img class="page-hero-img" src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop" alt="Service"/>
+    </div><div class="section-header"><div class="section-title title-teal">How Can We Help You?</div></div><div class="service-grid"><div class="service-card"><div class="service-icon">📦</div><h3>Track Your Order</h3><p>Check live status of your current orders and delivery ETA.</p><a href="#">Track Now →</a></div><div class="service-card"><div class="service-icon">↩️</div><h3>Returns & Refunds</h3><p>Easy returns within 30 days. Full refund guaranteed.</p><a href="#">Start Return →</a></div><div class="service-card"><div class="service-icon">🔧</div><h3>Product Support</h3><p>Technical help, setup guides & warranty claims.</p><a href="#">Get Help →</a></div><div class="service-card"><div class="service-icon">💳</div><h3>Payment Issues</h3><p>Resolve billing errors, failed payments & EMI queries.</p><a href="#">Resolve Now →</a></div><div class="service-card"><div class="service-icon">🎁</div><h3>Cancellations</h3><p>Cancel orders before dispatch with one click.</p><a href="#">Cancel Order →</a></div><div class="service-card"><div class="service-icon">⭐</div><h3>Leave Feedback</h3><p>Rate your experience and help us improve.</p><a href="#">Give Feedback →</a></div></div><div class="section-header"><div class="section-title title-amber">Frequently Asked Questions</div></div><div class="faq-section"><div style="max-width:760px;margin:0 auto"><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I track my order?<span>+</span></div><div class="faq-a">Once your order is shipped, you will receive an email with a tracking link. You can also visit 'Your Orders' in your account and click 'Track Package' for real-time updates.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is BlueCart's return policy?<span>+</span></div><div class="faq-a">We offer a 30-day hassle-free return policy. Simply initiate a return from your account, drop the item at a courier point, and receive your refund within 5–7 business days.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I change or cancel my order?<span>+</span></div><div class="faq-a">Yes — you can cancel or modify your order within 1 hour of placing it. After that, if the order has been dispatched, you will need to wait for delivery and then initiate a return.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How long does delivery take?<span>+</span></div><div class="faq-a">Standard delivery takes 3–5 business days. Express delivery (available in select cities) takes 1–2 days. Orders above ₹999 qualify for free standard shipping.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is my payment information secure?<span>+</span></div><div class="faq-a">Absolutely. BlueCart uses 256-bit SSL encryption and never stores full card details on our servers. We are PCI-DSS compliant and support UPI, net banking, cards & EMI.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I contact customer support?<span>+</span></div><div class="faq-a">You can reach us via live chat (24/7), email at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="760503060619040236141a031315170402581f18">[email&#160;protected]</a>, or call 1800-000-BLUE (Mon–Sat, 9 AM–9 PM). Average response time is under 2 minutes.</div></div></div></div><div class="section-header"><div class="section-title title-coral">Send Us a Message</div></div>
+    <div class="contact-form">
+      <h3>📩 Contact Form</h3>
+      <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your name"/></div>
+      <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@email.com"/></div>
+      <div class="form-group"><label>Order Number (optional)</label><input type="text" placeholder="BC-2024-XXXXXX"/></div>
+      <div class="form-group"><label>Issue Type</label>
+        <select><option>Select issue type</option><option>Order tracking</option><option>Return / Refund</option><option>Product query</option><option>Payment issue</option><option>Other</option></select>
+      </div>
+      <div class="form-group"><label>Message</label><textarea placeholder="Describe your issue in detail..."></textarea></div>
+      <button class="submit-btn" onclick="showToast('✅ Message sent! We will respond within 2 hours.')">Send Message</button>
+    </div>
+<footer>
+  <div class="footer-top">
+    <div class="footer-col"><h5>Get to Know Us</h5><a href="#">About BlueCart</a><a href="#">Careers</a><a href="#">Press Releases</a></div>
+    <div class="footer-col"><h5>Connect with Us</h5><a href="#">Facebook</a><a href="#">Twitter</a><a href="#">Instagram</a></div>
+    <div class="footer-col"><h5>Make Money</h5><a href="#">Sell on BlueCart</a><a href="#">Affiliate Programme</a></div>
+    <div class="footer-col"><h5>Help</h5><a href="#">Your Account</a><a href="#">Returns Centre</a><a href="#">Help Centre</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-logo">Blue<span>Cart</span></div>
+    <span>© 2026 BlueCart Store. All rights reserved.</span>
+    <span>Privacy · Terms · Sitemap</span>
+  </div>
+</footer>
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div id="cart">
+  <div class="cart-header"><h3>🛒 Your Cart</h3><button class="cart-close" onclick="toggleCart()">✕</button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cart-total">₹0</span></div>
+    <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout →</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="db.mongo.js"></script>
+<script>
+// ── SESSION: show user name in navbar ──
+(function() {
+  var token = localStorage.getItem('bc_token');
+  if (!token) return;
+  // Try to read session from IndexedDB via BC.ready
+  if (typeof BC !== 'undefined') {
+    BC.ready.then(function() { return BC.getSession(); }).then(function(sess) {
+      if (!sess) return;
+      var greet = document.getElementById('account-greeting');
+      var label = document.getElementById('account-label');
+      var link  = document.getElementById('account-link');
+      if (greet) greet.textContent = 'Hello, ' + sess.name.split(' ')[0];
+      if (label) label.textContent = 'My Account';
+      if (link)  link.href = sess.role === 'admin' ? 'admin.html' : '#';
+    }).catch(function(){});
+  }
+})();
+
+// ── BUY NOW → checkout page ──
+function buyNow(name, img, price) {
+  var p = new URLSearchParams();
+  p.set('name', name); p.set('img', img); p.set('price', price); p.set('mode', 'buynow');
+  window.location.href = 'checkout.html?' + p.toString();
+}
+
+// ── CART CHECKOUT ──
+function checkoutCart() {
+  if (!cartItems.length) { showToast('Your cart is empty!'); return; }
+  var p = new URLSearchParams();
+  p.set('mode', 'cart');
+  p.set('items', JSON.stringify(cartItems));
+  window.location.href = 'checkout.html?' + p.toString();
+}
+
+
+
+
+
+
+
+
+  setTimeout(function(){ var c=document.getElementById('loc-city'); if(c) c.value=city; }, 60);
+  setLocationDisplay(city);
+}
+(function(){
+  var saved = localStorage.getItem('bc_location');
+  if (saved){ var el=document.getElementById('location-display'); if(el) el.textContent='\uD83D\uDCCD '+saved; }
+  var pinEl = document.getElementById('loc-pincode');
+  if (pinEl) pinEl.addEventListener('keydown', function(e){ if(e.key==='Enter') applyPincode(); });
+})();
+</script>
+<script>
+
+
+</script>
+<script src="shared.js"></script>
+<script>
+function toggleHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(!drawer)return;
+  var open=drawer.classList.contains('open');
+  drawer.classList.toggle('open',!open);
+  overlay.classList.toggle('open',!open);
+  btn.classList.toggle('open',!open);
+}
+function closeHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(drawer){drawer.classList.remove('open');}
+  if(overlay){overlay.classList.remove('open');}
+  if(btn){btn.classList.remove('open');}
+}
+</script>
+</body>
+</html>

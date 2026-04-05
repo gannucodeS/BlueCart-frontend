@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Product — BlueCart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    /* ── PRODUCT PAGE LAYOUT ── */
+    .pv-wrap{max-width:1200px;margin:0 auto;padding:28px 4% 64px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+
+    /* ── LEFT: IMAGE GALLERY ── */
+    .pv-gallery{position:sticky;top:80px;}
+    .pv-main-img-wrap{border-radius:18px;overflow:hidden;background:white;box-shadow:0 8px 32px rgba(15,45,74,0.1);border:1.5px solid #e5eaf0;aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;}
+    .pv-main-img{width:100%;height:100%;object-fit:contain;padding:20px;transition:transform .4s ease;}
+    .pv-main-img:hover{transform:scale(1.04);}
+    .pv-badge-wrap{position:absolute;top:14px;left:14px;display:flex;flex-direction:column;gap:6px;}
+    .pv-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:800;}
+    .pv-badge-sale{background:var(--coral);color:white;}
+    .pv-badge-new{background:var(--teal);color:white;}
+    .pv-badge-hot{background:var(--amber);color:var(--navy);}
+    .pv-wish{position:absolute;top:14px;right:14px;background:white;border:1.5px solid #e5eaf0;border-radius:50%;width:42px;height:42px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(15,45,74,0.1);transition:all .2s;}
+    .pv-wish:hover{transform:scale(1.12);border-color:var(--coral);}
+    .pv-thumbs{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+    .pv-thumb{width:72px;height:72px;border-radius:10px;object-fit:contain;border:2px solid #e5eaf0;padding:4px;background:white;cursor:pointer;transition:all .2s;}
+    .pv-thumb:hover,.pv-thumb.active{border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,165,160,.15);}
+
+    /* ── RIGHT: PRODUCT INFO ── */
+    .pv-info{display:flex;flex-direction:column;gap:0;}
+    .pv-brand-cat{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+    .pv-brand{font-size:13px;font-weight:800;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;}
+    .pv-category-tag{background:var(--teal-light);color:var(--teal-dark);font-size:12px;font-weight:800;padding:3px 10px;border-radius:20px;}
+    .pv-name{font-family:'Syne',sans-serif;font-size:28px;color:var(--navy);line-height:1.2;margin-bottom:12px;}
+    .pv-rating-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+    .pv-stars{color:var(--amber);font-size:18px;}
+    .pv-rating-num{font-size:14px;font-weight:800;color:var(--navy);}
+    .pv-reviews{font-size:13px;color:var(--teal);font-weight:700;cursor:pointer;}
+    .pv-reviews:hover{text-decoration:underline;}
+    .pv-stock-badge{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;padding:3px 10px;border-radius:20px;}
+    .pv-instock{background:#dcfce7;color:#16a34a;}
+    .pv-outstock{background:#fee2e2;color:#dc2626;}
+    .pv-lowstock{background:#fef9c3;color:#a16207;}
+
+    /* Price block */
+    .pv-price-block{background:var(--off);border-radius:14px;padding:18px 20px;margin-bottom:20px;border:1.5px solid #e5eaf0;}
+    .pv-price-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+    .pv-price-now{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:var(--navy);}
+    .pv-price-old{font-size:18px;color:var(--muted);text-decoration:line-through;}
+    .pv-price-off{background:var(--coral);color:white;font-size:14px;font-weight:800;padding:4px 12px;border-radius:20px;}
+    .pv-savings{font-size:13.5px;color:var(--lime);font-weight:700;margin-top:6px;}
+    .pv-gst{font-size:12px;color:var(--muted);margin-top:4px;}
+
+    /* Variants */
+    .pv-variants{margin-bottom:20px;}
+    .pv-var-label{font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+    .pv-var-chips{display:flex;gap:8px;flex-wrap:wrap;}
+    .pv-chip{padding:6px 16px;border-radius:8px;border:1.5px solid #e0e7ef;background:white;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--navy);}
+    .pv-chip:hover,.pv-chip.active{background:var(--navy);color:white;border-color:var(--navy);}
+    .pv-color-dot{width:28px;height:28px;border-radius:50%;border:2.5px solid #e0e7ef;cursor:pointer;transition:all .2s;display:inline-block;}
+    .pv-color-dot:hover,.pv-color-dot.active{border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,165,160,.2);}
+
+    /* Quantity */
+    .pv-qty-row{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+    .pv-qty-label{font-size:13px;font-weight:800;color:var(--navy);}
+    .pv-qty-ctrl{display:flex;align-items:center;gap:0;border:1.5px solid #e0e7ef;border-radius:10px;overflow:hidden;}
+    .pv-qty-btn{background:var(--off);border:none;width:38px;height:38px;font-size:20px;cursor:pointer;font-weight:800;color:var(--navy);transition:background .2s;}
+    .pv-qty-btn:hover{background:#e0e7ef;}
+    .pv-qty-num{width:48px;text-align:center;font-size:16px;font-weight:800;color:var(--navy);border:none;border-left:1.5px solid #e0e7ef;border-right:1.5px solid #e0e7ef;background:white;outline:none;}
+
+    /* CTA Buttons */
+    .pv-cta{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+    .pv-btn-cart{flex:1;min-width:160px;padding:15px;background:white;border:2px solid var(--teal);color:var(--teal);border-radius:12px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .pv-btn-cart:hover{background:var(--teal);color:white;transform:translateY(-2px);}
+    .pv-btn-buy{flex:1;min-width:160px;padding:15px;background:linear-gradient(90deg,var(--teal),#0891b2);color:white;border:none;border-radius:12px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(14,165,160,.35);display:flex;align-items:center;justify-content:center;gap:8px;}
+    .pv-btn-buy:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(14,165,160,.45);}
+    .pv-btn-disabled{opacity:.5;cursor:not-allowed!important;pointer-events:none;}
+
+    /* Trust badges */
+    .pv-trust{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+    .pv-trust-item{background:white;border:1.5px solid #e5eaf0;border-radius:10px;padding:10px 8px;text-align:center;font-size:11.5px;font-weight:700;color:var(--navy);}
+    .pv-trust-item .ic{font-size:20px;display:block;margin-bottom:4px;}
+
+    /* ── TABS: Description / Specs / Reviews ── */
+    .pv-tabs-wrap{margin-top:40px;background:white;border-radius:16px;box-shadow:0 2px 12px rgba(15,45,74,0.07);overflow:hidden;border:1.5px solid #e5eaf0;}
+    .pv-tabs{display:flex;border-bottom:1px solid #e5eaf0;overflow-x:auto;}
+    .pv-tabs::-webkit-scrollbar{display:none;}
+    .pv-tab{padding:16px 24px;font-size:14px;font-weight:800;color:var(--muted);cursor:pointer;border:none;background:white;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;font-family:'Nunito',sans-serif;}
+    .pv-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+    .pv-tab:hover{color:var(--navy);}
+    .pv-tab-content{display:none;padding:28px;}
+    .pv-tab-content.active{display:block;}
+
+    /* Description */
+    .pv-desc{font-size:15px;color:#334155;line-height:1.8;}
+    .pv-features{margin-top:18px;display:flex;flex-direction:column;gap:10px;}
+    .pv-feature{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--navy);}
+    .pv-feature::before{content:'✓';color:var(--teal);font-weight:900;font-size:16px;flex-shrink:0;margin-top:1px;}
+
+    /* Specs table */
+    .pv-specs-table{width:100%;border-collapse:collapse;}
+    .pv-specs-table tr:nth-child(even) td{background:#f8fafc;}
+    .pv-specs-table td{padding:11px 16px;font-size:14px;border-bottom:1px solid #f0f4f8;vertical-align:top;}
+    .pv-specs-table td:first-child{font-weight:800;color:var(--navy);width:38%;white-space:nowrap;}
+    .pv-specs-table td:last-child{color:#334155;}
+    .pv-spec-section{font-family:'Syne',sans-serif;font-size:13px;color:var(--teal);padding:10px 16px 4px;font-weight:700;border-bottom:1px solid #e5eaf0;background:#f0fffe;text-transform:uppercase;letter-spacing:.5px;}
+
+    /* Reviews */
+    .pv-review-summary{display:flex;gap:28px;align-items:center;padding-bottom:24px;border-bottom:1px solid #f0f4f8;margin-bottom:24px;flex-wrap:wrap;}
+    .pv-big-rating{font-family:'Syne',sans-serif;font-size:64px;font-weight:800;color:var(--navy);line-height:1;}
+    .pv-rating-detail{flex:1;}
+    .pv-rating-bar{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+    .pv-bar-label{font-size:12.5px;font-weight:700;color:var(--navy);width:40px;text-align:right;}
+    .pv-bar-track{flex:1;height:8px;background:#e5eaf0;border-radius:4px;overflow:hidden;}
+    .pv-bar-fill{height:100%;background:var(--amber);border-radius:4px;transition:width .6s ease;}
+    .pv-bar-count{font-size:12px;color:var(--muted);width:24px;}
+    .pv-review-card{background:var(--off);border-radius:12px;padding:16px 18px;margin-bottom:14px;border-left:3px solid var(--teal);}
+    .pv-review-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px;}
+    .pv-reviewer{font-weight:800;font-size:14px;color:var(--navy);}
+    .pv-review-date{font-size:12px;color:var(--muted);}
+    .pv-review-stars{color:var(--amber);font-size:14px;}
+    .pv-review-text{font-size:14px;color:#334155;line-height:1.6;}
+
+    /* Related products */
+    .pv-related{padding:0 4% 48px;max-width:1200px;margin:0 auto;}
+    .pv-related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:12px;}
+
+    /* Loading / error states */
+    .pv-loading{text-align:center;padding:80px 20px;color:var(--muted);}
+    .pv-loading .spin{width:48px;height:48px;border:4px solid #e5eaf0;border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .pv-not-found{text-align:center;padding:80px 20px;}
+    .pv-not-found h2{font-family:'Syne',sans-serif;font-size:28px;color:var(--navy);margin-bottom:12px;}
+
+    /* Category-specific hero gradients */
+    .pv-hero{padding:28px 4%;background:linear-gradient(120deg,#0f2d4a,#1a4a6e);margin-bottom:0;}
+    .pv-hero.cat-smartphones{background:linear-gradient(120deg,#0f2d4a,#1a5f7a,#0ea5a0);}
+    .pv-hero.cat-laptops{background:linear-gradient(120deg,#1a0533,#4c1d95,#7c3aed);}
+    .pv-hero.cat-audio{background:linear-gradient(120deg,#1a0020,#831843,#ec4899);}
+    .pv-hero.cat-cameras{background:linear-gradient(120deg,#1a1a0a,#713f12,#d97706);}
+    .pv-hero.cat-gaming{background:linear-gradient(120deg,#0a1a00,#14532d,#16a34a);}
+    .pv-hero.cat-accessories{background:linear-gradient(120deg,#0f2d4a,#1e3a5f,#2563eb);}
+    .pv-hero.cat-smarthome{background:linear-gradient(120deg,#0a0a1a,#1e1b4b,#4f46e5);}
+    .pv-hero.cat-monitors{background:linear-gradient(120deg,#0f2d1a,#064e3b,#059669);}
+    .pv-hero.cat-tablets{background:linear-gradient(120deg,#1a0f0f,#7c1d1d,#dc2626);}
+    .pv-hero.cat-wearables{background:linear-gradient(120deg,#1a100f,#92400e,#f59e0b);}
+    .pv-hero-inner{display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;flex-wrap:wrap;gap:12px;}
+    .pv-hero-crumb{display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,.65);flex-wrap:wrap;}
+    .pv-hero-crumb a{color:rgba(255,255,255,.75);font-weight:700;text-decoration:none;transition:color .2s;}
+    .pv-hero-crumb a:hover{color:white;}
+    .pv-hero-crumb span{opacity:.45;}
+    .pv-hero-actions{display:flex;gap:10px;}
+    .pv-share-btn{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);color:white;padding:7px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;}
+    .pv-share-btn:hover{background:rgba(255,255,255,.25);}
+
+    @media(max-width:860px){
+      .pv-wrap{grid-template-columns:1fr;gap:24px;}
+      .pv-gallery{position:static;}
+      .pv-name{font-size:22px;}
+      .pv-price-now{font-size:28px;}
+      .pv-trust{grid-template-columns:repeat(3,1fr);}
+    }
+    @media(max-width:500px){
+      .pv-wrap{padding:16px 3% 40px;}
+      .pv-cta{flex-direction:column;}
+      .pv-trust{grid-template-columns:1fr 1fr;}
+      .pv-tab{padding:12px 16px;font-size:13px;}
+    }
+
+    /* Cart sidebar needed on this page */
+    #loc-overlay{display:none;position:fixed;inset:0;background:rgba(15,45,74,0.45);z-index:500;}
+    #loc-panel{display:none;position:fixed;top:0;left:0;width:100%;max-width:400px;height:100vh;background:white;z-index:600;box-shadow:8px 0 40px rgba(15,45,74,0.2);overflow-y:auto;font-family:'Nunito',sans-serif;}
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<!-- TOPBAR -->
+<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<!-- NAVBAR WRAP -->
+<div class="navbar-wrap">
+<nav class="navbar">
+  <a href="index.html" class="logo" style="text-decoration:none;">Blue<span>Cart</span></a>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div style="flex:1;"></div>
+  <div class="nav-right">
+    <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
+    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+          <!-- Hamburger button -->
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div><!-- end .nav-right -->
+  </nav>
+  <!-- Search Row -->
+  <div class="navbar-search-row">
+    <div class="search-bar" style="flex:1;">
+      <input type="text" id="searchInput" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
+      <button onclick="doSearchNav()">&#128269;</button>
+    </div>
+  </div>
+</div><!-- end .navbar-wrap -->
+
+<!-- Hamburger overlay + slide-in menu (outside navbar-wrap) -->
+<div class="hm-overlay" id="hm-overlay" onclick="closeHamburger()"></div>
+<div class="hm-drawer" id="hm-drawer">
+  <div class="hm-drawer-head">
+    <span class="hm-drawer-logo">Blue<span>Cart</span></span>
+    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+  </div>
+  <div class="hm-drawer-body">
+    <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Categories</div>
+    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
+    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
+    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
+    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
+    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
+    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
+    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
+    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Offers</div>
+    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
+    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Account</div>
+    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
+    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
+    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
+    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+  </div>
+</div>
+
+<!-- NAV STRIP (desktop only) -->
+<div class="nav-strip"><div class="nav-strip-inner">
+  <div class="nav-item"><a href="index.html">&#9776; All</a></div>
+  <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
+  <div class="nav-item"><a href="electronics.html">Electronics</a></div>
+  <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
+  <div class="nav-item"><a href="laptops.html">Laptops</a></div>
+  <div class="nav-item"><a href="audio.html">Audio</a></div>
+  <div class="nav-item"><a href="cameras.html">Cameras</a></div>
+  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
+  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
+  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
+  <div class="nav-item"><a href="deals.html" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
+  <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
+</div></div>
+
+<!-- HERO SECTION (populated by JS) -->
+<div id="pv-hero" class="pv-hero">
+  <div class="pv-hero-inner">
+    <div class="pv-hero-crumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <a href="electronics.html" id="pv-cat-link">Category</a>
+      <span>›</span>
+      <span id="pv-crumb-name">Product</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="pv-main">
+  <div class="pv-loading">
+    <div class="spin"></div>
+    <p>Loading product details...</p>
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div id="cart">
+  <div class="cart-header"><h3>&#128722; Your Cart</h3><button class="cart-close" onclick="toggleCart()">&#10005;</button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cart-total">&#8377;0</span></div>
+    <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout &#8594;</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- LOCATION PANEL -->
+<div id="loc-overlay" onclick="closeLocationPanel()"></div>
+<div id="loc-panel">
+  <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">&#128205; Set Delivery Location</div>
+    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">&#10005;</button>
+  </div>
+  <div style="padding:18px;">
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Enter Pincode</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="loc-pincode" maxlength="6" placeholder="e.g. 311001" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="flex:1;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;"/>
+        <button onclick="applyPincode()" style="background:#0ea5a0;color:white;border:none;padding:10px 16px;border-radius:9px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">Apply</button>
+      </div>
+      <div id="pin-result" style="margin-top:7px;font-size:13px;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><div style="flex:1;height:1px;background:#e5eaf0;"></div><span style="font-size:11.5px;color:#6b7a8d;font-weight:700;">OR SELECT</span><div style="flex:1;height:1px;background:#e5eaf0;"></div></div>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">State</label>
+      <select id="loc-state" onchange="loadCities()" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select State</option><option>Rajasthan</option><option>Maharashtra</option><option>Delhi</option><option>Karnataka</option><option>Tamil Nadu</option><option>Gujarat</option><option>Uttar Pradesh</option><option>West Bengal</option><option>Telangana</option><option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option><option>Haryana</option><option>Bihar</option><option>Goa</option></select>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
+      <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
+    </div>
+    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">&#128205; Set Location</button>
+    <div style="margin-top:18px;">
+      <div style="font-size:11px;font-weight:800;color:#6b7a8d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Popular Cities</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;">
+        <button onclick="setCity('Mumbai','Maharashtra')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Mumbai</button>
+        <button onclick="setCity('Delhi','Delhi')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Delhi</button>
+        <button onclick="setCity('Bengaluru','Karnataka')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Bengaluru</button>
+        <button onclick="setCity('Jaipur','Rajasthan')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Jaipur</button>
+        <button onclick="setCity('Bhilwara','Rajasthan')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Bhilwara</button>
+        <button onclick="setCity('Hyderabad','Telangana')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Hyderabad</button>
+        <button onclick="setCity('Chennai','Tamil Nadu')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Chennai</button>
+        <button onclick="setCity('Pune','Maharashtra')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Pune</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="db.mongo.js"></script>
+<script>
+// ── CART ─────────────────────────────────────────────────────────────────────
+var cartItems = [], cartOpen = false, currentQty = 1;
+function toggleCart(){cartOpen=!cartOpen;var c=document.getElementById('cart'),o=document.getElementById('cart-overlay');if(c)c.classList.toggle('active',cartOpen);if(o)o.classList.toggle('open',cartOpen);}
+function addToCart(name,price,qty){
+  qty=qty||currentQty||1;
+  for(var i=0;i<qty;i++) cartItems.push({name:name,price:price});
+  renderCart(); showToast(qty>1?'Added '+qty+' x '+name:'Added: '+name);
+}
+function removeFromCart(i){cartItems.splice(i,1);renderCart();}
+function renderCart(){
+  var list=document.getElementById('cart-items'),total=document.getElementById('cart-total'),count=document.getElementById('cart-count');
+  if(count)count.textContent=cartItems.length;
+  if(!list)return;
+  if(!cartItems.length){list.innerHTML='<div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div>';if(total)total.textContent='&#8377;0';return;}
+  list.innerHTML=cartItems.map(function(item,i){return '<li class="cart-item"><div><div class="cart-item-name">'+item.name+'</div><div class="cart-item-price">&#8377;'+item.price.toLocaleString('en-IN')+'</div></div><button class="remove-btn" onclick="removeFromCart('+i+')">Remove</button></li>';}).join('');
+  var sum=cartItems.reduce(function(a,b){return a+b.price;},0);
+  if(total)total.textContent='&#8377;'+sum.toLocaleString('en-IN');
+}
+function showToast(msg){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
+function buyNow(name,img,price){var p=new URLSearchParams();p.set('name',name);p.set('img',img||'');p.set('price',price);p.set('mode','buynow');window.location.href='checkout.html?'+p.toString();}
+function checkoutCart(){if(!cartItems.length){showToast('Your cart is empty!');return;}var p=new URLSearchParams();p.set('mode','cart');p.set('items',JSON.stringify(cartItems));window.location.href='checkout.html?'+p.toString();}
+function switchTab(id,btn){
+  document.querySelectorAll('.pv-tab-content').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.pv-tab').forEach(function(b){b.classList.remove('active');});
+  var el=document.getElementById('tab-'+id); if(el)el.classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+
+// ── WISHLIST ─────────────────────────────────────────────────────────────────
+function toggleWish(){
+  var btn=document.getElementById('pv-wish-btn');
+  if(!btn)return;
+  var filled=String.fromCodePoint(10084)+String.fromCodePoint(65039);
+  btn.textContent=btn.textContent.indexOf(String.fromCodePoint(10084))!==-1?String.fromCodePoint(129293):filled;
+}
+
+// ── LOCATION PANEL ────────────────────────────────────────────────────────────
+var _CITIES={'Rajasthan':['Jaipur','Jodhpur','Udaipur','Bhilwara','Ajmer','Kota'],'Maharashtra':['Mumbai','Pune','Nagpur','Thane','Nashik'],'Delhi':['New Delhi','Dwarka','Rohini','Saket'],'Karnataka':['Bengaluru','Mysuru','Hubli','Mangaluru'],'Tamil Nadu':['Chennai','Coimbatore','Madurai','Salem'],'Gujarat':['Ahmedabad','Surat','Vadodara','Rajkot'],'Uttar Pradesh':['Lucknow','Kanpur','Agra','Noida','Meerut'],'West Bengal':['Kolkata','Howrah','Asansol'],'Telangana':['Hyderabad','Warangal','Nizamabad'],'Madhya Pradesh':['Bhopal','Indore','Gwalior'],'Kerala':['Thiruvananthapuram','Kochi','Kozhikode'],'Punjab':['Ludhiana','Amritsar','Jalandhar'],'Haryana':['Gurugram','Faridabad','Panipat'],'Bihar':['Patna','Gaya'],'Goa':['Panaji','Margao']};
+var _PINS={'311001':'Bhilwara','302001':'Jaipur','400001':'Mumbai','110001':'Delhi','560001':'Bengaluru','500001':'Hyderabad','600001':'Chennai','700001':'Kolkata','411001':'Pune','380001':'Ahmedabad','226001':'Lucknow'};
+
+// ── CATEGORY → PAGE MAP ──────────────────────────────────────────────────────
+var CAT_PAGE = {
+  'Smartphones':'smartphones.html','Laptops':'laptops.html','Audio':'audio.html',
+  'Cameras':'cameras.html','Gaming':'gaming.html','Accessories':'accessories.html',
+  'Smart Home':'smarthome.html','Monitors':'electronics.html','Tablets':'electronics.html',
+  'Wearables':'electronics.html','Electronics':'electronics.html'
+};
+var CAT_CLASS = {
+  'Smartphones':'cat-smartphones','Laptops':'cat-laptops','Audio':'cat-audio',
+  'Cameras':'cat-cameras','Gaming':'cat-gaming','Accessories':'cat-accessories',
+  'Smart Home':'cat-smarthome','Monitors':'cat-monitors','Tablets':'cat-tablets',
+  'Wearables':'cat-wearables'
+};
+
+// ── SPEC ROWS PER CATEGORY ───────────────────────────────────────────────────
+function buildSpecRows(p) {
+  var rows = [];
+  var add = function(label,val){if(val)rows.push([label,val]);};
+
+  // Common
+  add('Brand', p.brand);
+  add('Model / SKU', p.sku);
+  add('Category', p.category);
+
+  // Category-specific
+  var cat = (p.category||'').toLowerCase();
+  if(cat==='smartphones'||cat==='tablets'){
+    add('Display', p.display);
+    add('Processor', p.processor);
+    add('Battery', p.battery);
+    add('Connectivity', p.connectivity);
+    add('Colors Available', p.colors&&p.colors.length?p.colors.join(', '):'');
+    add('Storage Options', p.storage&&p.storage.length?p.storage.join(', '):'');
+  } else if(cat==='laptops'){
+    add('Display', p.display);
+    add('Processor', p.processor);
+    add('Battery Life', p.battery);
+    add('Connectivity', p.connectivity);
+    add('Weight', p.weight);
+    add('Storage Options', p.storage&&p.storage.length?p.storage.join(', '):'');
+  } else if(cat==='audio'){
+    add('Connectivity', p.connectivity);
+    add('Battery Life', p.battery);
+    add('Colors', p.colors&&p.colors.length?p.colors.join(', '):'');
+  } else if(cat==='cameras'){
+    add('Display', p.display);
+    add('Connectivity', p.connectivity);
+    add('Battery', p.battery);
+    add('Weight', p.weight);
+  } else if(cat==='gaming'){
+    add('Display', p.display);
+    add('Processor', p.processor);
+    add('Connectivity', p.connectivity);
+    add('Colors', p.colors&&p.colors.length?p.colors.join(', '):'');
+  } else {
+    add('Display', p.display);
+    add('Processor', p.processor);
+    add('Battery', p.battery);
+    add('Connectivity', p.connectivity);
+    add('Weight', p.weight);
+    add('Colors', p.colors&&p.colors.length?p.colors.join(', '):'');
+    add('Storage', p.storage&&p.storage.length?p.storage.join(', '):'');
+  }
+
+  // Always last
+  add('Warranty', p.warranty);
+  add('GST', p.gst);
+  add('Stock Available', p.stock+' units');
+
+  return rows;
+}
+
+// ── RENDER REVIEWS (static sample + real feel) ───────────────────────────────
+var SAMPLE_REVIEWS = [
+  {name:'Arjun S.',stars:5,date:'12 Mar 2026',text:'Absolutely love this product! Build quality is top-notch and performance exceeded my expectations.'},
+  {name:'Priya K.',stars:5,date:'8 Mar 2026',text:'Great value for money. Delivery was fast and packaging was excellent. Highly recommended!'},
+  {name:'Rahul M.',stars:4,date:'2 Mar 2026',text:'Very good product overall. Minor issues with setup but customer support resolved it quickly.'},
+  {name:'Sneha T.',stars:5,date:'25 Feb 2026',text:'Bought this as a gift and the recipient loved it. Premium feel all around.'},
+];
+
+function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';return s;}
+
+// ── MAIN: LOAD AND RENDER PRODUCT ────────────────────────────────────────────
+BC.ready.then(function() {
+  // Session-aware navbar
+  return BC.getSession();
+}).then(function(sess) {
+  if(sess){
+    var g=document.getElementById('account-greeting'),l=document.getElementById('account-label'),lk=document.getElementById('account-link');
+    if(g)g.textContent='Hello, '+sess.name.split(' ')[0];
+    if(l)l.textContent='My Account';
+    if(lk)lk.href=sess.role==='admin'?'admin.html':'account.html';
+  }
+  var saved=localStorage.getItem('bc_location');
+  if(saved){var el=document.getElementById('location-display');if(el)el.textContent='\u{1F4CD} '+saved;}
+
+  // Read product ID from URL
+  var params = new URLSearchParams(window.location.search);
+  var pid    = params.get('id');
+  var pName  = params.get('name');   // fallback for static products
+  var pImg   = params.get('img');
+  var pPrice = params.get('price');
+  var pCat   = params.get('cat');
+
+  var main = document.getElementById('pv-main');
+
+  // If we have a DB id, load from IndexedDB
+  if(pid) {
+    return BC.getProductById(pid).then(function(p) {
+      if(!p) {
+        main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2><p>This product may have been removed.</p><a href="index.html" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;padding:12px 28px;border-radius:30px;background:#0ea5a0;color:white;font-weight:800;">Back to Home</a></div>';
+        return;
+      }
+      renderProduct(p);
+      loadRelated(p.category, p.id);
+    });
+  }
+
+  // Static product fallback (from category pages)
+  if(pName && pPrice) {
+    var staticProd = {
+      id:null, name:decodeURIComponent(pName),
+      imageUrl:decodeURIComponent(pImg||''),
+      price:parseFloat(pPrice), mrp:parseFloat(pPrice)*1.2,
+      category:decodeURIComponent(pCat||'Electronics'),
+      brand:'BlueCart', description:'Premium quality product.',
+      features:[], colors:[], storage:[], display:'', processor:'',
+      battery:'', connectivity:'', weight:'', warranty:'1 Year',
+      gst:'18%', stock:10, badge:'', sku:'', status:'active'
+    };
+    renderProduct(staticProd);
+    loadRelated(staticProd.category, null);
+    return;
+  }
+
+  main.innerHTML = '<div class="pv-not-found"><h2>No product specified</h2><p>Please navigate from a product page.</p><a href="index.html" style="color:#0ea5a0;font-weight:700;">Go to Home</a></div>';
+
+}).catch(function(e){
+  console.error('Product load error:', e);
+  document.getElementById('pv-main').innerHTML = '<div class="pv-not-found"><h2>Something went wrong</h2><p>'+e.message+'</p></div>';
+});
+
+function renderProduct(p) {
+  var disc = p.mrp > p.price ? Math.round((1-p.price/p.mrp)*100) : 0;
+  var savings = p.mrp > p.price ? (p.mrp - p.price) : 0;
+  var catPage = CAT_PAGE[p.category] || 'electronics.html';
+  var catClass = CAT_CLASS[p.category] || '';
+  var heroEl = document.getElementById('pv-hero');
+  var crumbName = document.getElementById('pv-crumb-name');
+  var catLink = document.getElementById('pv-cat-link');
+
+  // Update hero
+  heroEl.className = 'pv-hero ' + catClass;
+  if(crumbName) crumbName.textContent = p.name.length > 40 ? p.name.slice(0,40)+'...' : p.name;
+  if(catLink){ catLink.textContent = p.category; catLink.href = catPage; }
+  document.title = p.name + ' — BlueCart';
+
+  // Stock status
+  var stockHtml, stockClass;
+  if(p.stock <= 0){ stockHtml='&#10060; Out of Stock'; stockClass='pv-outstock'; }
+  else if(p.stock < 5){ stockHtml='&#9888; Only '+p.stock+' left'; stockClass='pv-lowstock'; }
+  else { stockHtml='&#10003; In Stock'; stockClass='pv-instock'; }
+
+  // Badge
+  var badgeHtml = '';
+  if(disc>0) badgeHtml += '<span class="pv-badge pv-badge-sale">-'+disc+'% OFF</span>';
+  if(p.badge) badgeHtml += '<span class="pv-badge pv-badge-new">'+p.badge+'</span>';
+
+  // Variants chips
+  var colorChips = '', storageChips = '';
+  if(p.colors && p.colors.length) {
+    colorChips = '<div class="pv-variants"><div class="pv-var-label">Color</div><div class="pv-var-chips">' +
+      p.colors.map(function(c,i){return '<span class="pv-chip'+(i===0?' active':'')+'" onclick="document.querySelectorAll(\'.pv-chip.color-chip\').forEach(function(e){e.classList.remove(\'active\')});this.classList.add(\'active\')">'+c+'</span>';}).join('') +
+    '</div></div>';
+  }
+  if(p.storage && p.storage.length) {
+    storageChips = '<div class="pv-variants"><div class="pv-var-label">Storage</div><div class="pv-var-chips">' +
+      p.storage.map(function(s,i){return '<span class="pv-chip'+(i===0?' active':'')+'" onclick="document.querySelectorAll(\'.pv-chip.stor-chip\').forEach(function(e){e.classList.remove(\'active\')});this.classList.add(\'active\')">'+s+'</span>';}).join('') +
+    '</div></div>';
+  }
+
+  // Specs
+  var specRows = buildSpecRows(p);
+  var specsHtml = '<table class="pv-specs-table">';
+  specsHtml += '<tr><td class="pv-spec-section" colspan="2">&#128203; Product Specifications</td></tr>';
+  specRows.forEach(function(row){ specsHtml += '<tr><td>'+row[0]+'</td><td>'+row[1]+'</td></tr>'; });
+  specsHtml += '</table>';
+
+  // Features
+  var featuresHtml = '';
+  if(p.features && p.features.length) {
+    featuresHtml = '<div class="pv-features">' + p.features.map(function(f){return '<div class="pv-feature">'+f+'</div>';}).join('') + '</div>';
+  }
+
+  // Reviews
+  var reviewsHtml = '<div class="pv-review-summary">' +
+    '<div>' +
+      '<div class="pv-big-rating">4.8</div>' +
+      '<div class="pv-stars" style="color:#ffb703;font-size:20px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' +
+      '<div style="font-size:13px;color:#6b7a8d;margin-top:4px;">Based on '+Math.floor(Math.random()*5000+500)+' reviews</div>' +
+    '</div>' +
+    '<div class="pv-rating-detail">' +
+      [['5',85],['4',10],['3',3],['2',1],['1',1]].map(function(r){
+        return '<div class="pv-rating-bar"><span class="pv-bar-label">'+r[0]+' &#9733;</span><div class="pv-bar-track"><div class="pv-bar-fill" style="width:'+r[1]+'%"></div></div><span class="pv-bar-count">'+r[1]+'%</span></div>';
+      }).join('') +
+    '</div>' +
+  '</div>' +
+  SAMPLE_REVIEWS.map(function(r){
+    return '<div class="pv-review-card">' +
+      '<div class="pv-review-top"><span class="pv-reviewer">'+r.name+'</span><span class="pv-review-stars">'+renderStars(r.stars)+'</span><span class="pv-review-date">'+r.date+'</span></div>' +
+      '<div class="pv-review-text">'+r.text+'</div>' +
+    '</div>';
+  }).join('');
+
+  var pNameJs = p.name.replace(/'/g, "\\'");
+  var pImgJs  = (p.imageUrl||'').replace(/'/g, "\\'");
+
+  var mainHtml =
+    '<div class="pv-wrap">' +
+      // LEFT — Gallery
+      '<div class="pv-gallery">' +
+        '<div class="pv-main-img-wrap">' +
+          '<div class="pv-badge-wrap">'+badgeHtml+'</div>' +
+          '<button class="pv-wish" id="pv-wish-btn" onclick="toggleWish()">&#129293;</button>' +
+          '<img class="pv-main-img" id="pv-main-img" src="'+(p.imageUrl||'https://placehold.co/600x600?text='+encodeURIComponent(p.name))+'" alt="'+p.name+'"/>' +
+        '</div>' +
+        '<div class="pv-thumbs" id="pv-thumbs">' +
+          '<img class="pv-thumb active" src="'+(p.imageUrl||'https://placehold.co/200x200?text=Main')+'" onclick="setMainImg(this.src,this)" alt="main"/>' +
+        '</div>' +
+      '</div>' +
+
+      // RIGHT — Info
+      '<div class="pv-info">' +
+        '<div class="pv-brand-cat">' +
+          '<span class="pv-brand">'+p.brand+'</span>' +
+          '<span class="pv-category-tag">'+p.category+'</span>' +
+          '<span class="pv-stock-badge '+stockClass+'">'+stockHtml+'</span>' +
+        '</div>' +
+        '<h1 class="pv-name">'+p.name+'</h1>' +
+        '<div class="pv-rating-row">' +
+          '<span class="pv-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' +
+          '<span class="pv-rating-num">4.8</span>' +
+          '<a class="pv-reviews" onclick="switchTab(\'reviews\',document.querySelector(\'.pv-tab[data-tab=reviews]\'))">See all reviews</a>' +
+        '</div>' +
+
+        '<div class="pv-price-block">' +
+          '<div class="pv-price-row">' +
+            '<span class="pv-price-now">&#8377;'+p.price.toLocaleString('en-IN')+'</span>' +
+            (p.mrp>p.price?'<span class="pv-price-old">&#8377;'+p.mrp.toLocaleString('en-IN')+'</span><span class="pv-price-off">'+disc+'% off</span>':'') +
+          '</div>' +
+          (savings>0?'<div class="pv-savings">You save &#8377;'+savings.toLocaleString('en-IN')+'!</div>':'') +
+          '<div class="pv-gst">Inclusive of all taxes (GST: '+(p.gst||'18%')+')</div>' +
+        '</div>' +
+
+        colorChips + storageChips +
+
+        '<div class="pv-qty-row">' +
+          '<span class="pv-qty-label">Quantity:</span>' +
+          '<div class="pv-qty-ctrl">' +
+            '<button class="pv-qty-btn" onclick="changeQty(-1)">&#8722;</button>' +
+            '<input type="number" id="pv-qty-inp" class="pv-qty-num" value="1" min="1" max="10" oninput="currentQty=parseInt(this.value)||1"/>' +
+            '<button class="pv-qty-btn" onclick="changeQty(1)">+</button>' +
+          '</div>' +
+          (p.stock>0&&p.stock<5?'<span style="font-size:12.5px;color:#a16207;font-weight:700;">Only '+p.stock+' left!</span>':'') +
+        '</div>' +
+
+        '<div class="pv-cta">' +
+          (p.stock>0
+            ? '<button class="pv-btn-cart" onclick="addToCart(\''+pNameJs+'\','+p.price+',currentQty)">&#128722; Add to Cart</button>' +
+              '<button class="pv-btn-buy"  onclick="buyNow(\''+pNameJs+'\',\''+pImgJs+'\','+p.price+')">&#9889; Buy Now</button>'
+            : '<button class="pv-btn-cart pv-btn-disabled">&#128722; Add to Cart</button>' +
+              '<button class="pv-btn-buy pv-btn-disabled">Out of Stock</button>'
+          ) +
+        '</div>' +
+
+        '<div class="pv-trust">' +
+          '<div class="pv-trust-item"><span class="ic">&#128666;</span>Free Delivery<br>above &#8377;999</div>' +
+          '<div class="pv-trust-item"><span class="ic">&#8617;&#65039;</span>Easy Returns<br>7-day policy</div>' +
+          '<div class="pv-trust-item"><span class="ic">&#128274;</span>Secure<br>Payment</div>' +
+          '<div class="pv-trust-item"><span class="ic">&#9989;</span>Genuine<br>Product</div>' +
+          '<div class="pv-trust-item"><span class="ic">&#128296;</span>Warranty<br>'+(p.warranty||'1 Year')+'</div>' +
+          '<div class="pv-trust-item"><span class="ic">&#9993;&#65039;</span>24/7<br>Support</div>' +
+        '</div>' +
+
+      '</div>' + // end .pv-info
+    '</div>' + // end .pv-wrap
+
+    // TABS
+    '<div class="pv-tabs-wrap" style="max-width:1200px;margin:0 auto 40px;padding:0 4%;">' +
+      '<div class="pv-tabs">' +
+        '<button class="pv-tab active" data-tab="desc" onclick="switchTab(\'desc\',this)">&#128218; Description</button>' +
+        '<button class="pv-tab" data-tab="specs" onclick="switchTab(\'specs\',this)">&#128203; Specifications</button>' +
+        '<button class="pv-tab" data-tab="reviews" onclick="switchTab(\'reviews\',this)">&#11088; Reviews</button>' +
+      '</div>' +
+      '<div class="pv-tab-content active" id="tab-desc">' +
+        '<p class="pv-desc">'+(p.description||'High quality product from '+p.brand+'. '+p.name+' offers excellent performance and value for money.')+'</p>' +
+        featuresHtml +
+      '</div>' +
+      '<div class="pv-tab-content" id="tab-specs">'+specsHtml+'</div>' +
+      '<div class="pv-tab-content" id="tab-reviews">'+reviewsHtml+'</div>' +
+    '</div>';
+
+  document.getElementById('pv-main').innerHTML = mainHtml;
+}
+
+function setMainImg(src, thumb) {
+  var img = document.getElementById('pv-main-img');
+  if(img) img.src = src;
+  document.querySelectorAll('.pv-thumb').forEach(function(t){t.classList.remove('active');});
+  if(thumb) thumb.classList.add('active');
+}
+
+function loadRelated(category, excludeId) {
+  BC.getAllProducts().then(function(products) {
+    var related = products.filter(function(p){
+      return p.category === category && p.id !== excludeId && p.status === 'active';
+    }).slice(0,4);
+    if(!related.length) return;
+
+    var relDiv = document.createElement('div');
+    relDiv.className = 'pv-related';
+    relDiv.innerHTML = '<div class="section-header" style="padding:0 0 16px;"><div class="section-title title-teal">Related Products</div></div>' +
+      '<div class="pv-related-grid">' +
+      related.map(function(p){
+        var disc=p.mrp>p.price?Math.round((1-p.price/p.mrp)*100):0;
+        var pn = p.name.replace(/'/g,"\\'");
+        var pi = (p.imageUrl||'').replace(/'/g,"\\'");
+        return '<div class="product-card" onclick="window.location.href=\'product.html?id='+encodeURIComponent(p.id)+'\'" style="cursor:pointer">' +
+          '<div class="prod-img-wrap">' +
+            (disc>0?'<span class="prod-badge badge-sale">-'+disc+'%</span>':'') +
+            '<img src="'+(p.imageUrl||'')+'" alt="'+p.name+'" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
+          '</div>' +
+          '<div class="prod-info">' +
+            '<span class="prod-category">'+p.category+'</span>' +
+            '<div class="prod-name">'+p.name+'</div>' +
+            '<div class="prod-price"><span class="price-now">&#8377;'+p.price.toLocaleString('en-IN')+'</span></div>' +
+            '<div class="add-to-cart"><button class="btn-cart" onclick="event.stopPropagation();addToCart(\''+pn+'\','+p.price+',1)">Add to Cart</button>' +
+            '<button class="btn-buy" onclick="event.stopPropagation();buyNow(\''+pn+'\',\''+pi+'\','+p.price+')">Buy Now</button></div>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+      '</div>';
+
+    document.getElementById('pv-main').appendChild(relDiv);
+  }).catch(function(){});
+}
+
+
+</script>
+<script src="shared.js"></script>
+<script>
+function toggleHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(!drawer)return;
+  var open=drawer.classList.contains('open');
+  drawer.classList.toggle('open',!open);
+  overlay.classList.toggle('open',!open);
+  btn.classList.toggle('open',!open);
+}
+function closeHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(drawer){drawer.classList.remove('open');}
+  if(overlay){overlay.classList.remove('open');}
+  if(btn){btn.classList.remove('open');}
+}
+</script>
+</body>
+</html>

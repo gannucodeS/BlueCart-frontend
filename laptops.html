@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Laptops — BlueCart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>.lap-hero{background:linear-gradient(120deg,#0c4a6e,#0369a1,#38bdf8);}
+/* ── BUY NOW BUTTON ── */
+.btn-buy {
+  background: linear-gradient(90deg, var(--amber), #f59e0b);
+  color: var(--navy);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all var(--trans);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-buy:hover { background: #e6a300; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,183,3,0.4); }
+</style>
+</head>
+<body>
+<!-- TOPBAR -->
+<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<!-- NAVBAR WRAP -->
+<div class="navbar-wrap">
+<nav class="navbar">
+  <a href="index.html" class="logo" style="text-decoration:none;">Blue<span>Cart</span></a>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div style="flex:1;"></div>
+  <div class="nav-right">
+    <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
+    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+          <!-- Hamburger button -->
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div><!-- end .nav-right -->
+  </nav>
+  <!-- Search Row -->
+  <div class="navbar-search-row">
+    <div class="search-bar" style="flex:1;">
+      <input type="text" id="searchInput" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
+      <button onclick="doSearchNav()">&#128269;</button>
+    </div>
+  </div>
+</div><!-- end .navbar-wrap -->
+
+<!-- Hamburger overlay + slide-in menu (outside navbar-wrap) -->
+<div class="hm-overlay" id="hm-overlay" onclick="closeHamburger()"></div>
+<div class="hm-drawer" id="hm-drawer">
+  <div class="hm-drawer-head">
+    <span class="hm-drawer-logo">Blue<span>Cart</span></span>
+    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+  </div>
+  <div class="hm-drawer-body">
+    <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Categories</div>
+    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
+    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
+    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
+    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
+    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
+    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
+    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
+    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Offers</div>
+    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
+    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Account</div>
+    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
+    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
+    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
+    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+  </div>
+</div>
+
+<!-- NAV STRIP (desktop only) -->
+<div class="nav-strip"><div class="nav-strip-inner">
+  <div class="nav-item"><a href="index.html">&#9776; All</a></div>
+  <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
+  <div class="nav-item"><a href="electronics.html">Electronics</a></div>
+  <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
+  <div class="nav-item"><a href="laptops.html">Laptops</a></div>
+  <div class="nav-item"><a href="audio.html">Audio</a></div>
+  <div class="nav-item"><a href="cameras.html">Cameras</a></div>
+  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
+  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
+  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
+  <div class="nav-item"><a href="deals.html" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
+  <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
+</div></div>
+
+<div class="breadcrumb"><a href="index.html">Home</a> <span>›</span> <a href="electronics.html">Electronics</a> <span>›</span> Laptops</div>
+    <div class="page-hero lap-hero">
+      <div class="hero-decor hd1"></div><div class="hero-decor hd2"></div>
+      <div class="page-hero-content">
+        <div class="page-hero-tag" style="background:#38bdf8;color:#0c4a6e">💻 Laptops</div>
+        <h1 class="fade-up">Work. Create. Dominate.</h1>
+        <p class="fade-up d1">From ultra-thin ultrabooks to powerhouse gaming rigs — find the laptop that fits your life.</p>
+        <button class="btn-primary fade-up d2" style="padding:10px 22px;font-size:14px">Shop Laptops</button>
+      </div>
+      <img class="page-hero-img" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=400&fit=crop&q=90" alt="Laptop"/>
+    </div><div class="filter-bar"><span class="filter-label">Filter:</span><span class="filter-chip active">All</span><span class="filter-chip">Ultrabooks</span><span class="filter-chip">Gaming</span><span class="filter-chip">Business</span><span class="filter-chip">Budget (<₹40K)</span><span class="filter-chip">MacBooks</span><span class="filter-chip">Student Picks</span><select class="filter-sort"><option>Sort: Featured</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Newest First</option><option>Best Rated</option></select></div><div class="section-header"><div class="section-title title-teal">All Laptops</div><a href="#" class="see-all">See all →</a></div>
+<div class="products-grid">
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=MacBook Air M3 15&quot;&price=114900&img=https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=400&fit=crop&q=90&cat=Apple';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-15%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=400&fit=crop&q=90" alt="MacBook Air M3 15""/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Apple</span>
+      <div class="prod-name">MacBook Air M3 15"</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (3400 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹114,900</span>
+        <span class="price-old">₹134,900</span>
+        <span class="price-off">15% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('MacBook Air M3 15"',114900)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('MacBook Air M3 15&quot;','https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=400&fit=crop&q=90',114900)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=MacBook Air M3 15&quot;&price=114900&img=https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=400&fit=crop&q=90&cat=Apple" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=XPS 15 OLED i7 13th Gen&price=149900&img=https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90&cat=Dell';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-hot">HOT</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90" alt="XPS 15 OLED i7 13th Gen"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Dell</span>
+      <div class="prod-name">XPS 15 OLED i7 13th Gen</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (1800 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹149,900</span>
+        <span class="price-old">₹184,900</span>
+        <span class="price-off">19% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('XPS 15 OLED i7 13th Gen',149900)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('XPS 15 OLED i7 13th Gen','https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90',149900)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=XPS 15 OLED i7 13th Gen&price=149900&img=https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90&cat=Dell" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=ROG Zephyrus G14 2024&price=149900&img=https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90&cat=Asus';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-new">NEW</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90" alt="ROG Zephyrus G14 2024"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Asus</span>
+      <div class="prod-name">ROG Zephyrus G14 2024</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (960 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹149,900</span>
+        <span class="price-old">₹179,900</span>
+        <span class="price-off">17% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('ROG Zephyrus G14 2024',149900)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('ROG Zephyrus G14 2024','https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90',149900)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=ROG Zephyrus G14 2024&price=149900&img=https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90&cat=Asus" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=Pavilion 15 Ryzen 7&price=54999&img=https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=400&fit=crop&q=90&cat=HP';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-30%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=400&fit=crop&q=90" alt="Pavilion 15 Ryzen 7"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">HP</span>
+      <div class="prod-name">Pavilion 15 Ryzen 7</div>
+      <div class="prod-rating"><span class="stars">★★★★☆</span> 4 (2600 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹54,999</span>
+        <span class="price-old">₹74,999</span>
+        <span class="price-off">27% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('Pavilion 15 Ryzen 7',54999)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('Pavilion 15 Ryzen 7','https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=400&fit=crop&q=90',54999)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=Pavilion 15 Ryzen 7&price=54999&img=https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=400&fit=crop&q=90&cat=HP" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=ThinkPad X1 Carbon&price=129900&img=https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=500&h=400&fit=crop&q=90&cat=Lenovo';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-top">Top</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=500&h=400&fit=crop&q=90" alt="ThinkPad X1 Carbon"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Lenovo</span>
+      <div class="prod-name">ThinkPad X1 Carbon</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (780 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹129,900</span>
+        <span class="price-old">₹164,900</span>
+        <span class="price-off">21% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('ThinkPad X1 Carbon',129900)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('ThinkPad X1 Carbon','https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=500&h=400&fit=crop&q=90',129900)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=ThinkPad X1 Carbon&price=129900&img=https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=500&h=400&fit=crop&q=90&cat=Lenovo" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=Predator Helios Neo 16&price=79999&img=https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90&cat=Acer';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-40%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90" alt="Predator Helios Neo 16"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Acer</span>
+      <div class="prod-name">Predator Helios Neo 16</div>
+      <div class="prod-rating"><span class="stars">★★★★☆</span> 4 (1400 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹79,999</span>
+        <span class="price-old">₹129,999</span>
+        <span class="price-off">38% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('Predator Helios Neo 16',79999)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('Predator Helios Neo 16','https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90',79999)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=Predator Helios Neo 16&price=79999&img=https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90&cat=Acer" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=Surface Pro 9 i5&price=112999&img=https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&h=400&fit=crop&q=90&cat=Microsoft';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-new">NEW</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&h=400&fit=crop&q=90" alt="Surface Pro 9 i5"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Microsoft</span>
+      <div class="prod-name">Surface Pro 9 i5</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (560 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹112,999</span>
+        <span class="price-old">₹139,999</span>
+        <span class="price-off">19% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('Surface Pro 9 i5',112999)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('Surface Pro 9 i5','https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&h=400&fit=crop&q=90',112999)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=Surface Pro 9 i5&price=112999&img=https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&h=400&fit=crop&q=90&cat=Microsoft" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=Galaxy Book4 Pro&price=129990&img=https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=400&fit=crop&q=90&cat=Samsung';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-25%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=400&fit=crop&q=90" alt="Galaxy Book4 Pro"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Samsung</span>
+      <div class="prod-name">Galaxy Book4 Pro</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (890 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹129,990</span>
+        <span class="price-old">₹174,990</span>
+        <span class="price-off">26% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('Galaxy Book4 Pro',129990)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('Galaxy Book4 Pro','https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=400&fit=crop&q=90',129990)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=Galaxy Book4 Pro&price=129990&img=https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=500&h=400&fit=crop&q=90&cat=Samsung" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div></div>
+<footer>
+  <div class="footer-top">
+    <div class="footer-col"><h5>Get to Know Us</h5><a href="#">About BlueCart</a><a href="#">Careers</a><a href="#">Press Releases</a></div>
+    <div class="footer-col"><h5>Connect with Us</h5><a href="#">Facebook</a><a href="#">Twitter</a><a href="#">Instagram</a></div>
+    <div class="footer-col"><h5>Make Money</h5><a href="#">Sell on BlueCart</a><a href="#">Affiliate Programme</a></div>
+    <div class="footer-col"><h5>Help</h5><a href="#">Your Account</a><a href="#">Returns Centre</a><a href="#">Help Centre</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-logo">Blue<span>Cart</span></div>
+    <span>© 2026 BlueCart Store. All rights reserved.</span>
+    <span>Privacy · Terms · Sitemap</span>
+  </div>
+</footer>
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div id="cart">
+  <div class="cart-header"><h3>🛒 Your Cart</h3><button class="cart-close" onclick="toggleCart()">✕</button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cart-total">₹0</span></div>
+    <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout →</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="db.mongo.js"></script>
+<script>
+// ── CART ──
+var cartItems = [], cartOpen = false;
+function toggleCart() {
+  cartOpen = !cartOpen;
+  var c = document.getElementById('cart');
+  var o = document.getElementById('cart-overlay');
+  if (c) c.classList.toggle('active', cartOpen);
+  if (o) o.classList.toggle('open', cartOpen);
+}
+function addToCart(name, price) {
+  cartItems.push({name: name, price: price});
+  renderCart();
+  showToast('✅ ' + name + ' added to cart!');
+}
+function removeFromCart(i) { cartItems.splice(i, 1); renderCart(); }
+function renderCart() {
+  var list  = document.getElementById('cart-items');
+  var total = document.getElementById('cart-total');
+  var count = document.getElementById('cart-count');
+  if (count) count.textContent = cartItems.length;
+  if (!list) return;
+  if (!cartItems.length) {
+    list.innerHTML = '<div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p></div>';
+    if (total) total.textContent = '₹0'; return;
+  }
+  list.innerHTML = cartItems.map(function(item, i) {
+    return '<li class="cart-item"><div><div class="cart-item-name">' + item.name + '</div>' +
+      '<div class="cart-item-price">₹' + item.price.toLocaleString('en-IN') + '</div></div>' +
+      '<button class="remove-btn" onclick="removeFromCart(' + i + ')">Remove</button></li>';
+  }).join('');
+  var sum = cartItems.reduce(function(a,b){return a+b.price;}, 0);
+  if (total) total.textContent = '₹' + sum.toLocaleString('en-IN');
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2800);
+}
+
+// ── SLIDER ──
+(function() {
+  var sliderEl = document.getElementById('slider');
+  if (!sliderEl) return;
+  var slides = document.querySelectorAll('.slide');
+  var dots   = document.querySelectorAll('.dot');
+  var current = 0, autoTimer;
+  window.goSlide = function(n) {
+    current = (n + slides.length) % slides.length;
+    sliderEl.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach(function(d,i){ d.classList.toggle('active', i===current); });
+  };
+  window.changeSlide = function(dir) { goSlide(current + dir); resetAuto(); };
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(function(){ goSlide(current + 1); }, 5000);
+  }
+  resetAuto();
+})();
+
+// ── WISHLIST ──
+document.querySelectorAll('.wishlist-btn').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+  });
+});
+
+// ── BUY NOW ──
+function buyNow(name, img, price) {
+  var p = new URLSearchParams();
+  p.set('name', name);
+  p.set('img', img);
+  p.set('price', price);
+  p.set('mode', 'buynow');
+  window.location.href = 'checkout.html?' + p.toString();
+}
+
+
+function checkoutCart() {
+  if (!cartItems.length) { showToast('Your cart is empty!'); return; }
+  var p = new URLSearchParams();
+  p.set('mode', 'cart');
+  p.set('items', JSON.stringify(cartItems));
+  window.location.href = 'checkout.html?' + p.toString();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+<!-- LOCATION PANEL -->
+<div id="loc-overlay" style="display:none;position:fixed;inset:0;background:rgba(15,45,74,0.45);z-index:500;backdrop-filter:blur(3px)" onclick="closeLocationPanel()"></div>
+<div id="loc-panel" style="display:none;position:fixed;top:0;left:0;width:100%;max-width:400px;height:100vh;background:white;z-index:600;box-shadow:8px 0 40px rgba(15,45,74,0.2);overflow-y:auto;font-family:Nunito,sans-serif;">
+  <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">📍 Set Delivery Location</div>
+    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">✕</button>
+  </div>
+  <div style="padding:18px;">
+    <div style="margin-bottom:18px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Enter Pincode</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="loc-pincode" maxlength="6" placeholder="e.g. 311001" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="flex:1;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;"/>
+        <button onclick="applyPincode()" style="background:#0ea5a0;color:white;border:none;padding:10px 16px;border-radius:9px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">Apply</button>
+      </div>
+      <div id="pin-result" style="margin-top:7px;font-size:13px;color:#6b7a8d;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;"><div style="flex:1;height:1px;background:#e5eaf0;"></div><span style="font-size:11.5px;color:#6b7a8d;font-weight:700;">OR SELECT</span><div style="flex:1;height:1px;background:#e5eaf0;"></div></div>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">State</label>
+      <select id="loc-state" onchange="loadCities()" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;">
+        <option value="">Select State</option>
+        <option>Rajasthan</option><option>Maharashtra</option><option>Delhi</option><option>Karnataka</option><option>Tamil Nadu</option><option>Gujarat</option><option>Uttar Pradesh</option><option>West Bengal</option><option>Telangana</option><option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option><option>Haryana</option><option>Bihar</option><option>Goa</option>
+      </select>
+    </div>
+    <div style="margin-bottom:18px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
+      <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
+    </div>
+    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">📍 Set Location</button>
+    <div style="margin-top:20px;">
+      <div style="font-size:11px;font-weight:800;color:#6b7a8d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Popular Cities</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;">
+        <button onclick="setCity('Mumbai','Maharashtra')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Mumbai</button>
+        <button onclick="setCity('Delhi','Delhi')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Delhi</button>
+        <button onclick="setCity('Bengaluru','Karnataka')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Bengaluru</button>
+        <button onclick="setCity('Hyderabad','Telangana')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Hyderabad</button>
+        <button onclick="setCity('Chennai','Tamil Nadu')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Chennai</button>
+        <button onclick="setCity('Kolkata','West Bengal')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Kolkata</button>
+        <button onclick="setCity('Pune','Maharashtra')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Pune</button>
+        <button onclick="setCity('Jaipur','Rajasthan')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Jaipur</button>
+        <button onclick="setCity('Bhilwara','Rajasthan')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Bhilwara</button>
+        <button onclick="setCity('Ahmedabad','Gujarat')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Ahmedabad</button>
+        <button onclick="setCity('Lucknow','Uttar Pradesh')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Lucknow</button>
+        <button onclick="setCity('Noida','Uttar Pradesh')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Noida</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+window.PAGE_FILTER_CONFIG = {
+  brands:     ["Apple", "Dell", "HP", "Lenovo", "Asus", "Samsung", "Microsoft", "Acer"],
+  label:      "Laptops",
+  priceChips: [{label:"All",min:0,max:99999999},{label:"Under &#8377;50K",min:0,max:50000},{label:"&#8377;50K–&#8377;1L",min:50000,max:100000},{label:"&#8377;1L–&#8377;1.5L",min:100000,max:150000},{label:"&#8377;1.5L+",min:150000,max:99999999}]
+};
+</script>
+<script src="shared.js"></script>
+<script src="shared-filter.js">
+function toggleHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(!drawer)return;
+  var open=drawer.classList.contains('open');
+  drawer.classList.toggle('open',!open);
+  overlay.classList.toggle('open',!open);
+  btn.classList.toggle('open',!open);
+}
+function closeHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(drawer){drawer.classList.remove('open');}
+  if(overlay){overlay.classList.remove('open');}
+  if(btn){btn.classList.remove('open');}
+}
+
+</script>
+</body></html>

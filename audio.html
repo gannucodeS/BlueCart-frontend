@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Audio — BlueCart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>.audio-hero{background:linear-gradient(120deg,#0f2d0f,#166534,#16a34a);}
+/* ── BUY NOW BUTTON ── */
+.btn-buy {
+  background: linear-gradient(90deg, var(--amber), #f59e0b);
+  color: var(--navy);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all var(--trans);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-buy:hover { background: #e6a300; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,183,3,0.4); }
+</style>
+</head>
+<body>
+<!-- TOPBAR -->
+<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<!-- NAVBAR WRAP -->
+<div class="navbar-wrap">
+<nav class="navbar">
+  <a href="index.html" class="logo" style="text-decoration:none;">Blue<span>Cart</span></a>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div style="flex:1;"></div>
+  <div class="nav-right">
+    <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
+    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+          <!-- Hamburger button -->
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div><!-- end .nav-right -->
+  </nav>
+  <!-- Search Row -->
+  <div class="navbar-search-row">
+    <div class="search-bar" style="flex:1;">
+      <input type="text" id="searchInput" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
+      <button onclick="doSearchNav()">&#128269;</button>
+    </div>
+  </div>
+</div><!-- end .navbar-wrap -->
+
+<!-- Hamburger overlay + slide-in menu (outside navbar-wrap) -->
+<div class="hm-overlay" id="hm-overlay" onclick="closeHamburger()"></div>
+<div class="hm-drawer" id="hm-drawer">
+  <div class="hm-drawer-head">
+    <span class="hm-drawer-logo">Blue<span>Cart</span></span>
+    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+  </div>
+  <div class="hm-drawer-body">
+    <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Categories</div>
+    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
+    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
+    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
+    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
+    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
+    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
+    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
+    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Offers</div>
+    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
+    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Account</div>
+    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
+    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
+    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
+    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+  </div>
+</div>
+
+<!-- NAV STRIP (desktop only) -->
+<div class="nav-strip"><div class="nav-strip-inner">
+  <div class="nav-item"><a href="index.html">&#9776; All</a></div>
+  <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
+  <div class="nav-item"><a href="electronics.html">Electronics</a></div>
+  <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
+  <div class="nav-item"><a href="laptops.html">Laptops</a></div>
+  <div class="nav-item"><a href="audio.html">Audio</a></div>
+  <div class="nav-item"><a href="cameras.html">Cameras</a></div>
+  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
+  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
+  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
+  <div class="nav-item"><a href="deals.html" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
+  <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
+</div></div>
+
+<div class="breadcrumb"><a href="index.html">Home</a> <span>›</span> <a href="electronics.html">Electronics</a> <span>›</span> Audio</div>
+    <div class="page-hero audio-hero">
+      <div class="hero-decor hd1"></div><div class="hero-decor hd2"></div>
+      <div class="page-hero-content">
+        <div class="page-hero-tag" style="background:var(--lime);color:#0f2d0f">🎧 Audio</div>
+        <h1 class="fade-up">Hear Every Detail</h1>
+        <p class="fade-up d1">Studio-grade headphones, earbuds, speakers & soundbars. Your music deserves the best.</p>
+        <button class="btn-primary fade-up d2" style="background:var(--lime);color:#0f2d0f;padding:10px 22px;font-size:14px">Shop Audio</button>
+      </div>
+      <img class="page-hero-img" src="https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90" alt="Headphones"/>
+    </div><div class="filter-bar"><span class="filter-label">Filter:</span><span class="filter-chip active">All Audio</span><span class="filter-chip">Headphones</span><span class="filter-chip">Earbuds</span><span class="filter-chip">Speakers</span><span class="filter-chip">Soundbars</span><span class="filter-chip">Microphones</span><span class="filter-chip">Under ₹2K</span><span class="filter-chip">Under ₹5K</span><select class="filter-sort"><option>Sort: Featured</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Newest First</option><option>Best Rated</option></select></div><div class="section-header"><div class="section-title title-teal">All Audio Products</div><a href="#" class="see-all">See all →</a></div>
+<div class="products-grid">
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=WH-1000XM5 ANC Headphones&price=24990&img=https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90&cat=Sony';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-hot">HOT</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90" alt="WH-1000XM5 ANC Headphones"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Sony</span>
+      <div class="prod-name">WH-1000XM5 ANC Headphones</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (5200 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹24,990</span>
+        <span class="price-old">₹34,990</span>
+        <span class="price-off">29% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('WH-1000XM5 ANC Headphones',24990)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('WH-1000XM5 ANC Headphones','https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90',24990)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=WH-1000XM5 ANC Headphones&price=24990&img=https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90&cat=Sony" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=QuietComfort Ultra Earbuds&price=22900&img=https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90&cat=Bose';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-35%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90" alt="QuietComfort Ultra Earbuds"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Bose</span>
+      <div class="prod-name">QuietComfort Ultra Earbuds</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (3400 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹22,900</span>
+        <span class="price-old">₹34,900</span>
+        <span class="price-off">34% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('QuietComfort Ultra Earbuds',22900)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('QuietComfort Ultra Earbuds','https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90',22900)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=QuietComfort Ultra Earbuds&price=22900&img=https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90&cat=Bose" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=JBL PartyBox 310 Speaker&price=29990&img=https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=400&fit=crop&q=90&cat=JBL';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-new">NEW</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=400&fit=crop&q=90" alt="JBL PartyBox 310 Speaker"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">JBL</span>
+      <div class="prod-name">JBL PartyBox 310 Speaker</div>
+      <div class="prod-rating"><span class="stars">★★★★☆</span> 4 (1800 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹29,990</span>
+        <span class="price-old">₹39,990</span>
+        <span class="price-off">25% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('JBL PartyBox 310 Speaker',29990)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('JBL PartyBox 310 Speaker','https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=400&fit=crop&q=90',29990)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=JBL PartyBox 310 Speaker&price=29990&img=https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=400&fit=crop&q=90&cat=JBL" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=AirPods Pro 2nd Gen&price=19900&img=https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90&cat=Apple';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-40%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90" alt="AirPods Pro 2nd Gen"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Apple</span>
+      <div class="prod-name">AirPods Pro 2nd Gen</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (8900 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹19,900</span>
+        <span class="price-old">₹34,900</span>
+        <span class="price-off">43% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('AirPods Pro 2nd Gen',19900)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('AirPods Pro 2nd Gen','https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90',19900)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=AirPods Pro 2nd Gen&price=19900&img=https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90&cat=Apple" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=HD 660S2 Open-Back&price=34990&img=https://images.unsplash.com/photo-1490135185809-f8a3a9cbcc67?w=500&h=400&fit=crop&q=90&cat=Sennheiser';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-top">Top</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1490135185809-f8a3a9cbcc67?w=500&h=400&fit=crop&q=90" alt="HD 660S2 Open-Back"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Sennheiser</span>
+      <div class="prod-name">HD 660S2 Open-Back</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (640 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹34,990</span>
+        <span class="price-old">₹44,990</span>
+        <span class="price-off">22% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('HD 660S2 Open-Back',34990)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('HD 660S2 Open-Back','https://images.unsplash.com/photo-1490135185809-f8a3a9cbcc67?w=500&h=400&fit=crop&q=90',34990)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=HD 660S2 Open-Back&price=34990&img=https://images.unsplash.com/photo-1490135185809-f8a3a9cbcc67?w=500&h=400&fit=crop&q=90&cat=Sennheiser" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=Airdopes 141 TWS&price=1299&img=https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&h=400&fit=crop&q=90&cat=boAt';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-50%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&h=400&fit=crop&q=90" alt="Airdopes 141 TWS"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">boAt</span>
+      <div class="prod-name">Airdopes 141 TWS</div>
+      <div class="prod-rating"><span class="stars">★★★★☆</span> 4 (12400 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹1,299</span>
+        <span class="price-old">₹2,499</span>
+        <span class="price-off">48% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('Airdopes 141 TWS',1299)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('Airdopes 141 TWS','https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&h=400&fit=crop&q=90',1299)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=Airdopes 141 TWS&price=1299&img=https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&h=400&fit=crop&q=90&cat=boAt" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=Galaxy Buds3 Pro&price=17999&img=https://images.unsplash.com/photo-1629367494173-c78a56567877?w=500&h=400&fit=crop&q=90&cat=Samsung';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-new">NEW</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1629367494173-c78a56567877?w=500&h=400&fit=crop&q=90" alt="Galaxy Buds3 Pro"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Samsung</span>
+      <div class="prod-name">Galaxy Buds3 Pro</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (1600 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹17,999</span>
+        <span class="price-old">₹23,999</span>
+        <span class="price-off">25% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('Galaxy Buds3 Pro',17999)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('Galaxy Buds3 Pro','https://images.unsplash.com/photo-1629367494173-c78a56567877?w=500&h=400&fit=crop&q=90',17999)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=Galaxy Buds3 Pro&price=17999&img=https://images.unsplash.com/photo-1629367494173-c78a56567877?w=500&h=400&fit=crop&q=90&cat=Samsung" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=Stanmore III BT Speaker&price=24999&img=https://images.unsplash.com/photo-1545454675-3531b543be5d?w=500&h=400&fit=crop&q=90&cat=Marshall';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-hot">HOT</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1545454675-3531b543be5d?w=500&h=400&fit=crop&q=90" alt="Stanmore III BT Speaker"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Marshall</span>
+      <div class="prod-name">Stanmore III BT Speaker</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (890 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹24,999</span>
+        <span class="price-old">₹32,999</span>
+        <span class="price-off">24% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('Stanmore III BT Speaker',24999)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('Stanmore III BT Speaker','https://images.unsplash.com/photo-1545454675-3531b543be5d?w=500&h=400&fit=crop&q=90',24999)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=Stanmore III BT Speaker&price=24999&img=https://images.unsplash.com/photo-1545454675-3531b543be5d?w=500&h=400&fit=crop&q=90&cat=Marshall" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div></div>
+<footer>
+  <div class="footer-top">
+    <div class="footer-col"><h5>Get to Know Us</h5><a href="#">About BlueCart</a><a href="#">Careers</a><a href="#">Press Releases</a></div>
+    <div class="footer-col"><h5>Connect with Us</h5><a href="#">Facebook</a><a href="#">Twitter</a><a href="#">Instagram</a></div>
+    <div class="footer-col"><h5>Make Money</h5><a href="#">Sell on BlueCart</a><a href="#">Affiliate Programme</a></div>
+    <div class="footer-col"><h5>Help</h5><a href="#">Your Account</a><a href="#">Returns Centre</a><a href="#">Help Centre</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-logo">Blue<span>Cart</span></div>
+    <span>© 2026 BlueCart Store. All rights reserved.</span>
+    <span>Privacy · Terms · Sitemap</span>
+  </div>
+</footer>
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div id="cart">
+  <div class="cart-header"><h3>🛒 Your Cart</h3><button class="cart-close" onclick="toggleCart()">✕</button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cart-total">₹0</span></div>
+    <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout →</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="db.mongo.js"></script>
+<script>
+// ── CART ──
+var cartItems = [], cartOpen = false;
+function toggleCart() {
+  cartOpen = !cartOpen;
+  var c = document.getElementById('cart');
+  var o = document.getElementById('cart-overlay');
+  if (c) c.classList.toggle('active', cartOpen);
+  if (o) o.classList.toggle('open', cartOpen);
+}
+function addToCart(name, price) {
+  cartItems.push({name: name, price: price});
+  renderCart();
+  showToast('✅ ' + name + ' added to cart!');
+}
+function removeFromCart(i) { cartItems.splice(i, 1); renderCart(); }
+function renderCart() {
+  var list  = document.getElementById('cart-items');
+  var total = document.getElementById('cart-total');
+  var count = document.getElementById('cart-count');
+  if (count) count.textContent = cartItems.length;
+  if (!list) return;
+  if (!cartItems.length) {
+    list.innerHTML = '<div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p></div>';
+    if (total) total.textContent = '₹0'; return;
+  }
+  list.innerHTML = cartItems.map(function(item, i) {
+    return '<li class="cart-item"><div><div class="cart-item-name">' + item.name + '</div>' +
+      '<div class="cart-item-price">₹' + item.price.toLocaleString('en-IN') + '</div></div>' +
+      '<button class="remove-btn" onclick="removeFromCart(' + i + ')">Remove</button></li>';
+  }).join('');
+  var sum = cartItems.reduce(function(a,b){return a+b.price;}, 0);
+  if (total) total.textContent = '₹' + sum.toLocaleString('en-IN');
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2800);
+}
+
+// ── SLIDER ──
+(function() {
+  var sliderEl = document.getElementById('slider');
+  if (!sliderEl) return;
+  var slides = document.querySelectorAll('.slide');
+  var dots   = document.querySelectorAll('.dot');
+  var current = 0, autoTimer;
+  window.goSlide = function(n) {
+    current = (n + slides.length) % slides.length;
+    sliderEl.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach(function(d,i){ d.classList.toggle('active', i===current); });
+  };
+  window.changeSlide = function(dir) { goSlide(current + dir); resetAuto(); };
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(function(){ goSlide(current + 1); }, 5000);
+  }
+  resetAuto();
+})();
+
+// ── WISHLIST ──
+document.querySelectorAll('.wishlist-btn').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+  });
+});
+
+// ── BUY NOW ──
+function buyNow(name, img, price) {
+  var p = new URLSearchParams();
+  p.set('name', name);
+  p.set('img', img);
+  p.set('price', price);
+  p.set('mode', 'buynow');
+  window.location.href = 'checkout.html?' + p.toString();
+}
+
+
+function checkoutCart() {
+  if (!cartItems.length) { showToast('Your cart is empty!'); return; }
+  var p = new URLSearchParams();
+  p.set('mode', 'cart');
+  p.set('items', JSON.stringify(cartItems));
+  window.location.href = 'checkout.html?' + p.toString();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+<!-- LOCATION PANEL -->
+<div id="loc-overlay" style="display:none;position:fixed;inset:0;background:rgba(15,45,74,0.45);z-index:500;backdrop-filter:blur(3px)" onclick="closeLocationPanel()"></div>
+<div id="loc-panel" style="display:none;position:fixed;top:0;left:0;width:100%;max-width:400px;height:100vh;background:white;z-index:600;box-shadow:8px 0 40px rgba(15,45,74,0.2);overflow-y:auto;font-family:Nunito,sans-serif;">
+  <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">📍 Set Delivery Location</div>
+    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">✕</button>
+  </div>
+  <div style="padding:18px;">
+    <div style="margin-bottom:18px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Enter Pincode</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="loc-pincode" maxlength="6" placeholder="e.g. 311001" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="flex:1;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;"/>
+        <button onclick="applyPincode()" style="background:#0ea5a0;color:white;border:none;padding:10px 16px;border-radius:9px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">Apply</button>
+      </div>
+      <div id="pin-result" style="margin-top:7px;font-size:13px;color:#6b7a8d;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;"><div style="flex:1;height:1px;background:#e5eaf0;"></div><span style="font-size:11.5px;color:#6b7a8d;font-weight:700;">OR SELECT</span><div style="flex:1;height:1px;background:#e5eaf0;"></div></div>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">State</label>
+      <select id="loc-state" onchange="loadCities()" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;">
+        <option value="">Select State</option>
+        <option>Rajasthan</option><option>Maharashtra</option><option>Delhi</option><option>Karnataka</option><option>Tamil Nadu</option><option>Gujarat</option><option>Uttar Pradesh</option><option>West Bengal</option><option>Telangana</option><option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option><option>Haryana</option><option>Bihar</option><option>Goa</option>
+      </select>
+    </div>
+    <div style="margin-bottom:18px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
+      <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
+    </div>
+    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">📍 Set Location</button>
+    <div style="margin-top:20px;">
+      <div style="font-size:11px;font-weight:800;color:#6b7a8d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Popular Cities</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;">
+        <button onclick="setCity('Mumbai','Maharashtra')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Mumbai</button>
+        <button onclick="setCity('Delhi','Delhi')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Delhi</button>
+        <button onclick="setCity('Bengaluru','Karnataka')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Bengaluru</button>
+        <button onclick="setCity('Hyderabad','Telangana')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Hyderabad</button>
+        <button onclick="setCity('Chennai','Tamil Nadu')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Chennai</button>
+        <button onclick="setCity('Kolkata','West Bengal')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Kolkata</button>
+        <button onclick="setCity('Pune','Maharashtra')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Pune</button>
+        <button onclick="setCity('Jaipur','Rajasthan')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Jaipur</button>
+        <button onclick="setCity('Bhilwara','Rajasthan')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Bhilwara</button>
+        <button onclick="setCity('Ahmedabad','Gujarat')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Ahmedabad</button>
+        <button onclick="setCity('Lucknow','Uttar Pradesh')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Lucknow</button>
+        <button onclick="setCity('Noida','Uttar Pradesh')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Noida</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+window.PAGE_FILTER_CONFIG = {
+  brands:     ["Sony", "Bose", "Apple", "JBL", "Samsung", "boAt", "Sennheiser", "Marshall"],
+  label:      "Audio",
+  priceChips: [{label:"All",min:0,max:99999999},{label:"Under &#8377;2K",min:0,max:2000},{label:"&#8377;2K–&#8377;10K",min:2000,max:10000},{label:"&#8377;10K–&#8377;25K",min:10000,max:25000},{label:"&#8377;25K+",min:25000,max:99999999}]
+};
+</script>
+<script src="shared.js"></script>
+<script src="shared-filter.js">
+function toggleHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(!drawer)return;
+  var open=drawer.classList.contains('open');
+  drawer.classList.toggle('open',!open);
+  overlay.classList.toggle('open',!open);
+  btn.classList.toggle('open',!open);
+}
+function closeHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(drawer){drawer.classList.remove('open');}
+  if(overlay){overlay.classList.remove('open');}
+  if(btn){btn.classList.remove('open');}
+}
+
+</script>
+</body></html>

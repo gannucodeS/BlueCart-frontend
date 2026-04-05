@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BlueCart — Premium Tech Store</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .sec-wrap{padding:0 4% 8px;}
+    .sec-divider{height:1px;background:#e5eaf0;margin:20px 4%;}
+    .dotd-header-bar{background:linear-gradient(90deg,#0f2d4a,#1a5f7a);border-radius:14px 14px 0 0;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .dotd-title{font-family:'Syne',sans-serif;font-size:20px;color:white;display:flex;align-items:center;gap:10px;}
+    .dotd-title span{background:var(--coral);color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.5px;}
+    .countdown{display:flex;align-items:center;gap:10px;}
+    .countdown-label{font-size:13px;color:rgba(255,255,255,0.7);font-weight:700;}
+    .cd-boxes{display:flex;align-items:center;gap:6px;}
+    .cd-box{background:rgba(255,255,255,0.15);border-radius:8px;padding:6px 12px;text-align:center;min-width:48px;}
+    .cd-box b{display:block;font-size:22px;font-family:'Syne',sans-serif;color:white;line-height:1;}
+    .cd-box span{font-size:10px;color:rgba(255,255,255,0.7);letter-spacing:.5px;}
+    .cd-sep{font-size:20px;color:rgba(255,255,255,0.5);font-weight:900;}
+    .see-all-btn{color:rgba(255,255,255,0.85);font-size:13.5px;font-weight:700;white-space:nowrap;}
+    .dotd-body{background:white;border-radius:0 0 14px 14px;padding:16px 0;box-shadow:0 4px 16px rgba(15,45,74,0.08);}
+    .scroll-wrap{position:relative;display:flex;align-items:center;}
+    .scroll-arrow{position:absolute;z-index:10;background:white;border:1.5px solid #e0e7ef;border-radius:50%;width:36px;height:36px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(15,45,74,0.12);transition:all .2s;color:var(--navy);}
+    .scroll-arrow.left{left:6px;} .scroll-arrow.right{right:6px;}
+    .scroll-arrow:hover{background:var(--teal);color:white;border-color:var(--teal);}
+    .h-scroll{display:flex;gap:14px;overflow-x:auto;padding:4px 48px;scroll-behavior:smooth;}
+    .h-scroll::-webkit-scrollbar{display:none;}
+    .deal-card{min-width:200px;max-width:200px;background:var(--off);border-radius:12px;overflow:hidden;border:1.5px solid #e5eaf0;transition:all .25s;flex-shrink:0;}
+    .deal-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(15,45,74,0.12);border-color:var(--teal);}
+    .deal-img{width:100%;height:140px;object-fit:cover;}
+    .deal-info{padding:10px 12px 12px;}
+    .deal-cat{font-size:10.5px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;}
+    .deal-name{font-size:13px;font-weight:800;color:var(--navy);margin:3px 0;line-height:1.3;}
+    .deal-off{display:inline-block;background:var(--coral);color:white;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px;margin-bottom:5px;}
+    .deal-price-row{display:flex;align-items:baseline;gap:6px;}
+    .deal-price-now{font-size:16px;font-weight:900;color:var(--navy);}
+    .deal-price-old{font-size:11px;color:var(--muted);text-decoration:line-through;}
+    .deal-stock{margin:6px 0;}
+    .deal-stock-label{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px;}
+    .deal-bar{height:4px;background:#e5eaf0;border-radius:3px;overflow:hidden;}
+    .deal-bar-fill{height:100%;background:linear-gradient(90deg,var(--coral),var(--amber));border-radius:3px;}
+    .deal-btn{width:100%;margin-top:8px;padding:8px;border-radius:8px;border:none;background:var(--teal);color:white;font-size:12.5px;font-weight:800;cursor:pointer;transition:all .2s;}
+    .deal-btn:hover{background:var(--teal-dark);}
+    .sec-header{display:flex;justify-content:space-between;align-items:center;padding:20px 0 12px;}
+    .sec-title{font-family:'Syne',sans-serif;font-size:20px;color:var(--navy);}
+    .sec-title.amber{color:var(--amber);}
+    .new-card{min-width:190px;max-width:190px;background:white;border-radius:12px;overflow:hidden;border:1.5px solid #e5eaf0;flex-shrink:0;transition:all .25s;position:relative;}
+    .new-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(15,45,74,0.12);border-color:var(--teal);}
+    .new-badge{position:absolute;top:10px;left:10px;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:20px;z-index:2;background:var(--teal);color:white;}
+    .new-badge.hot{background:var(--coral);} .new-badge.trend{background:var(--amber);color:var(--navy);}
+    .new-wishlist{position:absolute;top:10px;right:10px;background:white;border:none;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+    .new-img-wrap{height:150px;overflow:hidden;background:#f8fafc;}
+    .new-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+    .new-card:hover .new-img-wrap img{transform:scale(1.06);}
+    .new-info{padding:10px 12px 12px;}
+    .new-cat{font-size:10.5px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;}
+    .new-name{font-size:13px;font-weight:800;color:var(--navy);margin:3px 0;line-height:1.3;}
+    .new-stars{font-size:11px;color:var(--amber);}
+    .new-stars span{color:var(--muted);}
+    .new-price-row{display:flex;align-items:center;gap:8px;margin:5px 0;}
+    .new-price-now{font-size:16px;font-weight:900;color:var(--navy);}
+    .new-price-off{font-size:11px;font-weight:800;background:var(--teal-light);color:var(--teal-dark);padding:2px 8px;border-radius:20px;}
+    .new-add-btn{width:100%;padding:8px;border-radius:8px;border:none;background:var(--teal);color:white;font-size:12.5px;font-weight:800;cursor:pointer;transition:all .2s;}
+    .new-add-btn:hover{background:var(--teal-dark);}
+    .explore-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:4px;}
+    .explore-card{background:white;border-radius:12px;overflow:hidden;border:1.5px solid #e5eaf0;transition:all .25s;}
+    .explore-card:hover{transform:translateY(-5px);box-shadow:0 10px 28px rgba(15,45,74,0.13);border-color:var(--teal);}
+    .explore-img-wrap{height:170px;overflow:hidden;background:#f8fafc;position:relative;}
+    .explore-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+    .explore-card:hover .explore-img-wrap img{transform:scale(1.06);}
+    .exp-badge{position:absolute;top:9px;left:9px;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:20px;}
+    .exp-badge.sale{background:var(--coral);color:white;} .exp-badge.new{background:var(--teal);color:white;}
+    .exp-badge.hot{background:var(--amber);color:var(--navy);} .exp-badge.top{background:var(--lime);color:white;}
+    .explore-info{padding:12px 13px 14px;}
+    .explore-cat{font-size:10.5px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.5px;}
+    .explore-name{font-size:13.5px;font-weight:800;color:var(--navy);margin:3px 0;line-height:1.3;}
+    .explore-stars{font-size:11px;color:var(--amber);}
+    .explore-stars em{color:var(--muted);font-style:normal;}
+    .explore-price-row{display:flex;align-items:baseline;gap:7px;margin:5px 0;flex-wrap:wrap;}
+    .exp-now{font-size:18px;font-weight:900;color:var(--navy);}
+    .exp-old{font-size:11.5px;color:var(--muted);text-decoration:line-through;}
+    .exp-off{font-size:11.5px;font-weight:700;color:var(--coral);}
+    .explore-btns{display:flex;gap:8px;margin-top:8px;}
+    .exp-cart{flex:1;padding:9px;border-radius:8px;border:none;background:var(--teal);color:white;font-size:12.5px;font-weight:800;cursor:pointer;transition:all .2s;}
+    .exp-cart:hover{background:var(--teal-dark);}
+    .exp-buy{padding:9px 12px;border-radius:8px;border:none;background:var(--amber);color:var(--navy);font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;}
+    .exp-buy:hover{background:#e6a300;}
+    .btn-buy{background:var(--amber);color:var(--navy);border:none;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;transition:all .2s;white-space:nowrap;}
+    .btn-buy:hover{background:#e6a300;transform:translateY(-1px);}
+    #loc-overlay{display:none;position:fixed;inset:0;background:rgba(15,45,74,0.45);z-index:500;}
+    #loc-panel{display:none;position:fixed;top:0;left:0;width:100%;max-width:400px;height:100vh;background:white;z-index:600;box-shadow:8px 0 40px rgba(15,45,74,0.2);overflow-y:auto;font-family:'Nunito',sans-serif;}
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<!-- TOPBAR -->
+<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<!-- NAVBAR WRAP -->
+<div class="navbar-wrap">
+<nav class="navbar">
+  <a href="index.html" class="logo" style="text-decoration:none;">Blue<span>Cart</span></a>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div style="flex:1;"></div>
+  <div class="nav-right">
+    <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
+    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+          <!-- Hamburger button -->
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div><!-- end .nav-right -->
+  </nav>
+  <!-- Search Row -->
+  <div class="navbar-search-row">
+    <div class="search-bar" style="flex:1;">
+      <input type="text" id="searchInput" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
+      <button onclick="doSearchNav()">&#128269;</button>
+    </div>
+  </div>
+</div><!-- end .navbar-wrap -->
+
+<!-- Hamburger overlay + slide-in menu (outside navbar-wrap) -->
+<div class="hm-overlay" id="hm-overlay" onclick="closeHamburger()"></div>
+<div class="hm-drawer" id="hm-drawer">
+  <div class="hm-drawer-head">
+    <span class="hm-drawer-logo">Blue<span>Cart</span></span>
+    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+  </div>
+  <div class="hm-drawer-body">
+    <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Categories</div>
+    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
+    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
+    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
+    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
+    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
+    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
+    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
+    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Offers</div>
+    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
+    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Account</div>
+    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
+    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
+    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
+    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+  </div>
+</div>
+
+<!-- NAV STRIP (desktop only) -->
+<div class="nav-strip"><div class="nav-strip-inner">
+  <div class="nav-item"><a href="index.html">&#9776; All</a></div>
+  <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
+  <div class="nav-item"><a href="electronics.html">Electronics</a></div>
+  <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
+  <div class="nav-item"><a href="laptops.html">Laptops</a></div>
+  <div class="nav-item"><a href="audio.html">Audio</a></div>
+  <div class="nav-item"><a href="cameras.html">Cameras</a></div>
+  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
+  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
+  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
+  <div class="nav-item"><a href="deals.html" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
+  <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
+</div></div>
+
+<!-- HERO SLIDER -->
+<div class="hero-section">
+  <div class="slider" id="slider">
+    <div class="slide slide-1">
+      <div class="slide-decor decor-1"></div><div class="slide-decor decor-2"></div>
+      <div class="slide-content fade-up">
+        <div class="slide-tag">&#128293; Limited Time Deal</div>
+        <h1>Next-Gen Smartphones</h1>
+        <p>Experience lightning-fast performance with our latest collection. Up to 40% off on top brands.</p>
+        <div class="slide-btns"><button class="btn-primary" onclick="buyNow('Next-Gen Smartphone','https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop',74999)">Buy Now &#9889;</button><button class="btn-outline">View All Deals</button></div>
+      </div>
+      <img class="slide-img" src="https://i.postimg.cc/90CW7TC0/16-pro.png" alt="Smartphone"/>
+    </div>
+    <div class="slide slide-2">
+      <div class="slide-decor decor-1"></div><div class="slide-decor decor-2"></div>
+      <div class="slide-content">
+        <div class="slide-tag">&#9889; New Arrival</div>
+        <h1>Pro Laptops for Creators</h1>
+        <p>Unleash your creativity with our powerful laptop lineup. Starting at just &#8377;45,999.</p>
+        <div class="slide-btns"><button class="btn-primary" onclick="buyNow('MacBook Air M3','https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop',114900)">Buy Now &#9889;</button><button class="btn-outline">Compare Models</button></div>
+      </div>
+      <img class="slide-img" src="https://i.postimg.cc/X7NjNw24/laptop.png" alt="Laptop"/>
+    </div>
+    <div class="slide slide-3">
+      <div class="slide-decor decor-1"></div><div class="slide-decor decor-2"></div>
+      <div class="slide-content">
+        <div class="slide-tag">&#127911; Best Seller</div>
+        <h1>Premium Audio Gear</h1>
+        <p>Studio-quality sound for everyday life. Wireless headphones, earbuds &amp; more.</p>
+        <div class="slide-btns"><button class="btn-primary" onclick="buyNow('Sony WH-1000XM5','https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=200&h=200&fit=crop',24990)">Buy Now &#9889;</button><button class="btn-outline">Listen &amp; Compare</button></div>
+      </div>
+      <img class="slide-img" src="https://i.postimg.cc/J0M1kJMD/headphone.png" alt="Headphones"/>
+    </div>
+  </div>
+  <button class="slider-btn slider-prev" onclick="changeSlide(-1)">&#8249;</button>
+  <button class="slider-btn slider-next" onclick="changeSlide(1)">&#8250;</button>
+  <div class="slider-dots">
+    <div class="dot active" onclick="goSlide(0)"></div>
+    <div class="dot" onclick="goSlide(1)"></div>
+    <div class="dot" onclick="goSlide(2)"></div>
+  </div>
+</div>
+
+<!-- DEALS STRIP -->
+<div class="deals-strip">
+  <div class="deal-chip">&#9889; Flash Sale <span class="badge">6h left</span></div>
+  <div class="deal-chip">&#128241; Phones Under &#8377;10K <span class="badge">50% off</span></div>
+  <div class="deal-chip">&#128187; Laptops Under &#8377;40K <span class="badge">New</span></div>
+  <div class="deal-chip">&#127911; Earbuds Fest <span class="badge">60% off</span></div>
+  <div class="deal-chip">&#128247; Camera Week <span class="badge">Hot</span></div>
+  <div class="deal-chip">&#128250; Monitor Deals <span class="badge">40% off</span></div>
+  <div class="deal-chip">&#9000; PC Accessories <span class="badge">Bundle</span></div>
+  <div class="deal-chip">&#128267; Power Banks <span class="badge">&#8377;299+</span></div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="section-header">
+  <div class="section-title title-teal">Shop by Category</div>
+  <a href="electronics.html" class="see-all">View all categories &#8594;</a>
+</div>
+<div class="categories-section">
+  <div class="categories-grid" id="cat-grid">
+    <a href="smartphones.html" class="cat-card" style="text-decoration:none;">
+      <div class="cat-img-wrap" data-icon="&#128241;">
+        <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300&h=200&fit=crop" alt="Smartphones"/>
+      </div>
+      <div class="cat-info"><h4>Smartphones</h4><span>120+ products</span></div>
+    </a>
+    <a href="laptops.html" class="cat-card" style="text-decoration:none;">
+      <div class="cat-img-wrap" data-icon="&#128187;">
+        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=200&fit=crop" alt="Laptops"/>
+      </div>
+      <div class="cat-info"><h4>Laptops</h4><span>85+ products</span></div>
+    </a>
+    <a href="audio.html" class="cat-card" style="text-decoration:none;">
+      <div class="cat-img-wrap" data-icon="&#127911;">
+        <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=300&h=200&fit=crop" alt="Audio"/>
+      </div>
+      <div class="cat-info"><h4>Audio</h4><span>200+ products</span></div>
+    </a>
+    <a href="electronics.html" class="cat-card" style="text-decoration:none;">
+      <div class="cat-img-wrap" data-icon="&#128250;">
+        <img src="https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=300&h=200&fit=crop" alt="Monitors"/>
+      </div>
+      <div class="cat-info"><h4>Monitors</h4><span>60+ products</span></div>
+    </a>
+    <a href="gaming.html" class="cat-card" style="text-decoration:none;">
+      <div class="cat-img-wrap" data-icon="&#127918;">
+        <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=300&h=200&fit=crop" alt="Gaming"/>
+      </div>
+      <div class="cat-info"><h4>Gaming</h4><span>150+ products</span></div>
+    </a>
+    <a href="electronics.html" class="cat-card" id="cat-wearables" style="text-decoration:none;">
+      <div class="cat-img-wrap" data-icon="&#8987;">
+        <img src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=300&h=200&fit=crop" alt="Wearables"/>
+      </div>
+      <div class="cat-info"><h4>Wearables</h4><span>90+ products</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- DEAL OF THE DAY -->
+<div class="sec-wrap">
+  <div class="dotd-header-bar">
+    <div class="dotd-title">&#128293; Deal of the Day <span>Limited Time</span></div>
+    <div class="countdown"><div class="countdown-label">Ends in:</div><div class="cd-boxes"><div class="cd-box"><b id="cd-h">05</b><span>Hrs</span></div><div class="cd-sep">:</div><div class="cd-box"><b id="cd-m">42</b><span>Min</span></div><div class="cd-sep">:</div><div class="cd-box"><b id="cd-s">18</b><span>Sec</span></div></div></div>
+    <a href="deals.html" class="see-all-btn">See all deals &#8594;</a>
+  </div>
+  <div class="dotd-body">
+    <div class="scroll-wrap">
+      <button class="scroll-arrow left" onclick="scrollRow('dotd',-1)">&#8249;</button>
+      <div class="h-scroll" id="dotd">
+        <div class="deal-card"><img class="deal-img" src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop&q=90" alt="iPhone"/><div class="deal-info"><div class="deal-cat">Smartphones</div><div class="deal-name">iPhone 15 Pro 256GB</div><div class="deal-off">-55% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;1,34,900</span><span class="deal-price-old">&#8377;2,99,900</span></div><div class="deal-stock"><div class="deal-stock-label"><span>62% sold</span><span>Fast selling</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:62%"></div></div></div><button class="deal-btn" onclick="buyNow('iPhone 15 Pro 256GB','https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop',134900)">Buy Now</button></div></div>
+        <div class="deal-card"><img class="deal-img" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop&q=90" alt="MacBook"/><div class="deal-info"><div class="deal-cat">Laptops</div><div class="deal-name">MacBook Air M3 15"</div><div class="deal-off">-38% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;99,900</span><span class="deal-price-old">&#8377;1,59,900</span></div><div class="deal-stock"><div class="deal-stock-label"><span>78% sold</span><span>Only 8 left</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:78%"></div></div></div><button class="deal-btn" onclick="buyNow('MacBook Air M3','https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop',99900)">Buy Now</button></div></div>
+        <div class="deal-card"><img class="deal-img" src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=300&fit=crop&q=90" alt="Headphones"/><div class="deal-info"><div class="deal-cat">Audio</div><div class="deal-name">Sony WH-1000XM5</div><div class="deal-off">-60% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;14,990</span><span class="deal-price-old">&#8377;37,990</span></div><div class="deal-stock"><div class="deal-stock-label"><span>89% sold</span><span>Almost gone!</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:89%"></div></div></div><button class="deal-btn" onclick="buyNow('Sony WH-1000XM5','https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=200&h=200&fit=crop',14990)">Buy Now</button></div></div>
+        <div class="deal-card"><img class="deal-img" src="https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=400&h=300&fit=crop&q=90" alt="Monitor"/><div class="deal-info"><div class="deal-cat">Monitors</div><div class="deal-name">Samsung 27" 4K OLED</div><div class="deal-off">-40% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;28,990</span><span class="deal-price-old">&#8377;47,990</span></div><div class="deal-stock"><div class="deal-stock-label"><span>45% sold</span><span>72 left</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:45%"></div></div></div><button class="deal-btn" onclick="buyNow('Samsung 27 4K OLED','https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=200&h=200&fit=crop',28990)">Buy Now</button></div></div>
+        <div class="deal-card"><img class="deal-img" src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=300&fit=crop&q=90" alt="Watch"/><div class="deal-info"><div class="deal-cat">Wearables</div><div class="deal-name">Fitbit Charge 6 GPS</div><div class="deal-off">-28% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;12,990</span><span class="deal-price-old">&#8377;17,990</span></div><div class="deal-stock"><div class="deal-stock-label"><span>55% sold</span><span>36 left</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:55%"></div></div></div><button class="deal-btn" onclick="buyNow('Fitbit Charge 6 GPS','https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=200&h=200&fit=crop',12990)">Buy Now</button></div></div>
+        <div class="deal-card"><img class="deal-img" src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop&q=90" alt="PS5"/><div class="deal-info"><div class="deal-cat">Gaming</div><div class="deal-name">PS5 DualSense Controller</div><div class="deal-off">-35% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;5,990</span><span class="deal-price-old">&#8377;9,190</span></div><div class="deal-stock"><div class="deal-stock-label"><span>71% sold</span><span>14 left</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:71%"></div></div></div><button class="deal-btn" onclick="buyNow('PS5 DualSense Controller','https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=200&h=200&fit=crop',5990)">Buy Now</button></div></div>
+        <div class="deal-card"><img class="deal-img" src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop&q=90" alt="iPad"/><div class="deal-info"><div class="deal-cat">Tablets</div><div class="deal-name">iPad Pro 12.9" M2</div><div class="deal-off">-50% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;89,900</span><span class="deal-price-old">&#8377;1,79,900</span></div><div class="deal-stock"><div class="deal-stock-label"><span>83% sold</span><span>Only 4 left!</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:83%"></div></div></div><button class="deal-btn" onclick="buyNow('iPad Pro M2','https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=200&h=200&fit=crop',89900)">Buy Now</button></div></div>
+      </div>
+      <button class="scroll-arrow right" onclick="scrollRow('dotd',1)">&#8250;</button>
+    </div>
+  </div>
+</div>
+
+<div class="sec-divider"></div>
+
+<!-- NEW ARRIVALS -->
+<div class="sec-wrap">
+  <div class="sec-header">
+    <div class="sec-title">&#10024; New Arrivals</div>
+    <a href="new-arrivals.html" class="see-all-btn" style="color:var(--teal);font-weight:700">View all new &#8594;</a>
+  </div>
+  <div class="scroll-wrap">
+    <button class="scroll-arrow left" onclick="scrollRow('newarr',-1)">&#8249;</button>
+    <div class="h-scroll" id="newarr">
+      <div class="new-card"><span class="new-badge">Just In</span><button class="new-wishlist">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop&q=90" alt="iPhone 16"/></div><div class="new-info"><div class="new-cat">Apple</div><div class="new-name">iPhone 16 Pro Max 256GB</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9 (1.2k)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;1,19,900</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="buyNow('iPhone 16 Pro Max','https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop',119900)">Buy Now &#9889;</button></div></div>
+      <div class="new-card"><span class="new-badge hot">Hot</span><button class="new-wishlist">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=400&h=300&fit=crop&q=90" alt="Samsung Book4"/></div><div class="new-info"><div class="new-cat">Samsung</div><div class="new-name">Galaxy Book4 Ultra 16"</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.8 (340)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;1,94,990</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="buyNow('Galaxy Book4 Ultra','https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=200&h=200&fit=crop',194990)">Buy Now &#9889;</button></div></div>
+      <div class="new-card"><span class="new-badge trend">Trending</span><button class="new-wishlist">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=400&h=300&fit=crop&q=90" alt="Sony XM6"/></div><div class="new-info"><div class="new-cat">Audio</div><div class="new-name">Sony WH-1000XM6 ANC</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9 (450)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;31,990</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="buyNow('Sony WH-1000XM6 ANC','https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=200&h=200&fit=crop',31990)">Buy Now &#9889;</button></div></div>
+      <div class="new-card"><span class="new-badge">Just In</span><button class="new-wishlist">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=300&fit=crop&q=90" alt="Apple Watch Ultra"/></div><div class="new-info"><div class="new-cat">Wearables</div><div class="new-name">Apple Watch Ultra 3 GPS</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9 (680)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;89,900</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="buyNow('Apple Watch Ultra 3','https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=200&h=200&fit=crop',89900)">Buy Now &#9889;</button></div></div>
+      <div class="new-card"><span class="new-badge hot">Hot</span><button class="new-wishlist">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop&q=90" alt="MacBook Air M4"/></div><div class="new-info"><div class="new-cat">Apple</div><div class="new-name">MacBook Air M4 13"</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>5.0 (210)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;1,09,900</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="buyNow('MacBook Air M4','https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop',109900)">Buy Now &#9889;</button></div></div>
+      <div class="new-card"><span class="new-badge">Just In</span><button class="new-wishlist">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=400&h=300&fit=crop&q=90" alt="Galaxy S25"/></div><div class="new-info"><div class="new-cat">Samsung</div><div class="new-name">Galaxy S25 Ultra 512GB</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.8 (890)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;1,29,999</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="buyNow('Galaxy S25 Ultra','https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=200&h=200&fit=crop',129999)">Buy Now &#9889;</button></div></div>
+      <div class="new-card"><span class="new-badge hot">Hot</span><button class="new-wishlist">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=300&fit=crop&q=90" alt="ROG Phone"/></div><div class="new-info"><div class="new-cat">Asus</div><div class="new-name">ROG Phone 8 Pro 512GB</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9 (670)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;89,999</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="buyNow('Asus ROG Phone 8 Pro','https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=200&h=200&fit=crop',89999)">Buy Now &#9889;</button></div></div>
+    </div>
+    <button class="scroll-arrow right" onclick="scrollRow('newarr',1)">&#8250;</button>
+  </div>
+</div>
+
+<div class="sec-divider"></div>
+
+<!-- MINI BANNERS -->
+<div style="padding:24px 4% 8px;">
+  <div class="banner-row">
+    <div class="mini-banner mini-banner-1" onclick="window.location.href='laptops.html'" style="cursor:pointer"><span class="tag">New Launch</span><h3>Ultra-Thin Laptops</h3><p>Starting at &#8377;45,999</p><button class="banner-btn" onclick="event.stopPropagation();window.location.href='laptops.html'">Shop Now</button><span class="banner-icon">&#128187;</span></div>
+    <div class="mini-banner mini-banner-2" onclick="window.location.href='audio.html'" style="cursor:pointer"><span class="tag">Best Seller</span><h3>Wireless Earbuds</h3><p>40-60% off today only</p><button class="banner-btn" onclick="event.stopPropagation();window.location.href='audio.html'">Shop Now</button><span class="banner-icon">&#127911;</span></div>
+    <div class="mini-banner mini-banner-3" onclick="document.getElementById('cat-wearables').click()" style="cursor:pointer"><span class="tag">Limited Stock</span><h3>Smart Watches</h3><p>Track your fitness goals</p><button class="banner-btn" onclick="event.stopPropagation();document.getElementById('cat-wearables').click()">View Category</button><span class="banner-icon">&#8987;</span></div>
+  </div>
+</div>
+
+<!-- FEATURED PRODUCTS -->
+<div class="section-header">
+  <div class="section-title title-coral">Featured Products</div>
+  <a href="#" class="see-all">See all products &#8594;</a>
+</div>
+<div class="products-grid">
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-sale">-40%</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=400&h=300&fit=crop&q=90" alt="S24 Ultra"/></div><div class="prod-info"><span class="prod-category">Smartphones</span><div class="prod-name">Samsung Galaxy S24 Ultra</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8 (2.1k reviews)</div><div class="prod-price"><span class="price-now">&#8377;74,999</span><span class="price-old">&#8377;1,24,999</span><span class="price-off">40% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('Samsung Galaxy S24 Ultra',74999)">Add to Cart</button><button class="btn-buy" onclick="buyNow('Samsung Galaxy S24 Ultra','https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=200&h=200&fit=crop',74999)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-new">New</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop&q=90" alt="MacBook"/></div><div class="prod-info"><span class="prod-category">Laptops</span><div class="prod-name">MacBook Air M3 15"</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.9 (3.4k reviews)</div><div class="prod-price"><span class="price-now">&#8377;1,14,900</span><span class="price-old">&#8377;1,34,900</span><span class="price-off">15% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('MacBook Air M3',114900)">Add to Cart</button><button class="btn-buy" onclick="buyNow('MacBook Air M3','https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop',114900)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-hot">Hot</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=300&fit=crop&q=90" alt="Headphones"/></div><div class="prod-info"><span class="prod-category">Audio</span><div class="prod-name">Sony WH-1000XM5 ANC</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.7 (5.2k reviews)</div><div class="prod-price"><span class="price-now">&#8377;24,990</span><span class="price-old">&#8377;34,990</span><span class="price-off">29% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('Sony WH-1000XM5',24990)">Add to Cart</button><button class="btn-buy" onclick="buyNow('Sony WH-1000XM5','https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=200&h=200&fit=crop',24990)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-top">Top Pick</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=400&h=300&fit=crop&q=90" alt="Monitor"/></div><div class="prod-info"><span class="prod-category">Monitors</span><div class="prod-name">LG UltraWide 34" QHD</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;</span> 4.5 (1.8k reviews)</div><div class="prod-price"><span class="price-now">&#8377;42,990</span><span class="price-old">&#8377;55,990</span><span class="price-off">23% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('LG UltraWide 34',42990)">Add to Cart</button><button class="btn-buy" onclick="buyNow('LG UltraWide 34 QHD','https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=200&h=200&fit=crop',42990)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-sale">-35%</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1607016284872-d67178742e2b?w=400&h=300&fit=crop&q=90" alt="PS5"/></div><div class="prod-info"><span class="prod-category">Gaming</span><div class="prod-name">PS5 DualSense Controller</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.9 (7.6k reviews)</div><div class="prod-price"><span class="price-now">&#8377;5,990</span><span class="price-old">&#8377;9,190</span><span class="price-off">35% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('PS5 DualSense',5990)">Add to Cart</button><button class="btn-buy" onclick="buyNow('PS5 DualSense Controller','https://images.unsplash.com/photo-1607016284872-d67178742e2b?w=200&h=200&fit=crop',5990)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-new">New</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=300&fit=crop&q=90" alt="Watch"/></div><div class="prod-info"><span class="prod-category">Wearables</span><div class="prod-name">Apple Watch Series 9 GPS</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8 (4.1k reviews)</div><div class="prod-price"><span class="price-now">&#8377;41,900</span><span class="price-old">&#8377;49,900</span><span class="price-off">16% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('Apple Watch S9',41900)">Add to Cart</button><button class="btn-buy" onclick="buyNow('Apple Watch Series 9','https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=200&h=200&fit=crop',41900)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-hot">Hot</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=300&fit=crop&q=90" alt="Camera"/></div><div class="prod-info"><span class="prod-category">Cameras</span><div class="prod-name">Sony Alpha A7 IV Mirrorless</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.9 (920 reviews)</div><div class="prod-price"><span class="price-now">&#8377;2,49,990</span><span class="price-old">&#8377;2,89,990</span><span class="price-off">14% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('Sony Alpha A7 IV',249990)">Add to Cart</button><button class="btn-buy" onclick="buyNow('Sony Alpha A7 IV','https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=200&h=200&fit=crop',249990)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-sale">-50%</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop&q=90" alt="iPad"/></div><div class="prod-info"><span class="prod-category">Tablets</span><div class="prod-name">iPad Pro 12.9" M2 Chip</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8 (2.9k reviews)</div><div class="prod-price"><span class="price-now">&#8377;89,900</span><span class="price-old">&#8377;1,79,900</span><span class="price-off">50% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('iPad Pro M2',89900)">Add to Cart</button><button class="btn-buy" onclick="buyNow('iPad Pro M2','https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=200&h=200&fit=crop',89900)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-hot">Hot</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=300&fit=crop&q=90" alt="Razer Mouse"/></div><div class="prod-info"><span class="prod-category">Gaming</span><div class="prod-name">Razer DeathAdder V3 Pro</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8 (3.1k reviews)</div><div class="prod-price"><span class="price-now">&#8377;7,499</span><span class="price-old">&#8377;11,999</span><span class="price-off">38% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('Razer DeathAdder V3 Pro',7499)">Add to Cart</button><button class="btn-buy" onclick="buyNow('Razer DeathAdder V3 Pro','https://images.unsplash.com/photo-1527814050087-3793815479db?w=200&h=200&fit=crop',7499)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-sale">-44%</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1512446816042-444d641267d4?w=400&h=300&fit=crop&q=90" alt="Echo Dot"/></div><div class="prod-info"><span class="prod-category">Smart Home</span><div class="prod-name">Amazon Echo Dot 5th Gen</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.7 (34k reviews)</div><div class="prod-price"><span class="price-now">&#8377;3,499</span><span class="price-old">&#8377;6,299</span><span class="price-off">44% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('Amazon Echo Dot 5',3499)">Add to Cart</button><button class="btn-buy" onclick="buyNow('Amazon Echo Dot 5','https://images.unsplash.com/photo-1512446816042-444d641267d4?w=200&h=200&fit=crop',3499)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-new">New</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1570654639102-bdd95efeca7a?w=400&h=300&fit=crop&q=90" alt="Pixel 9 Pro"/></div><div class="prod-info"><span class="prod-category">Smartphones</span><div class="prod-name">Google Pixel 9 Pro 256GB</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8 (2.3k reviews)</div><div class="prod-price"><span class="price-now">&#8377;1,09,999</span><span class="price-old">&#8377;1,29,999</span><span class="price-off">15% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('Google Pixel 9 Pro',109999)">Add to Cart</button><button class="btn-buy" onclick="buyNow('Google Pixel 9 Pro','https://images.unsplash.com/photo-1570654639102-bdd95efeca7a?w=200&h=200&fit=crop',109999)">Buy Now</button></div></div></div>
+  <div class="product-card"><div class="prod-img-wrap"><span class="prod-badge badge-top">Top Pick</span><button class="wishlist-btn">&#129293;</button><img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=300&fit=crop&q=90" alt="Bose QC45"/></div><div class="prod-info"><span class="prod-category">Audio</span><div class="prod-name">Bose QuietComfort 45 ANC</div><div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.7 (8.9k reviews)</div><div class="prod-price"><span class="price-now">&#8377;23,990</span><span class="price-old">&#8377;32,990</span><span class="price-off">27% off</span></div><div class="add-to-cart"><button class="btn-cart" onclick="addToCart('Bose QuietComfort 45',23990)">Add to Cart</button><button class="btn-buy" onclick="buyNow('Bose QuietComfort 45','https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=200&h=200&fit=crop',23990)">Buy Now</button></div></div></div>
+</div>
+
+<!-- EXPLORE MORE -->
+<div class="sec-wrap">
+  <div class="sec-header">
+    <div class="sec-title amber">&#128717; Explore More</div>
+    <a href="electronics.html" class="see-all-btn" style="color:var(--teal);font-weight:700">View all products &#8594;</a>
+  </div>
+  <div class="explore-grid">
+    <div class="explore-card"><div class="explore-img-wrap"><span class="exp-badge sale">-40%</span><img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop&q=90" alt="Samsung S24"/></div><div class="explore-info"><div class="explore-cat">Smartphones</div><div class="explore-name">Samsung Galaxy S24 Ultra</div><div class="explore-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <em>4.8 (2.1k)</em></div><div class="explore-price-row"><span class="exp-now">&#8377;74,999</span><span class="exp-old">&#8377;1,24,999</span><span class="exp-off">40% off</span></div><div class="explore-btns"><button class="exp-cart" onclick="addToCart('Samsung Galaxy S24',74999)">Add to Cart</button><button class="exp-buy" onclick="buyNow('Samsung Galaxy S24','https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop',74999)">&#9889;</button></div></div></div>
+    <div class="explore-card"><div class="explore-img-wrap"><span class="exp-badge new">New</span><img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop&q=90" alt="MacBook"/></div><div class="explore-info"><div class="explore-cat">Laptops</div><div class="explore-name">MacBook Air M3 15"</div><div class="explore-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <em>4.9 (3.4k)</em></div><div class="explore-price-row"><span class="exp-now">&#8377;1,14,900</span><span class="exp-old">&#8377;1,34,900</span><span class="exp-off">15% off</span></div><div class="explore-btns"><button class="exp-cart" onclick="addToCart('MacBook Air M3',114900)">Add to Cart</button><button class="exp-buy" onclick="buyNow('MacBook Air M3','https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop',114900)">&#9889;</button></div></div></div>
+    <div class="explore-card"><div class="explore-img-wrap"><span class="exp-badge hot">Hot</span><img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=300&fit=crop&q=90" alt="Sony WH"/></div><div class="explore-info"><div class="explore-cat">Audio</div><div class="explore-name">Sony WH-1000XM5 ANC</div><div class="explore-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <em>4.7 (5.2k)</em></div><div class="explore-price-row"><span class="exp-now">&#8377;24,990</span><span class="exp-old">&#8377;34,990</span><span class="exp-off">29% off</span></div><div class="explore-btns"><button class="exp-cart" onclick="addToCart('Sony WH-1000XM5',24990)">Add to Cart</button><button class="exp-buy" onclick="buyNow('Sony WH-1000XM5','https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=200&h=200&fit=crop',24990)">&#9889;</button></div></div></div>
+    <div class="explore-card"><div class="explore-img-wrap"><span class="exp-badge top">Top Pick</span><img src="https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=400&h=300&fit=crop&q=90" alt="LG Monitor"/></div><div class="explore-info"><div class="explore-cat">Monitors</div><div class="explore-name">LG UltraWide 34" QHD</div><div class="explore-stars">&#9733;&#9733;&#9733;&#9733; <em>4.5 (1.8k)</em></div><div class="explore-price-row"><span class="exp-now">&#8377;42,990</span><span class="exp-old">&#8377;55,990</span><span class="exp-off">23% off</span></div><div class="explore-btns"><button class="exp-cart" onclick="addToCart('LG UltraWide 34',42990)">Add to Cart</button><button class="exp-buy" onclick="buyNow('LG UltraWide 34 QHD','https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=200&h=200&fit=crop',42990)">&#9889;</button></div></div></div>
+    <div class="explore-card"><div class="explore-img-wrap"><span class="exp-badge sale">-35%</span><img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop&q=90" alt="PS5"/></div><div class="explore-info"><div class="explore-cat">Gaming</div><div class="explore-name">PS5 DualSense Controller</div><div class="explore-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <em>4.9 (7.6k)</em></div><div class="explore-price-row"><span class="exp-now">&#8377;5,990</span><span class="exp-old">&#8377;9,190</span><span class="exp-off">35% off</span></div><div class="explore-btns"><button class="exp-cart" onclick="addToCart('PS5 DualSense',5990)">Add to Cart</button><button class="exp-buy" onclick="buyNow('PS5 DualSense Controller','https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=200&h=200&fit=crop',5990)">&#9889;</button></div></div></div>
+    <div class="explore-card"><div class="explore-img-wrap"><span class="exp-badge new">New</span><img src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=300&fit=crop&q=90" alt="Apple Watch"/></div><div class="explore-info"><div class="explore-cat">Wearables</div><div class="explore-name">Apple Watch Series 10 GPS</div><div class="explore-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <em>4.8 (4.1k)</em></div><div class="explore-price-row"><span class="exp-now">&#8377;41,900</span><span class="exp-old">&#8377;49,900</span><span class="exp-off">16% off</span></div><div class="explore-btns"><button class="exp-cart" onclick="addToCart('Apple Watch S10',41900)">Add to Cart</button><button class="exp-buy" onclick="buyNow('Apple Watch Series 10','https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=200&h=200&fit=crop',41900)">&#9889;</button></div></div></div>
+    <div class="explore-card"><div class="explore-img-wrap"><span class="exp-badge hot">Hot</span><img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=300&fit=crop&q=90" alt="Sony Camera"/></div><div class="explore-info"><div class="explore-cat">Cameras</div><div class="explore-name">Sony Alpha A7 IV Mirrorless</div><div class="explore-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <em>4.9 (920)</em></div><div class="explore-price-row"><span class="exp-now">&#8377;2,49,990</span><span class="exp-old">&#8377;2,89,990</span><span class="exp-off">14% off</span></div><div class="explore-btns"><button class="exp-cart" onclick="addToCart('Sony Alpha A7 IV',249990)">Add to Cart</button><button class="exp-buy" onclick="buyNow('Sony Alpha A7 IV','https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=200&h=200&fit=crop',249990)">&#9889;</button></div></div></div>
+    <div class="explore-card"><div class="explore-img-wrap"><span class="exp-badge sale">-50%</span><img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop&q=90" alt="iPad Pro"/></div><div class="explore-info"><div class="explore-cat">Tablets</div><div class="explore-name">iPad Pro 12.9" M2 Chip</div><div class="explore-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <em>4.8 (2.9k)</em></div><div class="explore-price-row"><span class="exp-now">&#8377;89,900</span><span class="exp-old">&#8377;1,79,900</span><span class="exp-off">50% off</span></div><div class="explore-btns"><button class="exp-cart" onclick="addToCart('iPad Pro M2',89900)">Add to Cart</button><button class="exp-buy" onclick="buyNow('iPad Pro M2','https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=200&h=200&fit=crop',89900)">&#9889;</button></div></div></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-col"><h5>Get to Know Us</h5><a href="#">About BlueCart</a><a href="#">Careers</a><a href="#">Press Releases</a></div>
+    <div class="footer-col"><h5>Connect with Us</h5><a href="#">Facebook</a><a href="#">Twitter</a><a href="#">Instagram</a></div>
+    <div class="footer-col"><h5>Make Money with Us</h5><a href="#">Sell on BlueCart</a><a href="#">Affiliate Programme</a></div>
+    <div class="footer-col"><h5>Let Us Help You</h5><a href="account.html">Your Account</a><a href="orders.html">Returns Centre</a><a href="customer-service.html">Help Centre</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-logo">Blue<span>Cart</span></div>
+    <span>&#169; 2026 BlueCart Store. All rights reserved.</span>
+    <span>Privacy &middot; Terms &middot; Sitemap</span>
+  </div>
+</footer>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div id="cart">
+  <div class="cart-header"><h3>&#128722; Your Cart</h3><button class="cart-close" onclick="toggleCart()">&#10005;</button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cart-total">&#8377;0</span></div>
+    <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout &#8594;</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- LOCATION PANEL -->
+<div id="loc-overlay" onclick="closeLocationPanel()"></div>
+<div id="loc-panel">
+  <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">&#128205; Set Delivery Location</div>
+    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">&#10005;</button>
+  </div>
+  <div style="padding:18px;">
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Enter Pincode</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="loc-pincode" maxlength="6" placeholder="e.g. 311001" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="flex:1;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;"/>
+        <button onclick="applyPincode()" style="background:#0ea5a0;color:white;border:none;padding:10px 16px;border-radius:9px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">Apply</button>
+      </div>
+      <div id="pin-result" style="margin-top:7px;font-size:13px;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><div style="flex:1;height:1px;background:#e5eaf0;"></div><span style="font-size:11.5px;color:#6b7a8d;font-weight:700;">OR SELECT</span><div style="flex:1;height:1px;background:#e5eaf0;"></div></div>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">State</label>
+      <select id="loc-state" onchange="loadCities()" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select State</option><option>Rajasthan</option><option>Maharashtra</option><option>Delhi</option><option>Karnataka</option><option>Tamil Nadu</option><option>Gujarat</option><option>Uttar Pradesh</option><option>West Bengal</option><option>Telangana</option><option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option><option>Haryana</option><option>Bihar</option><option>Goa</option></select>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
+      <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
+    </div>
+    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">&#128205; Set Location</button>
+    <div style="margin-top:18px;">
+      <div style="font-size:11px;font-weight:800;color:#6b7a8d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Popular Cities</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;">
+        <button onclick="setCity('Mumbai','Maharashtra')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Mumbai</button>
+        <button onclick="setCity('Delhi','Delhi')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Delhi</button>
+        <button onclick="setCity('Bengaluru','Karnataka')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Bengaluru</button>
+        <button onclick="setCity('Hyderabad','Telangana')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Hyderabad</button>
+        <button onclick="setCity('Chennai','Tamil Nadu')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Chennai</button>
+        <button onclick="setCity('Pune','Maharashtra')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Pune</button>
+        <button onclick="setCity('Jaipur','Rajasthan')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Jaipur</button>
+        <button onclick="setCity('Bhilwara','Rajasthan')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Bhilwara</button>
+        <button onclick="setCity('Ahmedabad','Gujarat')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Ahmedabad</button>
+        <button onclick="setCity('Lucknow','Uttar Pradesh')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Lucknow</button>
+        <button onclick="setCity('Kolkata','West Bengal')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Kolkata</button>
+        <button onclick="setCity('Noida','Uttar Pradesh')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Noida</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="db.mongo.js"></script>
+<script>
+// ── CART ────────────────────────────────────────────────────────────────────
+var cartItems = [], cartOpen = false;
+function toggleCart() {
+  cartOpen = !cartOpen;
+  var c = document.getElementById('cart'), o = document.getElementById('cart-overlay');
+  if (c) c.classList.toggle('active', cartOpen);
+  if (o) o.classList.toggle('open', cartOpen);
+}
+function addToCart(name, price) { cartItems.push({name:name,price:price}); renderCart(); showToast('Added: ' + name); }
+function removeFromCart(i) { cartItems.splice(i,1); renderCart(); }
+function renderCart() {
+  var list=document.getElementById('cart-items'), total=document.getElementById('cart-total'), count=document.getElementById('cart-count');
+  if (count) count.textContent = cartItems.length;
+  if (!list) return;
+  if (!cartItems.length) { list.innerHTML='<div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div>'; if(total)total.textContent='&#8377;0'; return; }
+  list.innerHTML = cartItems.map(function(item,i){ return '<li class="cart-item"><div><div class="cart-item-name">'+item.name+'</div><div class="cart-item-price">&#8377;'+item.price.toLocaleString('en-IN')+'</div></div><button class="remove-btn" onclick="removeFromCart('+i+')">Remove</button></li>'; }).join('');
+  var sum = cartItems.reduce(function(a,b){return a+b.price;},0);
+  if (total) total.textContent = '&#8377;' + sum.toLocaleString('en-IN');
+}
+function showToast(msg) { var t=document.getElementById('toast'); if(!t)return; t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},2800); }
+
+// ── BUY NOW ─────────────────────────────────────────────────────────────────
+function buyNow(name, img, price) {
+  var p = new URLSearchParams();
+  p.set('name',name); p.set('img',img); p.set('price',price); p.set('mode','buynow');
+  window.location.href = 'checkout.html?' + p.toString();
+}
+function checkoutCart() {
+  if (!cartItems.length) { showToast('Your cart is empty!'); return; }
+  var p = new URLSearchParams();
+  p.set('mode','cart'); p.set('items',JSON.stringify(cartItems));
+  window.location.href = 'checkout.html?' + p.toString();
+}
+
+// ── SLIDER ──────────────────────────────────────────────────────────────────
+(function(){
+  var el=document.getElementById('slider'); if(!el)return;
+  var slides=document.querySelectorAll('.slide'), dots=document.querySelectorAll('.dot'), cur=0, timer;
+  window.goSlide = function(n){ cur=(n+slides.length)%slides.length; el.style.transform='translateX(-'+(cur*100)+'%)'; dots.forEach(function(d,i){d.classList.toggle('active',i===cur);}); };
+  window.changeSlide = function(d){ goSlide(cur+d); reset(); };
+  function reset(){ clearInterval(timer); timer=setInterval(function(){goSlide(cur+1);},5000); }
+  reset();
+})();
+
+// ── SCROLL ROWS ─────────────────────────────────────────────────────────────
+function scrollRow(id, dir) { var el=document.getElementById(id); if(el)el.scrollBy({left:dir*280,behavior:'smooth'}); }
+
+// ── COUNTDOWN ───────────────────────────────────────────────────────────────
+(function(){
+  var h=5,m=42,s=18;
+  setInterval(function(){
+    s--; if(s<0){s=59;m--;} if(m<0){m=59;h--;} if(h<0){h=23;}
+    var hE=document.getElementById('cd-h'),mE=document.getElementById('cd-m'),sE=document.getElementById('cd-s');
+    if(hE)hE.textContent=String(h).padStart(2,'0');
+    if(mE)mE.textContent=String(m).padStart(2,'0');
+    if(sE)sE.textContent=String(s).padStart(2,'0');
+  },1000);
+})();
+
+// ── WISHLIST ─────────────────────────────────────────────────────────────────
+document.querySelectorAll('.wishlist-btn, .new-wishlist').forEach(function(btn){
+  btn.addEventListener('click',function(e){e.stopPropagation();btn.textContent=btn.textContent==='&#129293;'?'&#10084;&#65039;':'&#129293;';});
+});
+
+// ── ORDERS REDIRECT moved to shared.js ──
+
+
+// ── LOCATION PANEL ────────────────────────────────────────────────────────────
+var _CITIES = {
+  'Rajasthan':['Jaipur','Jodhpur','Udaipur','Kota','Ajmer','Bikaner','Bhilwara','Alwar'],
+  'Maharashtra':['Mumbai','Pune','Nagpur','Thane','Nashik','Aurangabad'],
+  'Delhi':['New Delhi','Dwarka','Rohini','Saket','Lajpat Nagar'],
+  'Karnataka':['Bengaluru','Mysuru','Hubli','Mangaluru'],
+  'Tamil Nadu':['Chennai','Coimbatore','Madurai','Salem'],
+  'Gujarat':['Ahmedabad','Surat','Vadodara','Rajkot'],
+  'Uttar Pradesh':['Lucknow','Kanpur','Agra','Noida','Meerut'],
+  'West Bengal':['Kolkata','Howrah','Asansol','Siliguri'],
+  'Telangana':['Hyderabad','Warangal','Nizamabad'],
+  'Madhya Pradesh':['Bhopal','Indore','Gwalior'],
+  'Kerala':['Thiruvananthapuram','Kochi','Kozhikode'],
+  'Punjab':['Ludhiana','Amritsar','Jalandhar'],
+  'Haryana':['Gurugram','Faridabad','Panipat'],
+  'Bihar':['Patna','Gaya','Bhagalpur'],
+  'Goa':['Panaji','Margao']
+};
+var _PINS = {'311001':'Bhilwara','302001':'Jaipur','400001':'Mumbai','110001':'Delhi','560001':'Bengaluru','500001':'Hyderabad','600001':'Chennai','700001':'Kolkata','411001':'Pune','380001':'Ahmedabad','226001':'Lucknow','122001':'Gurugram','201301':'Noida'};
+
+
+
+
+
+</script>
+<script src="shared.js"></script>
+<script>
+function toggleHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(!drawer)return;
+  var open=drawer.classList.contains('open');
+  drawer.classList.toggle('open',!open);
+  overlay.classList.toggle('open',!open);
+  btn.classList.toggle('open',!open);
+}
+function closeHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(drawer){drawer.classList.remove('open');}
+  if(overlay){overlay.classList.remove('open');}
+  if(btn){btn.classList.remove('open');}
+}
+</script>
+</body>
+</html>

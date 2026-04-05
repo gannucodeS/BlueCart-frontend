@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Gaming — BlueCart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>.game-hero{background:linear-gradient(120deg,#0d0d1a,#1a0533,#4c1d95);}
+/* ── BUY NOW BUTTON ── */
+.btn-buy {
+  background: linear-gradient(90deg, var(--amber), #f59e0b);
+  color: var(--navy);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all var(--trans);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-buy:hover { background: #e6a300; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,183,3,0.4); }
+</style>
+</head>
+<body>
+<!-- TOPBAR -->
+<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<!-- NAVBAR WRAP -->
+<div class="navbar-wrap">
+<nav class="navbar">
+  <a href="index.html" class="logo" style="text-decoration:none;">Blue<span>Cart</span></a>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div style="flex:1;"></div>
+  <div class="nav-right">
+    <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
+    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+          <!-- Hamburger button -->
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div><!-- end .nav-right -->
+  </nav>
+  <!-- Search Row -->
+  <div class="navbar-search-row">
+    <div class="search-bar" style="flex:1;">
+      <input type="text" id="searchInput" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
+      <button onclick="doSearchNav()">&#128269;</button>
+    </div>
+  </div>
+</div><!-- end .navbar-wrap -->
+
+<!-- Hamburger overlay + slide-in menu (outside navbar-wrap) -->
+<div class="hm-overlay" id="hm-overlay" onclick="closeHamburger()"></div>
+<div class="hm-drawer" id="hm-drawer">
+  <div class="hm-drawer-head">
+    <span class="hm-drawer-logo">Blue<span>Cart</span></span>
+    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+  </div>
+  <div class="hm-drawer-body">
+    <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Categories</div>
+    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
+    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
+    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
+    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
+    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
+    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
+    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
+    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Offers</div>
+    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
+    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <div class="hm-divider"></div>
+    <div class="hm-section-label">Account</div>
+    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
+    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
+    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
+    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+  </div>
+</div>
+
+<!-- NAV STRIP (desktop only) -->
+<div class="nav-strip"><div class="nav-strip-inner">
+  <div class="nav-item"><a href="index.html">&#9776; All</a></div>
+  <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
+  <div class="nav-item"><a href="electronics.html">Electronics</a></div>
+  <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
+  <div class="nav-item"><a href="laptops.html">Laptops</a></div>
+  <div class="nav-item"><a href="audio.html">Audio</a></div>
+  <div class="nav-item"><a href="cameras.html">Cameras</a></div>
+  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
+  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
+  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
+  <div class="nav-item"><a href="deals.html" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
+  <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
+</div></div>
+
+<div class="breadcrumb"><a href="index.html">Home</a> <span>›</span> Gaming</div>
+    <div class="page-hero game-hero">
+      <div class="hero-decor hd1"></div><div class="hero-decor hd2"></div>
+      <div class="page-hero-content">
+        <div class="page-hero-tag" style="background:#a78bfa;color:#0d0d1a">🎮 Gaming</div>
+        <h1 class="fade-up">Level Up Your Game</h1>
+        <p class="fade-up d1">Consoles, controllers, gaming laptops, peripherals & accessories for every gamer.</p>
+        <div style="display:flex;gap:12px;margin-top:8px;" class="fade-up d2">
+          <button class="btn-primary" style="background:#7c3aed;padding:10px 22px;font-size:14px">Shop Gaming</button>
+          <button class="btn-outline" style="padding:10px 22px;font-size:14px">New Releases</button>
+        </div>
+      </div>
+      <img class="page-hero-img" src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&h=400&fit=crop&q=90" alt="Gaming"/>
+    </div><div class="filter-bar"><span class="filter-label">Filter:</span><span class="filter-chip active">All Gaming</span><span class="filter-chip">Consoles</span><span class="filter-chip">Controllers</span><span class="filter-chip">Gaming Laptops</span><span class="filter-chip">Headsets</span><span class="filter-chip">Keyboards</span><span class="filter-chip">Mice</span><span class="filter-chip">Monitors</span><select class="filter-sort"><option>Sort: Featured</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Newest First</option><option>Best Rated</option></select></div><div class="section-header"><div class="section-title title-teal">All Gaming Products</div><a href="#" class="see-all">See all →</a></div>
+<div class="products-grid">
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=PlayStation 5 Slim&price=54990&img=https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&h=400&fit=crop&q=90&cat=Sony';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-hot">HOT</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&h=400&fit=crop&q=90" alt="PlayStation 5 Slim"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Sony</span>
+      <div class="prod-name">PlayStation 5 Slim</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (4300 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹54,990</span>
+        <span class="price-old">₹64,990</span>
+        <span class="price-off">15% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('PlayStation 5 Slim',54990)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('PlayStation 5 Slim','https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&h=400&fit=crop&q=90',54990)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=PlayStation 5 Slim&price=54990&img=https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&h=400&fit=crop&q=90&cat=Sony" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=PS5 DualSense Controller&price=5990&img=https://images.unsplash.com/photo-1607016284872-d67178742e2b?w=500&h=400&fit=crop&q=90&cat=Sony';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-35%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1607016284872-d67178742e2b?w=500&h=400&fit=crop&q=90" alt="PS5 DualSense Controller"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Sony</span>
+      <div class="prod-name">PS5 DualSense Controller</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (7600 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹5,990</span>
+        <span class="price-old">₹9,190</span>
+        <span class="price-off">35% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('PS5 DualSense Controller',5990)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('PS5 DualSense Controller','https://images.unsplash.com/photo-1607016284872-d67178742e2b?w=500&h=400&fit=crop&q=90',5990)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=PS5 DualSense Controller&price=5990&img=https://images.unsplash.com/photo-1607016284872-d67178742e2b?w=500&h=400&fit=crop&q=90&cat=Sony" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=Xbox Series X Console&price=49990&img=https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=500&h=400&fit=crop&q=90&cat=Microsoft';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-new">NEW</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=500&h=400&fit=crop&q=90" alt="Xbox Series X Console"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Microsoft</span>
+      <div class="prod-name">Xbox Series X Console</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (2100 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹49,990</span>
+        <span class="price-old">₹54,990</span>
+        <span class="price-off">9% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('Xbox Series X Console',49990)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('Xbox Series X Console','https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=500&h=400&fit=crop&q=90',49990)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=Xbox Series X Console&price=49990&img=https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=500&h=400&fit=crop&q=90&cat=Microsoft" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=ROG Strix G16 Gaming&price=119900&img=https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90&cat=Asus';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-40%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90" alt="ROG Strix G16 Gaming"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Asus</span>
+      <div class="prod-name">ROG Strix G16 Gaming</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (860 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹119,900</span>
+        <span class="price-old">₹199,900</span>
+        <span class="price-off">40% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('ROG Strix G16 Gaming',119900)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('ROG Strix G16 Gaming','https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90',119900)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=ROG Strix G16 Gaming&price=119900&img=https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&h=400&fit=crop&q=90&cat=Asus" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=BlackWidow V4 Pro KB&price=14999&img=https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&h=400&fit=crop&q=90&cat=Razer';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-top">Top</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&h=400&fit=crop&q=90" alt="BlackWidow V4 Pro KB"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Razer</span>
+      <div class="prod-name">BlackWidow V4 Pro KB</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (1200 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹14,999</span>
+        <span class="price-old">₹19,999</span>
+        <span class="price-off">25% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('BlackWidow V4 Pro KB',14999)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('BlackWidow V4 Pro KB','https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&h=400&fit=crop&q=90',14999)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=BlackWidow V4 Pro KB&price=14999&img=https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&h=400&fit=crop&q=90&cat=Razer" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=Arctis Nova Pro Headset&price=17999&img=https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500&h=400&fit=crop&q=90&cat=SteelSeries';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-30%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500&h=400&fit=crop&q=90" alt="Arctis Nova Pro Headset"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">SteelSeries</span>
+      <div class="prod-name">Arctis Nova Pro Headset</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (930 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹17,999</span>
+        <span class="price-old">₹24,999</span>
+        <span class="price-off">28% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('Arctis Nova Pro Headset',17999)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('Arctis Nova Pro Headset','https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500&h=400&fit=crop&q=90',17999)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=Arctis Nova Pro Headset&price=17999&img=https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500&h=400&fit=crop&q=90&cat=SteelSeries" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=G Pro X Superlight 2&price=12999&img=https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=400&fit=crop&q=90&cat=Logitech';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-hot">HOT</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=400&fit=crop&q=90" alt="G Pro X Superlight 2"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">Logitech</span>
+      <div class="prod-name">G Pro X Superlight 2</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (2400 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹12,999</span>
+        <span class="price-old">₹17,999</span>
+        <span class="price-off">28% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('G Pro X Superlight 2',12999)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('G Pro X Superlight 2','https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=400&fit=crop&q=90',12999)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=G Pro X Superlight 2&price=12999&img=https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&h=400&fit=crop&q=90&cat=Logitech" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div>
+  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=27&quot; 165Hz Gaming Monitor&price=27999&img=https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=500&h=400&fit=crop&q=90&cat=MSI';}})(event)">
+    <div class="prod-img-wrap">
+      <span class="prod-badge badge-sale">-25%</span>
+      <button class="wishlist-btn">🤍</button>
+      <img src="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=500&h=400&fit=crop&q=90" alt="27" 165Hz Gaming Monitor"/>
+    </div>
+    <div class="prod-info">
+      <span class="prod-category">MSI</span>
+      <div class="prod-name">27" 165Hz Gaming Monitor</div>
+      <div class="prod-rating"><span class="stars">★★★★★</span> 5 (1500 reviews)</div>
+      <div class="prod-price">
+        <span class="price-now">₹27,999</span>
+        <span class="price-old">₹36,999</span>
+        <span class="price-off">24% off</span>
+      </div>
+      <div class="add-to-cart">
+        <button class="btn-cart" onclick="addToCart('27" 165Hz Gaming Monitor',27999)">Add to Cart</button>
+        <button class="btn-buy" onclick="buyNow('27&quot; 165Hz Gaming Monitor','https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=500&h=400&fit=crop&q=90',27999)">Buy Now ⚡</button>
+      </div>
+    <a href="product.html?name=27&quot; 165Hz Gaming Monitor&price=27999&img=https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=500&h=400&fit=crop&q=90&cat=MSI" class="view-details-btn" onclick="event.stopPropagation()">View Details &#8594;</a>
+  </div>
+  </div></div>
+<footer>
+  <div class="footer-top">
+    <div class="footer-col"><h5>Get to Know Us</h5><a href="#">About BlueCart</a><a href="#">Careers</a><a href="#">Press Releases</a></div>
+    <div class="footer-col"><h5>Connect with Us</h5><a href="#">Facebook</a><a href="#">Twitter</a><a href="#">Instagram</a></div>
+    <div class="footer-col"><h5>Make Money</h5><a href="#">Sell on BlueCart</a><a href="#">Affiliate Programme</a></div>
+    <div class="footer-col"><h5>Help</h5><a href="#">Your Account</a><a href="#">Returns Centre</a><a href="#">Help Centre</a></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-logo">Blue<span>Cart</span></div>
+    <span>© 2026 BlueCart Store. All rights reserved.</span>
+    <span>Privacy · Terms · Sitemap</span>
+  </div>
+</footer>
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div id="cart">
+  <div class="cart-header"><h3>🛒 Your Cart</h3><button class="cart-close" onclick="toggleCart()">✕</button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cart-total">₹0</span></div>
+    <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout →</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="db.mongo.js"></script>
+<script>
+// ── CART ──
+var cartItems = [], cartOpen = false;
+function toggleCart() {
+  cartOpen = !cartOpen;
+  var c = document.getElementById('cart');
+  var o = document.getElementById('cart-overlay');
+  if (c) c.classList.toggle('active', cartOpen);
+  if (o) o.classList.toggle('open', cartOpen);
+}
+function addToCart(name, price) {
+  cartItems.push({name: name, price: price});
+  renderCart();
+  showToast('✅ ' + name + ' added to cart!');
+}
+function removeFromCart(i) { cartItems.splice(i, 1); renderCart(); }
+function renderCart() {
+  var list  = document.getElementById('cart-items');
+  var total = document.getElementById('cart-total');
+  var count = document.getElementById('cart-count');
+  if (count) count.textContent = cartItems.length;
+  if (!list) return;
+  if (!cartItems.length) {
+    list.innerHTML = '<div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p></div>';
+    if (total) total.textContent = '₹0'; return;
+  }
+  list.innerHTML = cartItems.map(function(item, i) {
+    return '<li class="cart-item"><div><div class="cart-item-name">' + item.name + '</div>' +
+      '<div class="cart-item-price">₹' + item.price.toLocaleString('en-IN') + '</div></div>' +
+      '<button class="remove-btn" onclick="removeFromCart(' + i + ')">Remove</button></li>';
+  }).join('');
+  var sum = cartItems.reduce(function(a,b){return a+b.price;}, 0);
+  if (total) total.textContent = '₹' + sum.toLocaleString('en-IN');
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2800);
+}
+
+// ── SLIDER ──
+(function() {
+  var sliderEl = document.getElementById('slider');
+  if (!sliderEl) return;
+  var slides = document.querySelectorAll('.slide');
+  var dots   = document.querySelectorAll('.dot');
+  var current = 0, autoTimer;
+  window.goSlide = function(n) {
+    current = (n + slides.length) % slides.length;
+    sliderEl.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach(function(d,i){ d.classList.toggle('active', i===current); });
+  };
+  window.changeSlide = function(dir) { goSlide(current + dir); resetAuto(); };
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(function(){ goSlide(current + 1); }, 5000);
+  }
+  resetAuto();
+})();
+
+// ── WISHLIST ──
+document.querySelectorAll('.wishlist-btn').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+  });
+});
+
+// ── BUY NOW ──
+function buyNow(name, img, price) {
+  var p = new URLSearchParams();
+  p.set('name', name);
+  p.set('img', img);
+  p.set('price', price);
+  p.set('mode', 'buynow');
+  window.location.href = 'checkout.html?' + p.toString();
+}
+
+
+function checkoutCart() {
+  if (!cartItems.length) { showToast('Your cart is empty!'); return; }
+  var p = new URLSearchParams();
+  p.set('mode', 'cart');
+  p.set('items', JSON.stringify(cartItems));
+  window.location.href = 'checkout.html?' + p.toString();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+<!-- LOCATION PANEL -->
+<div id="loc-overlay" style="display:none;position:fixed;inset:0;background:rgba(15,45,74,0.45);z-index:500;backdrop-filter:blur(3px)" onclick="closeLocationPanel()"></div>
+<div id="loc-panel" style="display:none;position:fixed;top:0;left:0;width:100%;max-width:400px;height:100vh;background:white;z-index:600;box-shadow:8px 0 40px rgba(15,45,74,0.2);overflow-y:auto;font-family:Nunito,sans-serif;">
+  <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
+    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">📍 Set Delivery Location</div>
+    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">✕</button>
+  </div>
+  <div style="padding:18px;">
+    <div style="margin-bottom:18px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Enter Pincode</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="loc-pincode" maxlength="6" placeholder="e.g. 311001" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="flex:1;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;"/>
+        <button onclick="applyPincode()" style="background:#0ea5a0;color:white;border:none;padding:10px 16px;border-radius:9px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">Apply</button>
+      </div>
+      <div id="pin-result" style="margin-top:7px;font-size:13px;color:#6b7a8d;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;"><div style="flex:1;height:1px;background:#e5eaf0;"></div><span style="font-size:11.5px;color:#6b7a8d;font-weight:700;">OR SELECT</span><div style="flex:1;height:1px;background:#e5eaf0;"></div></div>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">State</label>
+      <select id="loc-state" onchange="loadCities()" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;">
+        <option value="">Select State</option>
+        <option>Rajasthan</option><option>Maharashtra</option><option>Delhi</option><option>Karnataka</option><option>Tamil Nadu</option><option>Gujarat</option><option>Uttar Pradesh</option><option>West Bengal</option><option>Telangana</option><option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option><option>Haryana</option><option>Bihar</option><option>Goa</option>
+      </select>
+    </div>
+    <div style="margin-bottom:18px;">
+      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
+      <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
+    </div>
+    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">📍 Set Location</button>
+    <div style="margin-top:20px;">
+      <div style="font-size:11px;font-weight:800;color:#6b7a8d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Popular Cities</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;">
+        <button onclick="setCity('Mumbai','Maharashtra')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Mumbai</button>
+        <button onclick="setCity('Delhi','Delhi')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Delhi</button>
+        <button onclick="setCity('Bengaluru','Karnataka')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Bengaluru</button>
+        <button onclick="setCity('Hyderabad','Telangana')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Hyderabad</button>
+        <button onclick="setCity('Chennai','Tamil Nadu')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Chennai</button>
+        <button onclick="setCity('Kolkata','West Bengal')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Kolkata</button>
+        <button onclick="setCity('Pune','Maharashtra')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Pune</button>
+        <button onclick="setCity('Jaipur','Rajasthan')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Jaipur</button>
+        <button onclick="setCity('Bhilwara','Rajasthan')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Bhilwara</button>
+        <button onclick="setCity('Ahmedabad','Gujarat')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Ahmedabad</button>
+        <button onclick="setCity('Lucknow','Uttar Pradesh')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Lucknow</button>
+        <button onclick="setCity('Noida','Uttar Pradesh')" style="background:#f4f7fb;border:1.5px solid #e0e7ef;border-radius:20px;padding:5px 13px;font-size:12.5px;font-weight:700;color:#0f2d4a;cursor:pointer;font-family:Nunito,sans-serif;">Noida</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+window.PAGE_FILTER_CONFIG = {
+  brands:     ["Sony", "Microsoft", "Razer", "Logitech", "Asus", "SteelSeries", "MSI"],
+  label:      "Gaming",
+  priceChips: [{label:"All",min:0,max:99999999},{label:"Under &#8377;5K",min:0,max:5000},{label:"&#8377;5K–&#8377;20K",min:5000,max:20000},{label:"&#8377;20K–&#8377;80K",min:20000,max:80000},{label:"&#8377;80K+",min:80000,max:99999999}]
+};
+</script>
+<script src="shared.js"></script>
+<script src="shared-filter.js">
+function toggleHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(!drawer)return;
+  var open=drawer.classList.contains('open');
+  drawer.classList.toggle('open',!open);
+  overlay.classList.toggle('open',!open);
+  btn.classList.toggle('open',!open);
+}
+function closeHamburger(){
+  var btn=document.getElementById('hamburger-btn');
+  var drawer=document.getElementById('hm-drawer');
+  var overlay=document.getElementById('hm-overlay');
+  if(drawer){drawer.classList.remove('open');}
+  if(overlay){overlay.classList.remove('open');}
+  if(btn){btn.classList.remove('open');}
+}
+
+</script>
+</body></html>
