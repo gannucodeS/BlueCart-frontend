@@ -114,8 +114,87 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
   white-space: nowrap;
   text-decoration: none;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 .logo span { color: #ccf2f1; }
+.logo-img {
+  height: 34px;
+  width: auto;
+  margin-right: 2px;
+}
+.hm-drawer-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hm-drawer-logo span { color: #ccf2f1; }
+.hm-drawer-logo-img {
+  height: 28px;
+  width: auto;
+}
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.footer-logo span { color: var(--teal); }
+.footer-logo-img {
+  height: 26px;
+  width: auto;
+}
+.sb-logo {
+  padding: 22px 20px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sb-logo h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  color: white;
+}
+.sb-logo h2 span { color: #ccf2f1; }
+.sb-logo p { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; }
+.admin-logo-img {
+  height: 26px;
+  width: auto;
+}
+.mini-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px;
+  color: white;
+  text-align: center;
+  padding: 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.mini-logo span { color: #ccf2f1; }
+.mini-logo p { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.65); margin-top: 4px; font-family: 'Nunito', sans-serif; }
+.mini-logo a { color: inherit; text-decoration: none; cursor: pointer; }
+.login-logo-img {
+  height: 48px;
+  width: auto;
+  margin-bottom: 8px;
+}
+@media (max-width: 600px) {
+  .logo-img { height: 28px; }
+  .hm-drawer-logo-img { height: 24px; }
+  .footer-logo-img { height: 22px; }
+  .admin-logo-img { height: 22px; }
+  .login-logo-img { height: 40px; }
+}
 
 /* ── Location box (hidden on mobile) ── */
 .location-box {
