@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="shared.css"/>
   <style>
     /* ── SEARCH PAGE LAYOUT ── */
-    .search-page-wrap{display:grid;grid-template-columns:280px 1fr;gap:24px;padding:24px 4% 60px;max-width:1300px;margin:0 auto;}
+    .search-page-wrap{display:grid;grid-template-columns:280px 1fr;gap:24px;padding:24px 4% 60px;max-width:1300px;margin:0 auto;align-items:start;}
 
     /* ── SEARCH HERO ── */
     .search-hero{background:linear-gradient(120deg,#0f2d4a,#1a4a6e);padding:28px 4%;}
@@ -26,7 +26,7 @@
     .search-tag:hover{background:rgba(255,255,255,.3);}
 
     /* ── SIDEBAR FILTERS ── */
-    .filter-sidebar{background:white;border-radius:16px;padding:0;box-shadow:0 2px 12px rgba(15,45,74,.07);border:1.5px solid #e5eaf0;height:fit-content;position:sticky;top:80px;}
+    .filter-sidebar{background:white;border-radius:16px;padding:0;box-shadow:0 2px 12px rgba(15,45,74,.07);border:1.5px solid #e5eaf0;height:fit-content;position:sticky;top:80px;overflow:visible;}
     .fs-header{padding:16px 20px;border-bottom:1px solid #e5eaf0;display:flex;justify-content:space-between;align-items:center;}
     .fs-title{font-family:'Syne',sans-serif;font-size:16px;color:var(--navy);}
     .fs-clear{font-size:12.5px;font-weight:800;color:var(--teal);cursor:pointer;border:none;background:none;font-family:'Nunito',sans-serif;}
@@ -56,7 +56,7 @@
     .apply-filter-btn:hover{background:var(--teal-dark);}
 
     /* ── RESULTS AREA ── */
-    .results-area{}
+    .results-area{min-width:0;}
     .results-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:white;border-radius:12px;padding:12px 16px;margin-bottom:18px;box-shadow:0 2px 8px rgba(15,45,74,.06);border:1.5px solid #e5eaf0;flex-wrap:wrap;}
     .view-toggle{display:flex;gap:6px;}
     .view-btn{background:var(--off);border:1.5px solid #e0e7ef;border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s;}
@@ -65,8 +65,9 @@
     .sort-select:focus{border-color:var(--teal);}
     .results-count-text{font-size:13.5px;color:var(--muted);font-weight:700;}
 
-    /* Grid/List view toggle */
-    .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+    /* Grid/List view toggle - Fixed alignment */
+    .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;align-items:start;}
+    .results-grid > *{align-self:start;}
     .results-grid.list-view{grid-template-columns:1fr;}
     .results-grid.list-view .product-card{flex-direction:row;max-height:160px;}
     .results-grid.list-view .prod-img-wrap{width:160px;min-width:160px;height:160px;}
@@ -141,6 +142,9 @@
     .mob-result-count{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;margin-left:auto;flex-shrink:0;}
 
     /* ── RESPONSIVE BREAKPOINTS ── */
+    @media(max-width:1100px){
+      .results-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+    }
     @media(max-width:900px){
       .search-page-wrap{grid-template-columns:1fr;padding:12px 3% 60px;}
       .filter-sidebar{display:none;}
@@ -151,9 +155,12 @@
       .search-hero{padding:18px 4% 14px;}
       .search-hero h2{font-size:16px;margin-bottom:10px;}
       .search-hero h2 span{font-size:20px;}
-      .results-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+      .results-grid{grid-template-columns:repeat(3,1fr);gap:14px;}
       .active-filters{padding:0 2px;}
       .sim-card{width:150px;}
+    }
+    @media(max-width:700px){
+      .results-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
     }
     @media(max-width:600px){
       .search-big-bar{height:46px;}
@@ -185,20 +192,12 @@
     <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
     <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
     <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
-          <!-- Hamburger button -->
-      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div><!-- end .nav-right -->
-  </nav>
-  <!-- Search Row -->
-  <div class="navbar-search-row">
-    <div class="search-bar" style="flex:1;">
-      <input type="text" id="navSearch" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')runSearch(this.value)"/>
-      <button onclick="runSearch(document.getElementById('navSearch').value)">&#128269;</button>
-    </div>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
-</div><!-- end .navbar-wrap -->
+</nav>
+</div>
 
 <!-- Hamburger overlay + slide-in menu (outside navbar-wrap) -->
 <div class="hm-overlay" id="hm-overlay" onclick="closeHamburger()"></div>
@@ -634,7 +633,6 @@ BC.ready.then(function() {
   // Get query from URL
   var params = new URLSearchParams(window.location.search);
   currentQuery = params.get('q') || '';
-  document.getElementById('navSearch').value = currentQuery;
   document.getElementById('bigSearch').value = currentQuery;
   document.getElementById('query-display').textContent = currentQuery ? '\u201C'+currentQuery+'\u201D' : 'All Products';
   document.title = currentQuery ? 'Search: '+currentQuery+' \u2014 BlueCart' : 'All Products \u2014 BlueCart';
@@ -924,16 +922,6 @@ function closeMobileFilter() {
   document.getElementById('filter-sidebar').classList.remove('mobile-open');
   document.getElementById('filter-overlay').classList.remove('open');
 }
-
-// ── LOCATION PANEL ────────────────────────────────────────────────────────────
-var _CITIES={'Rajasthan':['Jaipur','Jodhpur','Udaipur','Bhilwara'],'Maharashtra':['Mumbai','Pune','Nagpur'],'Delhi':['New Delhi','Dwarka'],'Karnataka':['Bengaluru','Mysuru'],'Tamil Nadu':['Chennai','Coimbatore'],'Gujarat':['Ahmedabad','Surat'],'Uttar Pradesh':['Lucknow','Noida','Agra'],'West Bengal':['Kolkata','Howrah'],'Telangana':['Hyderabad'],'Goa':['Panaji']};
-var _PINS={'311001':'Bhilwara','302001':'Jaipur','400001':'Mumbai','110001':'Delhi','560001':'Bengaluru','500001':'Hyderabad'};
-function toggleLocationPanel(){var p=document.getElementById('loc-panel'),o=document.getElementById('loc-overlay');var open=p.style.display==='block';p.style.display=open?'none':'block';o.style.display=open?'none':'block';}
-function closeLocationPanel(){document.getElementById('loc-panel').style.display='none';document.getElementById('loc-overlay').style.display='none';}
-function setLocationDisplay(city){var el=document.getElementById('location-display');if(el)el.textContent='\u{1F4CD} '+city;localStorage.setItem('bc_location',city);closeLocationPanel();}
-function applyPincode(){var pin=document.getElementById('loc-pincode').value.trim(),res=document.getElementById('pin-result');if(pin.length!==6){res.innerHTML='<span style="color:#dc2626">Invalid pincode.</span>';return;}var city=_PINS[pin];city?setLocationDisplay(city):setLocationDisplay(pin);}
-function loadCities(){var s=document.getElementById('loc-state'),c=document.getElementById('loc-city');c.innerHTML='<option value="">Select City</option>';(_CITIES[s.value]||[]).forEach(function(ct){var o=document.createElement('option');o.value=ct;o.textContent=ct;c.appendChild(o);});}
-function applyStateCity(){var s=document.getElementById('loc-state'),c=document.getElementById('loc-city');if(!s.value||!c.value)return;setLocationDisplay(c.value);}
 
 // ── MOBILE FILTER SHEET ──────────────────────────────────────────────────────
 function openFilterSheet(){

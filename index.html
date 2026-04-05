@@ -158,16 +158,34 @@
 <div class="nav-strip"><div class="nav-strip-inner">
   <div class="nav-item"><a href="index.html">&#9776; All</a></div>
   <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
-  <div class="nav-item"><a href="electronics.html">Electronics</a></div>
+  <div class="nav-item">
+    <a href="electronics.html">Electronics</a>
+    <div class="nav-dropdown">
+      <a href="smartphones.html">&#128241; Smartphones</a>
+      <a href="laptops.html">&#128187; Laptops</a>
+      <a href="audio.html">&#127911; Audio</a>
+      <a href="cameras.html">&#128247; Cameras</a>
+      <a href="gaming.html">&#127918; Gaming</a>
+      <hr/>
+      <a href="accessories.html">&#128298; Accessories</a>
+      <a href="electronics.html">View All Electronics</a>
+    </div>
+  </div>
   <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
   <div class="nav-item"><a href="laptops.html">Laptops</a></div>
   <div class="nav-item"><a href="audio.html">Audio</a></div>
   <div class="nav-item"><a href="cameras.html">Cameras</a></div>
-  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
-  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
-  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
-  <div class="nav-item"><a href="deals.html" class="hot">&#128293; Hot Deals</a></div>
-  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
+  <div class="nav-item">
+    <a href="accessories.html">More</a>
+    <div class="nav-dropdown">
+      <a href="accessories.html">&#128298; Accessories</a>
+      <a href="gaming.html">&#127918; Gaming</a>
+      <a href="smarthome.html">&#127968; Smart Home</a>
+      <hr/>
+      <a href="new-arrivals.html">&#10024; New Arrivals</a>
+      <a href="deals.html">&#128293; Hot Deals</a>
+    </div>
+  </div>
   <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
 </div></div>
 
@@ -443,40 +461,6 @@
 
 <script src="db.mongo.js"></script>
 <script>
-// ── CART ────────────────────────────────────────────────────────────────────
-var cartItems = [], cartOpen = false;
-function toggleCart() {
-  cartOpen = !cartOpen;
-  var c = document.getElementById('cart'), o = document.getElementById('cart-overlay');
-  if (c) c.classList.toggle('active', cartOpen);
-  if (o) o.classList.toggle('open', cartOpen);
-}
-function addToCart(name, price) { cartItems.push({name:name,price:price}); renderCart(); showToast('Added: ' + name); }
-function removeFromCart(i) { cartItems.splice(i,1); renderCart(); }
-function renderCart() {
-  var list=document.getElementById('cart-items'), total=document.getElementById('cart-total'), count=document.getElementById('cart-count');
-  if (count) count.textContent = cartItems.length;
-  if (!list) return;
-  if (!cartItems.length) { list.innerHTML='<div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div>'; if(total)total.textContent='&#8377;0'; return; }
-  list.innerHTML = cartItems.map(function(item,i){ return '<li class="cart-item"><div><div class="cart-item-name">'+item.name+'</div><div class="cart-item-price">&#8377;'+item.price.toLocaleString('en-IN')+'</div></div><button class="remove-btn" onclick="removeFromCart('+i+')">Remove</button></li>'; }).join('');
-  var sum = cartItems.reduce(function(a,b){return a+b.price;},0);
-  if (total) total.textContent = '&#8377;' + sum.toLocaleString('en-IN');
-}
-function showToast(msg) { var t=document.getElementById('toast'); if(!t)return; t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},2800); }
-
-// ── BUY NOW ─────────────────────────────────────────────────────────────────
-function buyNow(name, img, price) {
-  var p = new URLSearchParams();
-  p.set('name',name); p.set('img',img); p.set('price',price); p.set('mode','buynow');
-  window.location.href = 'checkout.html?' + p.toString();
-}
-function checkoutCart() {
-  if (!cartItems.length) { showToast('Your cart is empty!'); return; }
-  var p = new URLSearchParams();
-  p.set('mode','cart'); p.set('items',JSON.stringify(cartItems));
-  window.location.href = 'checkout.html?' + p.toString();
-}
-
 // ── SLIDER ──────────────────────────────────────────────────────────────────
 (function(){
   var el=document.getElementById('slider'); if(!el)return;
@@ -507,54 +491,10 @@ document.querySelectorAll('.wishlist-btn, .new-wishlist').forEach(function(btn){
   btn.addEventListener('click',function(e){e.stopPropagation();btn.textContent=btn.textContent==='&#129293;'?'&#10084;&#65039;':'&#129293;';});
 });
 
-// ── ORDERS REDIRECT moved to shared.js ──
-
-
-// ── LOCATION PANEL ────────────────────────────────────────────────────────────
-var _CITIES = {
-  'Rajasthan':['Jaipur','Jodhpur','Udaipur','Kota','Ajmer','Bikaner','Bhilwara','Alwar'],
-  'Maharashtra':['Mumbai','Pune','Nagpur','Thane','Nashik','Aurangabad'],
-  'Delhi':['New Delhi','Dwarka','Rohini','Saket','Lajpat Nagar'],
-  'Karnataka':['Bengaluru','Mysuru','Hubli','Mangaluru'],
-  'Tamil Nadu':['Chennai','Coimbatore','Madurai','Salem'],
-  'Gujarat':['Ahmedabad','Surat','Vadodara','Rajkot'],
-  'Uttar Pradesh':['Lucknow','Kanpur','Agra','Noida','Meerut'],
-  'West Bengal':['Kolkata','Howrah','Asansol','Siliguri'],
-  'Telangana':['Hyderabad','Warangal','Nizamabad'],
-  'Madhya Pradesh':['Bhopal','Indore','Gwalior'],
-  'Kerala':['Thiruvananthapuram','Kochi','Kozhikode'],
-  'Punjab':['Ludhiana','Amritsar','Jalandhar'],
-  'Haryana':['Gurugram','Faridabad','Panipat'],
-  'Bihar':['Patna','Gaya','Bhagalpur'],
-  'Goa':['Panaji','Margao']
-};
-var _PINS = {'311001':'Bhilwara','302001':'Jaipur','400001':'Mumbai','110001':'Delhi','560001':'Bengaluru','500001':'Hyderabad','600001':'Chennai','700001':'Kolkata','411001':'Pune','380001':'Ahmedabad','226001':'Lucknow','122001':'Gurugram','201301':'Noida'};
-
-
-
-
-
 </script>
 <script src="shared.js"></script>
 <script>
-function toggleHamburger(){
-  var btn=document.getElementById('hamburger-btn');
-  var drawer=document.getElementById('hm-drawer');
-  var overlay=document.getElementById('hm-overlay');
-  if(!drawer)return;
-  var open=drawer.classList.contains('open');
-  drawer.classList.toggle('open',!open);
-  overlay.classList.toggle('open',!open);
-  btn.classList.toggle('open',!open);
-}
-function closeHamburger(){
-  var btn=document.getElementById('hamburger-btn');
-  var drawer=document.getElementById('hm-drawer');
-  var overlay=document.getElementById('hm-overlay');
-  if(drawer){drawer.classList.remove('open');}
-  if(overlay){overlay.classList.remove('open');}
-  if(btn){btn.classList.remove('open');}
-}
+// Hamburger functions are in shared.js
 </script>
 </body>
 </html>

@@ -13,23 +13,26 @@
     .mini-logo{font-family:'Syne',sans-serif;font-size:26px;color:white;text-align:center;padding:0 0 20px;}
     .mini-logo span{color:#ccf2f1;}
     .mini-logo p{font-size:13px;font-weight:600;color:rgba(255,255,255,0.65);margin-top:4px;font-family:'Nunito',sans-serif;}
+    .mini-logo a{color:inherit;text-decoration:none;cursor:pointer;}
     .auth-card{width:100%;max-width:460px;background:white;border-radius:20px;box-shadow:0 24px 64px rgba(0,0,0,.25);overflow:hidden;}
     .db-tag{text-align:center;padding:9px;background:rgba(14,165,160,.1);border-bottom:1px solid rgba(14,165,160,.2);font-size:12px;font-weight:700;color:#0c8f8b;}
     .tabs{display:flex;border-bottom:1px solid #e5eaf0;}
     .tab{flex:1;padding:17px;text-align:center;font-weight:800;font-size:15px;cursor:pointer;color:#6b7a8d;background:#f4f7fb;transition:all .2s;border:none;font-family:'Nunito',sans-serif;}
     .tab.active{background:white;color:#0f2d4a;border-bottom:3px solid #0ea5a0;}
-    .role-row{display:flex;gap:10px;padding:18px 24px 4px;}
-    .role-btn{flex:1;padding:10px;border-radius:10px;border:2px solid #e0e7ef;background:#f4f7fb;font-size:13.5px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;color:#0f2d4a;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;}
-    .role-btn.active{background:#0f2d4a;color:white;border-color:#0f2d4a;}
     .body{padding:18px 24px 24px;}
     .fg{margin-bottom:15px;}
     .fg label{display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
     .fg input{width:100%;padding:11px 13px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:'Nunito',sans-serif;outline:none;color:#0f2d4a;transition:border-color .2s;}
     .fg input:focus{border-color:#0ea5a0;box-shadow:0 0 0 3px rgba(14,165,160,.1);}
+    .fg input.error{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,.1);}
+    .fg input.valid{border-color:#16a34a;}
+    .fg-error{font-size:11.5px;color:#dc2626;margin-top:4px;display:none;}
+    .fg-success{font-size:11.5px;color:#16a34a;margin-top:4px;display:none;}
     .pw-wrap{position:relative;}
     .pw-wrap input{padding-right:44px;}
     .pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:17px;color:#6b7a8d;}
-    .admin-field{display:none;}
+    .admin-login-toggle{text-align:center;margin-top:12px;}
+    .admin-login-toggle a{font-size:12.5px;color:var(--teal);font-weight:700;cursor:pointer;text-decoration:underline;}
     .submit-btn{width:100%;padding:13px;border-radius:11px;border:none;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;box-shadow:0 4px 16px rgba(14,165,160,.35);transition:all .2s;}
     .submit-btn:hover{transform:translateY(-2px);}
     .submit-btn:disabled{opacity:.65;cursor:not-allowed;transform:none;}
@@ -48,51 +51,74 @@
     .divider span{font-size:11px;color:#6b7a8d;font-weight:700;}
     @keyframes spin{to{transform:rotate(360deg)}}
     .spin{display:inline-block;width:15px;height:15px;border:2.5px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;vertical-align:middle;}
+    .google-btn{width:100%;padding:12px;border-radius:11px;border:2px solid #e0e7ef;background:white;color:#0f2d4a;font-size:14px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;}
+    .google-btn:hover{background:#f4f7fb;border-color:#0ea5a0;}
+    .google-btn:disabled{opacity:.65;cursor:not-allowed;}
+    .google-btn svg{width:20px;height:20px;}
+    .admin-fields{display:none;margin-top:16px;padding-top:16px;border-top:1px solid #e5eaf0;}
+    .admin-fields.show{display:block;}
   </style>
 </head>
 <body>
 
 
 <div class="page-bg">
-  <div class="mini-logo"><div>Blue<span>Cart</span></div><p>Sign in or create your account</p></div>
+  <div class="mini-logo"><a href="index.html">Blue<span>Cart</span></a><p>Sign in or create your account</p></div>
+  <div style="text-align:center;margin-bottom:16px;"><a href="index.html" style="color:rgba(255,255,255,0.75);font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">&#8592; Return to BlueCart</a></div>
   <div class="auth-card">
-    <div class="db-tag">&#128204; Secured with IndexedDB + PBKDF2 Encryption</div>
     <div class="tabs">
       <button class="tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
       <button class="tab" id="tab-register" onclick="switchTab('register')">Create Account</button>
     </div>
-    <div class="role-row">
-      <button class="role-btn active" id="role-user" onclick="setRole('user')">&#128100; Customer</button>
-      <button class="role-btn" id="role-admin" onclick="setRole('admin')">&#128737; Admin</button>
-    </div>
+
     <!-- LOGIN PANE -->
     <div class="pane active" id="pane-login">
       <div class="body">
         <div class="msg msg-err" id="login-err"></div>
         <div class="msg msg-ok" id="login-ok"></div>
-        <div class="fg"><label>Email Address</label><input type="email" id="l-email" placeholder="you@email.com" autocomplete="email"/></div>
-        <div class="fg"><label>Password</label><div class="pw-wrap"><input type="password" id="l-pass" placeholder="Your password" autocomplete="current-password"/><button class="pw-eye" type="button" onclick="togglePw('l-pass',this)">&#128065;</button></div></div>
-        <div class="fg admin-field" id="l-key-group"><label>Admin Secret Key</label><input type="password" id="l-key" placeholder="Required for admin login"/></div>
+        
+        <div class="google-btn" id="google-btn" onclick="signInWithGoogle()">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <span id="google-btn-text">Sign in with Google</span>
+        </div>
+        
+        <div class="divider"><span>or</span></div>
+        
+        <div class="fg"><label>Email Address</label><input type="email" id="l-email" placeholder="you@email.com" autocomplete="email" oninput="validateEmailField(this)" onblur="validateEmailField(this)"/><div class="fg-error" id="l-email-error"></div><div class="fg-success" id="l-email-success"></div></div>
+        <div class="fg"><label>Password</label><div class="pw-wrap"><input type="password" id="l-pass" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/><button class="pw-eye" type="button" onclick="togglePw('l-pass',this)">&#128065;</button></div></div>
+        
+        <div class="admin-login-toggle"><a onclick="toggleAdminLogin()">Admin Login</a></div>
+        <div class="admin-fields" id="admin-fields">
+          <div class="fg"><label>Admin Secret Key</label><div class="pw-wrap"><input type="password" id="l-admin-key" placeholder="Enter admin secret key"/><button class="pw-eye" type="button" onclick="togglePw('l-admin-key',this)">&#128065;</button></div></div>
+        </div>
+        
         <button class="submit-btn" id="login-btn" onclick="doLogin()">Sign In</button>
-        <div class="divider"><span>Test Credentials</span></div>
-        <div class="hint"><b>Admin:</b> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dbbabfb6b2b59bb9b7aebeb8baa9aff5b2b5">[email&#160;protected]</a> / Admin@123 / Key: bluecart@admin2026<br><b>User:</b> Register a new account using the tab above</div>
+        <div class="hint"><b>Admin:</b> Use Admin Login link above with key: bluecart@admin2026<br><b>User:</b> Register a new account or use Google Sign-In</div>
       </div>
       <div class="note">New here? <a onclick="switchTab('register')">Create a free account</a></div>
     </div>
+
     <!-- REGISTER PANE -->
     <div class="pane" id="pane-register">
       <div class="body">
         <div class="msg msg-err" id="reg-err"></div>
         <div class="msg msg-ok" id="reg-ok"></div>
-        <div class="two-col">
-          <div class="fg"><label>First Name *</label><input type="text" id="r-fname" placeholder="Arjun"/></div>
-          <div class="fg"><label>Last Name *</label><input type="text" id="r-lname" placeholder="Sharma"/></div>
+        
+        <div class="google-btn" id="google-reg-btn" onclick="signInWithGoogle()" style="margin-bottom:16px;">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <span>Sign up with Google</span>
         </div>
-        <div class="fg"><label>Email *</label><input type="email" id="r-email" placeholder="you@email.com"/></div>
-        <div class="fg"><label>Phone *</label><input type="tel" id="r-phone" placeholder="+91 98765 43210"/></div>
-        <div class="fg"><label>Password * (min 8 chars)</label><div class="pw-wrap"><input type="password" id="r-pass" placeholder="Create a strong password"/><button class="pw-eye" type="button" onclick="togglePw('r-pass',this)">&#128065;</button></div></div>
-        <div class="fg"><label>Confirm Password *</label><div class="pw-wrap"><input type="password" id="r-confirm" placeholder="Re-enter password"/><button class="pw-eye" type="button" onclick="togglePw('r-confirm',this)">&#128065;</button></div></div>
-        <div class="fg admin-field" id="r-key-group"><label>Admin Secret Key *</label><input type="password" id="r-key" placeholder="Contact super-admin for this key"/></div>
+        
+        <div class="divider"><span>or</span></div>
+        
+        <div class="two-col">
+          <div class="fg"><label>First Name *</label><input type="text" id="r-fname" placeholder="Arjun" oninput="validateNameField(this)"/><div class="fg-error" id="r-fname-error"></div></div>
+          <div class="fg"><label>Last Name *</label><input type="text" id="r-lname" placeholder="Sharma" oninput="validateNameField(this)"/><div class="fg-error" id="r-lname-error"></div></div>
+        </div>
+        <div class="fg"><label>Email *</label><input type="email" id="r-email" placeholder="you@email.com" oninput="validateEmailField(this)" onblur="validateEmailField(this)"/><div class="fg-error" id="r-email-error"></div><div class="fg-success" id="r-email-success"></div></div>
+        <div class="fg"><label>Phone * (10-digit Indian number)</label><input type="tel" id="r-phone" placeholder="+91 98765 43210" maxlength="14" oninput="formatPhoneInput(this);validatePhoneField(this)" onblur="validatePhoneField(this)"/><div class="fg-error" id="r-phone-error"></div><div class="fg-success" id="r-phone-success"></div></div>
+        <div class="fg"><label>Password * (min 8 chars)</label><div class="pw-wrap"><input type="password" id="r-pass" placeholder="Create a strong password" oninput="validatePasswordField(this)"/><button class="pw-eye" type="button" onclick="togglePw('r-pass',this)">&#128065;</button></div><div class="fg-error" id="r-pass-error"></div><div class="fg-success" id="r-pass-success"></div></div>
+        <div class="fg"><label>Confirm Password *</label><div class="pw-wrap"><input type="password" id="r-confirm" placeholder="Re-enter password" oninput="validateConfirmField(this)"/><button class="pw-eye" type="button" onclick="togglePw('r-confirm',this)">&#128065;</button></div><div class="fg-error" id="r-confirm-error"></div><div class="fg-success" id="r-confirm-success"></div></div>
         <button class="submit-btn" id="reg-btn" onclick="doRegister()">Create Account</button>
       </div>
       <div class="note">Already have an account? <a onclick="switchTab('login')">Sign in here</a></div>
@@ -104,7 +130,8 @@
 <script src="db.mongo.js"></script>
 <script src="shared.js"></script>
 <script>
-var currentRole = 'user';
+var isAdminLogin = false;
+var googleConfigured = false;
 
 function switchTab(tab) {
   document.getElementById('tab-login').classList.toggle('active', tab==='login');
@@ -113,94 +140,388 @@ function switchTab(tab) {
   document.getElementById('pane-register').classList.toggle('active', tab==='register');
   clearMsgs();
 }
-function setRole(role) {
-  currentRole = role;
-  document.getElementById('role-user').classList.toggle('active', role==='user');
-  document.getElementById('role-admin').classList.toggle('active', role==='admin');
-  document.querySelectorAll('.admin-field').forEach(function(el){ el.style.display = role==='admin'?'block':'none'; });
-  clearMsgs();
+
+function toggleAdminLogin() {
+  isAdminLogin = !isAdminLogin;
+  document.getElementById('admin-fields').classList.toggle('show', isAdminLogin);
 }
+
 function togglePw(id, btn) {
   var inp = document.getElementById(id);
   if (inp.type==='password'){ inp.type='text'; btn.innerHTML='&#128584;'; }
   else { inp.type='password'; btn.innerHTML='&#128065;'; }
 }
+
+function formatPhoneInput(inp) {
+  var v = inp.value.replace(/\D/g, '').substring(0, 10);
+  if (v.length > 0) {
+    if (v.length <= 10) {
+      inp.value = '+91 ' + v;
+    }
+  }
+}
+
+function validateEmailField(inp) {
+  var email = inp.value.trim();
+  var errorEl = document.getElementById(inp.id + '-error');
+  var successEl = document.getElementById(inp.id + '-success');
+  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  if (!email) {
+    inp.classList.remove('error', 'valid');
+    if (errorEl) errorEl.style.display = 'none';
+    if (successEl) successEl.style.display = 'none';
+    return false;
+  }
+  
+  if (!emailRegex.test(email)) {
+    inp.classList.add('error');
+    inp.classList.remove('valid');
+    if (errorEl) { errorEl.textContent = 'Please enter a valid email address'; errorEl.style.display = 'block'; }
+    if (successEl) successEl.style.display = 'none';
+    return false;
+  }
+  
+  inp.classList.remove('error');
+  inp.classList.add('valid');
+  if (errorEl) errorEl.style.display = 'none';
+  if (successEl) { successEl.textContent = 'Valid email'; successEl.style.display = 'block'; }
+  return true;
+}
+
+function validatePhoneField(inp) {
+  var phone = inp.value.replace(/\D/g, '').substring(0, 10);
+  var errorEl = document.getElementById(inp.id + '-error');
+  var successEl = document.getElementById(inp.id + '-success');
+  var phoneRegex = /^[6-9]\d{9}$/;
+  
+  if (!phone || phone.length < 10) {
+    inp.classList.remove('error', 'valid');
+    if (errorEl) errorEl.style.display = 'none';
+    if (successEl) successEl.style.display = 'none';
+    return false;
+  }
+  
+  if (!phoneRegex.test(phone)) {
+    inp.classList.add('error');
+    inp.classList.remove('valid');
+    if (errorEl) { errorEl.textContent = 'Please enter a valid 10-digit Indian phone number'; errorEl.style.display = 'block'; }
+    if (successEl) successEl.style.display = 'none';
+    return false;
+  }
+  
+  inp.classList.remove('error');
+  inp.classList.add('valid');
+  if (errorEl) errorEl.style.display = 'none';
+  if (successEl) { successEl.textContent = 'Valid phone number'; successEl.style.display = 'block'; }
+  return true;
+}
+
+function validatePasswordField(inp) {
+  var password = inp.value;
+  var errorEl = document.getElementById(inp.id + '-error');
+  var successEl = document.getElementById(inp.id + '-success');
+  
+  if (!password) {
+    inp.classList.remove('error', 'valid');
+    if (errorEl) errorEl.style.display = 'none';
+    if (successEl) successEl.style.display = 'none';
+    return false;
+  }
+  
+  if (password.length < 8) {
+    inp.classList.add('error');
+    inp.classList.remove('valid');
+    if (errorEl) { errorEl.textContent = 'Password must be at least 8 characters'; errorEl.style.display = 'block'; }
+    if (successEl) successEl.style.display = 'none';
+    return false;
+  }
+  
+  inp.classList.remove('error');
+  inp.classList.add('valid');
+  if (errorEl) errorEl.style.display = 'none';
+  if (successEl) { successEl.textContent = 'Strong password'; successEl.style.display = 'block'; }
+  return true;
+}
+
+function validateConfirmField(inp) {
+  var password = document.getElementById('r-pass').value;
+  var confirm = inp.value;
+  var errorEl = document.getElementById(inp.id + '-error');
+  var successEl = document.getElementById(inp.id + '-success');
+  
+  if (!confirm) {
+    inp.classList.remove('error', 'valid');
+    if (errorEl) errorEl.style.display = 'none';
+    if (successEl) successEl.style.display = 'none';
+    return false;
+  }
+  
+  if (confirm !== password) {
+    inp.classList.add('error');
+    inp.classList.remove('valid');
+    if (errorEl) { errorEl.textContent = 'Passwords do not match'; errorEl.style.display = 'block'; }
+    if (successEl) successEl.style.display = 'none';
+    return false;
+  }
+  
+  inp.classList.remove('error');
+  inp.classList.add('valid');
+  if (errorEl) errorEl.style.display = 'none';
+  if (successEl) { successEl.textContent = 'Passwords match'; successEl.style.display = 'block'; }
+  return true;
+}
+
+function validateNameField(inp) {
+  var name = inp.value.trim();
+  var errorEl = document.getElementById(inp.id + '-error');
+  
+  if (!name) {
+    inp.classList.remove('error');
+    if (errorEl) errorEl.style.display = 'none';
+    return false;
+  }
+  
+  if (name.length < 2) {
+    inp.classList.add('error');
+    if (errorEl) { errorEl.textContent = 'Name must be at least 2 characters'; errorEl.style.display = 'block'; }
+    return false;
+  }
+  
+  inp.classList.remove('error');
+  if (errorEl) errorEl.style.display = 'none';
+  return true;
+}
+
 function showMsg(id, msg, type) {
   var el = document.getElementById(id);
   el.textContent = msg; el.style.display='block';
   el.className = 'msg '+(type==='ok'?'msg-ok':'msg-err');
 }
+
 function clearMsgs() {
   document.querySelectorAll('.msg').forEach(function(m){ m.style.display='none'; m.textContent=''; });
 }
-function setBtnLoading(id) {
+
+function setBtnLoading(id, text) {
   var btn=document.getElementById(id); btn.disabled=true;
-  btn.innerHTML='<span class="spin"></span>Please wait...';
+  btn.innerHTML='<span class="spin"></span>'+(text||'Please wait...');
 }
+
 function setBtnNormal(id, text) {
   var btn=document.getElementById(id); btn.disabled=false; btn.textContent=text;
 }
+
+async function signInWithGoogle() {
+  var btn = document.getElementById('google-btn') || document.getElementById('google-reg-btn');
+  if (btn) btn.disabled = true;
+  
+  clearMsgs();
+  
+  if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+    google.accounts.id.initialize({
+      client_id: window.GOOGLE_CLIENT_ID || '',
+      callback: handleGoogleResponse
+    });
+    
+    try {
+      google.accounts.id.prompt(function(response) {
+        if (response.isNotDisplayed() || response.isSkippedMoment()) {
+          google.accounts.id.requestIdToken({
+            client_id: window.GOOGLE_CLIENT_ID || '',
+            callback: handleGoogleResponse
+          });
+        }
+      });
+    } catch (e) {
+      try {
+        google.accounts.id.requestIdToken({
+          client_id: window.GOOGLE_CLIENT_ID || '',
+          callback: handleGoogleResponse
+        });
+      } catch (e2) {
+        showMsg('login-err', 'Google Sign-In failed. Please use email/password.', 'err');
+        if (btn) btn.disabled = false;
+      }
+    }
+  } else {
+    showMsg('login-err', 'Google Sign-In is not configured. Please use email/password.', 'err');
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function handleGoogleResponse(response) {
+  var btn = document.getElementById('google-btn') || document.getElementById('google-reg-btn');
+  if (btn) btn.disabled = true;
+  
+  clearMsgs();
+  showMsg('login-ok', 'Signing in with Google...', 'ok');
+  
+  BC.loginWithGoogle(response.credential).then(function(res) {
+    if (!res.ok) {
+      showMsg('login-err', res.error || 'Google sign-in failed.', 'err');
+      if (btn) btn.disabled = false;
+      return;
+    }
+    
+    showMsg('login-ok', 'Welcome! Redirecting...', 'ok');
+    setTimeout(function(){
+      var rd = sessionStorage.getItem('bc_redirect') || 'index.html';
+      sessionStorage.removeItem('bc_redirect');
+      window.location.href = rd;
+    }, 800);
+  }).catch(function(e) {
+    showMsg('login-err', 'Something went wrong. Please try again.', 'err');
+    if (btn) btn.disabled = false;
+  });
+}
+
 function doLogin() {
   clearMsgs();
-  var email=document.getElementById('l-email').value.trim();
-  var pass=document.getElementById('l-pass').value;
-  var key=document.getElementById('l-key').value.trim();
-  if (!email||!pass){ showMsg('login-err','Please enter your email and password.'); return; }
-  setBtnLoading('login-btn');
-  BC.ready.then(function(){
-    return BC.loginUser({email:email,password:pass,role:currentRole,adminKey:key});
-  }).then(function(res){
-    if (!res.ok){ showMsg('login-err',res.error); setBtnNormal('login-btn','Sign In'); return; }
-    showMsg('login-ok','Welcome back, '+res.user.name.split(' ')[0]+'! Redirecting...','ok');
-    setTimeout(function(){
-      if (res.user.role==='admin'){ window.location.href='admin.html'; return; }
-      var rd=sessionStorage.getItem('bc_redirect')||'index.html';
+  var email = document.getElementById('l-email').value.trim();
+  var pass = document.getElementById('l-pass').value;
+  
+  if (!email || !pass) {
+    showMsg('login-err', 'Please enter your email and password.');
+    return;
+  }
+  
+  if (!validateEmailField(document.getElementById('l-email'))) {
+    showMsg('login-err', 'Please enter a valid email address.');
+    return;
+  }
+  
+  setBtnLoading('login-btn', 'Signing in...');
+  
+  var loginFn = isAdminLogin ? BC.loginAdmin : BC.loginUser;
+  var loginData = { email: email, password: pass };
+  
+  if (isAdminLogin) {
+    loginData.adminKey = document.getElementById('l-admin-key').value.trim();
+  }
+  
+  BC.ready.then(function() {
+    return loginFn(loginData);
+  }).then(function(res) {
+    if (!res.ok) {
+      showMsg('login-err', res.error);
+      setBtnNormal('login-btn', 'Sign In');
+      return;
+    }
+    
+    showMsg('login-ok', 'Welcome back, ' + res.user.name.split(' ')[0] + '! Redirecting...', 'ok');
+    setTimeout(function() {
+      if (res.user.role === 'admin') {
+        window.location.href = 'admin.html';
+        return;
+      }
+      var rd = sessionStorage.getItem('bc_redirect') || 'index.html';
       sessionStorage.removeItem('bc_redirect');
-      window.location.href=rd;
-    },1000);
-  }).catch(function(e){
-    showMsg('login-err','Something went wrong. Please try again.');
-    setBtnNormal('login-btn','Sign In');
+      window.location.href = rd;
+    }, 800);
+  }).catch(function(e) {
+    showMsg('login-err', 'Something went wrong. Please try again.');
+    setBtnNormal('login-btn', 'Sign In');
   });
 }
+
 function doRegister() {
   clearMsgs();
-  var fname=document.getElementById('r-fname').value.trim();
-  var lname=document.getElementById('r-lname').value.trim();
-  var email=document.getElementById('r-email').value.trim();
-  var phone=document.getElementById('r-phone').value.trim();
-  var pass=document.getElementById('r-pass').value;
-  var confirm=document.getElementById('r-confirm').value;
-  var key=document.getElementById('r-key').value.trim();
-  if (!fname||!lname||!email||!phone||!pass||!confirm){ showMsg('reg-err','Please fill all required fields.'); return; }
-  if (pass!==confirm){ showMsg('reg-err','Passwords do not match.'); return; }
-  if (pass.length<8){ showMsg('reg-err','Password must be at least 8 characters.'); return; }
-  if (!/\S+@\S+\.\S+/.test(email)){ showMsg('reg-err','Enter a valid email address.'); return; }
-  setBtnLoading('reg-btn');
-  BC.ready.then(function(){
-    return BC.registerUser({firstName:fname,lastName:lname,email:email,phone:phone,password:pass,role:currentRole,adminKey:key});
-  }).then(function(res){
-    if (!res.ok){ showMsg('reg-err',res.error); setBtnNormal('reg-btn','Create Account'); return; }
-    showMsg('reg-ok','Account created! Please sign in.','ok');
-    setTimeout(function(){ switchTab('login'); setBtnNormal('reg-btn','Create Account'); },1400);
-  }).catch(function(e){
-    showMsg('reg-err','Registration failed. Please try again.');
-    setBtnNormal('reg-btn','Create Account');
+  
+  var fname = document.getElementById('r-fname').value.trim();
+  var lname = document.getElementById('r-lname').value.trim();
+  var email = document.getElementById('r-email').value.trim();
+  var phone = document.getElementById('r-phone').value.trim();
+  var pass = document.getElementById('r-pass').value;
+  var confirm = document.getElementById('r-confirm').value;
+  
+  if (!fname || !lname || !email || !phone || !pass || !confirm) {
+    showMsg('reg-err', 'Please fill all required fields.');
+    return;
+  }
+  
+  if (!validateEmailField(document.getElementById('r-email'))) {
+    showMsg('reg-err', 'Please enter a valid email address.');
+    return;
+  }
+  
+  if (!validatePhoneField(document.getElementById('r-phone'))) {
+    showMsg('reg-err', 'Please enter a valid 10-digit Indian phone number.');
+    return;
+  }
+  
+  if (pass.length < 8) {
+    showMsg('reg-err', 'Password must be at least 8 characters.');
+    return;
+  }
+  
+  if (pass !== confirm) {
+    showMsg('reg-err', 'Passwords do not match.');
+    return;
+  }
+  
+  setBtnLoading('reg-btn', 'Creating account...');
+  
+  BC.ready.then(function() {
+    return BC.registerUser({
+      firstName: fname,
+      lastName: lname,
+      email: email,
+      phone: phone.replace(/\D/g, '').substring(0, 10),
+      password: pass
+    });
+  }).then(function(res) {
+    if (!res.ok) {
+      showMsg('reg-err', res.error);
+      setBtnNormal('reg-btn', 'Create Account');
+      return;
+    }
+    
+    showMsg('reg-ok', 'Account created successfully! Please sign in.', 'ok');
+    setTimeout(function() {
+      switchTab('login');
+      setBtnNormal('reg-btn', 'Create Account');
+      document.getElementById('l-email').value = email;
+    }, 1400);
+  }).catch(function(e) {
+    showMsg('reg-err', 'Registration failed. Please try again.');
+    setBtnNormal('reg-btn', 'Create Account');
   });
 }
+
 // Auto-redirect if already logged in
-BC.ready.then(function(){
+BC.ready.then(function() {
   return BC.getSession();
-}).then(function(sess){
+}).then(function(sess) {
   if (!sess) return;
-  if (sess.role==='admin'){ window.location.href='admin.html'; return; }
-  var rd=sessionStorage.getItem('bc_redirect')||'index.html';
-  window.location.href=rd;
-}).catch(function(){});
+  if (sess.role === 'admin') {
+    window.location.href = 'admin.html';
+    return;
+  }
+  var rd = sessionStorage.getItem('bc_redirect') || 'index.html';
+  window.location.href = rd;
+}).catch(function() {});
+
+// Load Google Sign-In config
+BC.ready.then(function() {
+  return BC.getGoogleConfig();
+}).then(function(res) {
+  if (res && res.clientId) {
+    window.GOOGLE_CLIENT_ID = res.clientId;
+    googleConfigured = true;
+    
+    var script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+}).catch(function() {});
+
 // Enter key handlers
-document.addEventListener('DOMContentLoaded',function(){
-  document.getElementById('l-pass').addEventListener('keydown',function(e){ if(e.key==='Enter')doLogin(); });
-  document.getElementById('r-confirm').addEventListener('keydown',function(e){ if(e.key==='Enter')doRegister(); });
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('l-pass').addEventListener('keydown', function(e) { if(e.key==='Enter')doLogin(); });
+  document.getElementById('r-confirm').addEventListener('keydown', function(e) { if(e.key==='Enter')doRegister(); });
 });
 </script>
 </body>

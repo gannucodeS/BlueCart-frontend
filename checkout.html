@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="shared.css"/>
   <script src="db.mongo.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     :root{--navy:#0f2d4a;--teal:#0ea5a0;--teal-dark:#0c8f8b;--teal-light:#ccf2f1;--coral:#ff5f5f;--amber:#ffb703;--lime:#56cf76;--off:#f4f7fb;--muted:#6b7a8d;}
     .navbar{background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:0 4%;display:flex;align-items:center;gap:16px;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(15,45,74,.3);}
@@ -30,27 +31,49 @@
     .co-card-title{font-family:'Syne',sans-serif;font-size:17px;color:#0f2d4a;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
     .step-num{background:#0ea5a0;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-    .fg{margin-bottom:15px;}
+    .fg{margin-bottom:15px;position:relative;}
     .fg label{display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
     .fg input,.fg select,.fg textarea{width:100%;padding:11px 13px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:'Nunito',sans-serif;outline:none;color:#0f2d4a;transition:border-color .2s;background:white;}
     .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#0ea5a0;box-shadow:0 0 0 3px rgba(14,165,160,.1);}
+    .fg input.error{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,.1);}
+    .fg input.valid{border-color:#16a34a;}
+    .fg input:disabled{background:#f4f7fb;cursor:not-allowed;}
+    .fg-error{font-size:11.5px;color:#dc2626;margin-top:4px;display:none;}
+    .fg-success{font-size:11.5px;color:#16a34a;margin-top:4px;display:none;}
+    .fg-hint{font-size:11px;color:#6b7a8d;margin-top:4px;}
     .pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
-    .pay-option{border:2px solid #e0e7ef;border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;background:white;}
+    .pay-option{border:2px solid #e0e7ef;border-radius:12px;padding:16px 10px;text-align:center;cursor:pointer;transition:all .2s;background:white;}
     .pay-option.active{border-color:#0ea5a0;background:#f0fffe;}
     .pay-option:hover{border-color:#0ea5a0;}
-    .pay-icon{font-size:26px;margin-bottom:6px;}
+    .pay-option.disabled{opacity:.5;cursor:not-allowed;}
+    .pay-icon{font-size:28px;margin-bottom:8px;}
     .pay-label{font-size:13px;font-weight:800;color:#0f2d4a;}
-    .pay-sub{font-size:11px;color:#6b7a8d;}
-    .qr-panel{display:none;flex-direction:column;align-items:center;text-align:center;padding:20px;background:#f4f7fb;border-radius:12px;border:1.5px solid #e0e7ef;}
-    .qr-panel.show{display:flex;}
-    .qr-title{font-family:'Syne',sans-serif;font-size:16px;color:#0f2d4a;margin-bottom:6px;}
-    .qr-sub{font-size:13px;color:#6b7a8d;margin-bottom:14px;}
-    .qr-img{width:200px;height:200px;border-radius:8px;display:block;border:1.5px solid #e0e7ef;}
-    .qr-amount-tag{background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border-radius:20px;padding:8px 20px;font-size:15px;font-weight:800;display:block;margin:0 auto 12px auto;width:fit-content;}
-    .qr-upi-row{display:flex;align-items:center;justify-content:center;gap:10px;background:white;border:1.5px solid #e0e7ef;border-radius:10px;padding:12px 16px;margin-bottom:12px;width:100%;}
-    .qr-upi-id{font-size:14px;font-weight:800;color:#0f2d4a;}
-    .copy-btn{background:#0ea5a0;color:white;border:none;padding:6px 12px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
-    .qr-steps{text-align:left;background:white;border-radius:10px;padding:14px 16px;font-size:13px;color:#6b7a8d;line-height:2;width:100%;}
+    .pay-sub{font-size:11px;color:#6b7a8d;margin-top:4px;}
+    .payment-panel{display:none;padding:20px;background:#f4f7fb;border-radius:12px;border:1.5px solid #e0e7ef;margin-top:16px;}
+    .payment-panel.show{display:block;}
+    .razorpay-info{display:flex;align-items:center;gap:12px;padding:14px;background:white;border-radius:10px;border:1px solid #e0e7ef;}
+    .razorpay-info .icon{font-size:32px;}
+    .razorpay-info .text{font-size:13px;color:#6b7a8d;}
+    .razorpay-info .text strong{color:#0f2d4a;}
+    .bank-details{background:white;border-radius:10px;padding:16px;border:1px solid #e0e7ef;}
+    .bank-detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f4f8;font-size:13.5px;}
+    .bank-detail-row:last-child{border-bottom:none;}
+    .bank-detail-row .label{color:#6b7a8d;}
+    .bank-detail-row .value{font-weight:700;color:#0f2d4a;}
+    .copy-btn-small{background:#0ea5a0;color:white;border:none;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;}
+    .utr-input-wrap{display:flex;gap:10px;margin-top:14px;}
+    .utr-input-wrap input{flex:1;}
+    .verify-utr-btn{padding:11px 20px;background:#0ea5a0;color:white;border:none;border-radius:9px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;}
+    .verify-utr-btn:disabled{opacity:.6;cursor:not-allowed;}
+    .utr-status{margin-top:8px;font-size:12.5px;font-weight:700;padding:8px 12px;border-radius:6px;display:none;}
+    .utr-status.success{background:#dcfce7;color:#16a34a;display:block;}
+    .utr-status.error{background:#fee2e2;color:#dc2626;display:block;}
+    .utr-status.pending{background:#fef3c7;color:#d97706;display:block;}
+    .cod-info{text-align:center;padding:20px;}
+    .cod-icon{font-size:48px;margin-bottom:12px;}
+    .cod-title{font-family:'Syne',sans-serif;font-size:18px;color:#0f2d4a;margin-bottom:8px;}
+    .cod-text{font-size:13px;color:#6b7a8d;}
+    .cod-note{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e;margin-top:12px;text-align:left;}
     .order-summary{background:white;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(15,45,74,.07);position:sticky;top:80px;}
     .os-title{font-family:'Syne',sans-serif;font-size:17px;color:#0f2d4a;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #e5eaf0;}
     .os-item{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f0f4f8;}
@@ -62,6 +85,7 @@
     .os-savings{background:#dcfce7;border-radius:8px;padding:8px 12px;font-size:12.5px;font-weight:700;color:#16a34a;margin:10px 0;}
     .place-order-btn{width:100%;padding:15px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;box-shadow:0 4px 16px rgba(14,165,160,.35);transition:all .2s;margin-top:14px;}
     .place-order-btn:hover{transform:translateY(-2px);}
+    .place-order-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
     .secure-note{text-align:center;font-size:12px;color:#6b7a8d;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:5px;}
     .success-screen{display:none;text-align:center;padding:60px 20px;max-width:520px;margin:0 auto;}
     .success-icon{font-size:72px;margin-bottom:16px;}
@@ -70,82 +94,42 @@
     .success-order-id{background:#f0fffe;border:1.5px solid #0ea5a0;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:800;color:#0ea5a0;margin-bottom:24px;display:inline-block;}
     .s-btn-primary{background:#0ea5a0;color:white;border:none;padding:13px 28px;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin:0 6px;}
     .s-btn-sec{background:white;color:#0f2d4a;border:1.5px solid #e0e7ef;padding:12px 24px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;margin:0 6px;}
-    .upi-input,.card-form{display:none;margin-top:14px;}
-    .upi-input.show,.card-form.show{display:block;}
     .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#0f2d4a;color:white;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:700;box-shadow:0 8px 24px rgba(15,45,74,.3);z-index:9999;opacity:0;pointer-events:none;transition:all .35s;border-left:4px solid #0ea5a0;}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-    #loc-overlay{display:none;position:fixed;inset:0;background:rgba(15,45,74,.45);z-index:500;}
-    #loc-panel{display:none;position:fixed;top:0;left:0;width:100%;max-width:400px;height:100vh;background:white;z-index:600;box-shadow:8px 0 40px rgba(15,45,74,.2);overflow-y:auto;font-family:'Nunito',sans-serif;}
+    .login-required{display:none;text-align:center;padding:60px 20px;}
+    .login-required.show{display:block;}
+    .login-required-icon{font-size:64px;margin-bottom:16px;}
+    .login-required h2{font-family:'Syne',sans-serif;font-size:24px;color:#0f2d4a;margin-bottom:10px;}
+    .login-required p{font-size:14px;color:#6b7a8d;margin-bottom:20px;}
+    .login-btn-big{display:inline-block;padding:14px 32px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;text-decoration:none;}
     @media(max-width:860px){.checkout-layout{grid-template-columns:1fr;}.order-summary{position:static;}.pay-methods{grid-template-columns:repeat(2,1fr);}.form-row{grid-template-columns:1fr;}}
     @media(max-width:600px){.navbar{height:52px;padding:0 3%;gap:8px;}.logo{font-size:18px;}.search-bar{height:34px;}.nav-right a:not(.cart-btn){display:none;}.checkout-layout{padding:0 3% 32px;}}
   </style>
 </head>
 <body>
-<div class="topbar" style="background:#0f2d4a;color:rgba(255,255,255,.75);font-size:12.5px;padding:6px 4%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">
-  <span>&#128230; Free shipping on orders over <b style="color:#ffb703;">&#8377;999</b></span>
-  <span>&#128274; 100% Secure Payments</span>
-  <span>&#128222; Support: <b style="color:#ffb703;">1800-000-BLUE</b></span>
-</div>
-<!-- TOPBAR -->
-<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
-<!-- NAVBAR WRAP -->
-<div class="navbar-wrap">
-<nav class="navbar">
-  <a href="index.html" class="logo" style="text-decoration:none;">Blue<span>Cart</span></a>
-  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
-  <div style="flex:1;"></div>
-  <div class="nav-right">
-    <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
-    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
-    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
-          <!-- Hamburger button -->
-      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div><!-- end .nav-right -->
-  </nav>
-  <!-- Search Row -->
-  <div class="navbar-search-row">
-    <div class="search-bar" style="flex:1;">
-      <input type="text" id="searchInput" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
-      <button onclick="doSearchNav()">&#128269;</button>
-    </div>
-  </div>
-</div><!-- end .navbar-wrap -->
 
-<!-- Hamburger overlay + slide-in menu (outside navbar-wrap) -->
 <div class="hm-overlay" id="hm-overlay" onclick="closeHamburger()"></div>
 <div class="hm-drawer" id="hm-drawer">
-  <div class="hm-drawer-head">
-    <span class="hm-drawer-logo">Blue<span>Cart</span></span>
-    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
-  </div>
+  <div class="hm-drawer-head"><span class="hm-drawer-logo">Blue<span>Cart</span></span><button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button></div>
   <div class="hm-drawer-body">
     <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
-    <div class="hm-divider"></div>
-    <div class="hm-section-label">Categories</div>
-    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
-    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
-    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
-    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
-    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
-    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
-    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
-    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
-    <div class="hm-divider"></div>
-    <div class="hm-section-label">Offers</div>
-    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
-    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
-    <div class="hm-divider"></div>
-    <div class="hm-section-label">Account</div>
-    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
-    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
-    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
-    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+    <div class="hm-divider"></div><div class="hm-section-label">Categories</div>
+    <a href="electronics.html" class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
+    <a href="smartphones.html" class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
+    <a href="laptops.html" class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
+    <a href="audio.html" class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
+    <a href="cameras.html" class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
+    <a href="gaming.html" class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
+    <a href="accessories.html" class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
+    <a href="smarthome.html" class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <div class="hm-divider"></div><div class="hm-section-label">Offers</div>
+    <a href="deals.html" class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
+    <div class="hm-divider"></div><div class="hm-section-label">Account</div>
+    <a href="orders.html" class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
+    <a href="account.html" class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
+    <a href="login.html" class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
   </div>
 </div>
-
-<!-- NAV STRIP (desktop only) -->
 <div class="nav-strip"><div class="nav-strip-inner">
   <div class="nav-item"><a href="index.html">&#9776; All</a></div>
   <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
@@ -153,37 +137,39 @@
   <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
   <div class="nav-item"><a href="laptops.html">Laptops</a></div>
   <div class="nav-item"><a href="audio.html">Audio</a></div>
-  <div class="nav-item"><a href="cameras.html">Cameras</a></div>
-  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
-  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
-  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
   <div class="nav-item"><a href="deals.html" class="hot">&#128293; Hot Deals</a></div>
-  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
-  <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
 </div></div>
 
-<div id="checkout-wrap">
+<div id="login-required" class="login-required">
+  <div class="login-required-icon">&#128274;</div>
+  <h2>Login Required</h2>
+  <p>Please sign in to proceed with checkout.</p>
+  <a href="login.html" class="login-btn-big">Sign In to Continue</a>
+</div>
+
+<div id="checkout-wrap" style="display:none;">
   <div class="checkout-layout">
     <div>
       <div class="co-card">
         <div class="co-card-title"><span class="step-num">1</span> Delivery Information</div>
         <div class="form-row">
-          <div class="fg"><label>Full Name *</label><input type="text" id="co-name" placeholder="Arjun Sharma"/></div>
-          <div class="fg"><label>Phone Number *</label><input type="tel" id="co-phone" placeholder="+91 98765 43210"/></div>
+          <div class="fg"><label>Full Name *</label><input type="text" id="co-name" placeholder="Arjun Sharma" oninput="validateField(this,'name')"/><div class="fg-error" id="co-name-error"></div></div>
+          <div class="fg"><label>Phone Number *</label><input type="tel" id="co-phone" placeholder="+91 98765 43210" maxlength="14" oninput="formatPhone(this);validateField(this,'phone')"/><div class="fg-error" id="co-phone-error"></div><div class="fg-success" id="co-phone-success"></div></div>
         </div>
-        <div class="fg"><label>Email Address *</label><input type="email" id="co-email" placeholder="you@email.com"/></div>
-        <div class="fg"><label>Delivery Address *</label><textarea id="co-addr" rows="3" placeholder="House No., Street, Area, Landmark..."></textarea></div>
+        <div class="fg"><label>Email Address *</label><input type="email" id="co-email" placeholder="you@email.com" oninput="validateField(this,'email')"/><div class="fg-error" id="co-email-error"></div><div class="fg-success" id="co-email-success"></div></div>
+        <div class="fg"><label>Delivery Address *</label><textarea id="co-addr" rows="3" placeholder="House No., Street, Area, Landmark..." oninput="validateField(this,'required')"></textarea><div class="fg-error" id="co-addr-error"></div></div>
         <div class="form-row">
-          <div class="fg"><label>City *</label><input type="text" id="co-city" placeholder="Bhilwara"/></div>
+          <div class="fg"><label>City *</label><input type="text" id="co-city" placeholder="Bhilwara" oninput="validateField(this,'required')"/><div class="fg-error" id="co-city-error"></div></div>
           <div class="fg"><label>State *</label>
-            <select id="co-state">
+            <select id="co-state" onchange="onStateChange(this)">
               <option value="">Select State</option>
               <option>Rajasthan</option><option>Maharashtra</option><option>Delhi</option><option>Karnataka</option><option>Tamil Nadu</option><option>Gujarat</option><option>Uttar Pradesh</option><option>West Bengal</option><option>Telangana</option><option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option><option>Haryana</option><option>Bihar</option><option>Goa</option>
             </select>
+            <div class="fg-error" id="co-state-error"></div>
           </div>
         </div>
         <div class="form-row">
-          <div class="fg"><label>Pincode *</label><input type="text" id="co-pin" maxlength="6" placeholder="311001" oninput="this.value=this.value.replace(/[^0-9]/g,'')"/></div>
+          <div class="fg"><label>Pincode *</label><input type="text" id="co-pin" maxlength="6" placeholder="311001" oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value.length===6)fetchPincodeDetails(this.value)"/><div class="fg-hint" id="co-pin-hint"></div><div class="fg-error" id="co-pin-error"></div></div>
           <div class="fg"><label>Delivery Instructions (Optional)</label><input type="text" id="co-instr" placeholder="Leave at door, call before delivery..."/></div>
         </div>
       </div>
@@ -191,37 +177,43 @@
       <div class="co-card">
         <div class="co-card-title"><span class="step-num">2</span> Payment Method</div>
         <div class="pay-methods">
-          <div class="pay-option active" id="pay-qr" onclick="selectPay('qr')"><div class="pay-icon">&#128242;</div><div class="pay-label">QR / UPI</div><div class="pay-sub">PhonePe, GPay, Paytm</div></div>
-          <div class="pay-option" id="pay-upi" onclick="selectPay('upi')"><div class="pay-icon">&#128179;</div><div class="pay-label">UPI ID</div><div class="pay-sub">Enter UPI address</div></div>
-          <div class="pay-option" id="pay-card" onclick="selectPay('card')"><div class="pay-icon">&#127968;</div><div class="pay-label">Card / Net Banking</div><div class="pay-sub">Debit / Credit / NEFT</div></div>
+          <div class="pay-option active" id="pay-razorpay" onclick="selectPay('razorpay')"><div class="pay-icon">&#128179;</div><div class="pay-label">Razorpay</div><div class="pay-sub">UPI/Card/Netbanking</div></div>
+          <div class="pay-option" id="pay-cod" onclick="selectPay('cod')"><div class="pay-icon">&#128176;</div><div class="pay-label">Cash on Delivery</div><div class="pay-sub">Pay when delivered</div></div>
+          <div class="pay-option" id="pay-bank" onclick="selectPay('bank')"><div class="pay-icon">&#127970;</div><div class="pay-label">Bank Transfer</div><div class="pay-sub">NEFT/UPI with UTR</div></div>
         </div>
 
-        <div class="qr-panel show" id="qr-panel">
-          <div class="qr-title">Scan &amp; Pay with Any UPI App</div>
-          <div class="qr-sub">Scan the QR code using PhonePe, Google Pay, Paytm, BHIM or any UPI app</div>
-          <img class="qr-img" id="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=8955813948@ptyes&pn=Gantavya&am=100" alt="QR Code"/>
-          <div class="qr-amount-tag">Pay &#8377;<span id="qr-amount">0</span></div>
-          <div class="qr-upi-row">
-            <span style="font-size:13px;color:#6b7a8d;font-weight:700;">Pay to: <span style="color:#0f2d4a">+91 XXXXX XXXXX</span></span>
-            <span class="qr-upi-id">8955813948@ptyes</span>
-            <button class="copy-btn" onclick="navigator.clipboard.writeText('8955813948@ptyes');showToast('UPI ID copied!')">Copy UPI</button>
+        <div class="payment-panel show" id="razorpay-panel">
+          <div class="razorpay-info">
+            <div class="icon">&#128179;</div>
+            <div class="text"><strong>Pay securely with Razorpay</strong><br>Accepts UPI, Credit/Debit Cards, Net Banking, Wallets</div>
           </div>
-          <div class="qr-steps">&#9312; Open any UPI app<br>&#9313; Scan the QR code above<br>&#9314; Enter amount &#8377;<span id="qr-steps-amt">0</span><br>&#9315; Complete payment<br>&#9316; Enter UTR number below</div>
-          <div class="fg" style="width:100%;margin-top:12px;"><label>UTR / Transaction Number *</label><input type="text" id="co-utr" placeholder="Enter 12-digit UTR number after payment"/></div>
         </div>
 
-        <div class="upi-input" id="upi-input">
-          <div class="fg"><label>Your UPI ID</label><input type="text" id="co-upi-id" placeholder="yourname@upi"/></div>
-          <p style="font-size:13px;color:#6b7a8d;">A payment request will be sent to your UPI app.</p>
-        </div>
-
-        <div class="card-form" id="card-form">
-          <div class="fg"><label>Card Number</label><input type="text" id="co-card-num" maxlength="19" placeholder="1234 5678 9012 3456" oninput="formatCard(this)"/></div>
-          <div class="form-row">
-            <div class="fg"><label>Expiry Date</label><input type="text" id="co-exp" maxlength="5" placeholder="MM/YY" oninput="formatExpiry(this)"/></div>
-            <div class="fg"><label>CVV</label><input type="password" id="co-cvv" maxlength="4" placeholder="&#9679;&#9679;&#9679;"/></div>
+        <div class="payment-panel" id="cod-panel">
+          <div class="cod-info">
+            <div class="cod-icon">&#128176;</div>
+            <div class="cod-title">Pay on Delivery</div>
+            <div class="cod-text">No advance payment required. Pay cash or use UPI when your order arrives.</div>
+            <div class="cod-note">&#9432; Additional &#8377;40 handling charges apply for COD orders below &#8377;999</div>
           </div>
-          <div class="fg"><label>Name on Card</label><input type="text" id="co-card-name" placeholder="ARJUN SHARMA"/></div>
+        </div>
+
+        <div class="payment-panel" id="bank-panel">
+          <div class="bank-details" id="bank-details">
+            <div class="bank-detail-row"><span class="label">Account Name</span><span class="value" id="bank-account-name">BlueCart E-Commerce</span></div>
+            <div class="bank-detail-row"><span class="label">Account Number</span><span class="value" id="bank-account-number">XXXXXXXXXXXX</span></div>
+            <div class="bank-detail-row"><span class="label">IFSC Code</span><span class="value" id="bank-ifsc">XXXX0000000</span></div>
+            <div class="bank-detail-row"><span class="label">Bank</span><span class="value" id="bank-name">Sample Bank</span></div>
+            <div class="bank-detail-row"><span class="label">UPI ID</span><span class="value"><span id="bank-upi">bluecart@upi</span> <button class="copy-btn-small" onclick="copyUpi()">Copy</button></span></div>
+          </div>
+          <div class="utr-input-wrap">
+            <div class="fg" style="margin-bottom:0;flex:1;">
+              <label>UTR / Transaction ID *</label>
+              <input type="text" id="co-utr" placeholder="Enter 12-digit UTR number" maxlength="12" oninput="this.value=this.value.replace(/[^0-9]/g,'');verifyUtrLive()"/>
+            </div>
+            <button class="verify-utr-btn" id="verify-utr-btn" onclick="verifyUtr()">Verify UTR</button>
+          </div>
+          <div class="utr-status" id="utr-status"></div>
         </div>
       </div>
     </div>
@@ -235,7 +227,7 @@
         <div class="os-row"><span>Discount</span><span id="os-discount" style="color:#ff5f5f;font-weight:700;">&#8377;0</span></div>
         <div class="os-row total"><span>Total</span><span id="os-total">&#8377;0</span></div>
         <div class="os-savings" id="os-savings" style="display:none;"></div>
-        <button class="place-order-btn" onclick="placeOrder()">&#128274; Place Order &amp; Pay</button>
+        <button class="place-order-btn" id="place-order-btn" onclick="placeOrder()">&#128274; Place Order</button>
         <div class="secure-note">&#128274; 100% Secure &nbsp;|&nbsp; &#9989; Easy Returns &nbsp;|&nbsp; &#128666; Fast Delivery</div>
       </div>
     </div>
@@ -244,8 +236,8 @@
 
 <div class="success-screen" id="success-screen">
   <div class="success-icon">&#9989;</div>
-  <div class="success-title">Order Placed Successfully!</div>
-  <div class="success-sub">Thank you for your purchase. Your order is confirmed and will be delivered soon.</div>
+  <div class="success-title" id="success-title">Order Placed Successfully!</div>
+  <div class="success-sub" id="success-sub">Thank you for your purchase. Your order is confirmed and will be delivered soon.</div>
   <div class="success-order-id" id="success-order-id">Order ID: —</div>
   <div>
     <button class="s-btn-primary" onclick="window.location.href='orders.html'">&#128230; Track Order</button>
@@ -255,199 +247,519 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- LOCATION PANEL -->
-<div id="loc-overlay" onclick="closeLocationPanel()"></div>
-<div id="loc-panel">
-  <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
-    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">&#128205; Set Delivery Location</div>
-    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">&#10005;</button>
-  </div>
-  <div style="padding:18px;">
-    <div style="margin-bottom:16px;">
-      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Enter Pincode</label>
-      <div style="display:flex;gap:8px;">
-        <input type="text" id="loc-pincode" maxlength="6" placeholder="e.g. 311001" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="flex:1;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:14px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;"/>
-        <button onclick="applyPincode()" style="background:#0ea5a0;color:white;border:none;padding:10px 16px;border-radius:9px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">Apply</button>
-      </div>
-      <div id="pin-result" style="margin-top:7px;font-size:13px;"></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><div style="flex:1;height:1px;background:#e5eaf0;"></div><span style="font-size:11.5px;color:#6b7a8d;font-weight:700;">OR SELECT</span><div style="flex:1;height:1px;background:#e5eaf0;"></div></div>
-    <div style="margin-bottom:12px;">
-      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">State</label>
-      <select id="loc-state" onchange="loadCities()" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;">
-        <option value="">Select State</option><option>Rajasthan</option><option>Maharashtra</option><option>Delhi</option><option>Karnataka</option><option>Tamil Nadu</option><option>Gujarat</option><option>Uttar Pradesh</option><option>West Bengal</option><option>Telangana</option><option>Madhya Pradesh</option><option>Kerala</option><option>Punjab</option><option>Haryana</option><option>Bihar</option><option>Goa</option>
-      </select>
-    </div>
-    <div style="margin-bottom:16px;">
-      <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
-      <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
-    </div>
-    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">&#128205; Set Location</button>
-  </div>
-</div>
-
 <script>
-// ── CHECKOUT PAGE LOGIC ───────────────────────────────────────────────────────
 var orderItems = [], orderTotal = 0;
-var currentPayMethod = 'qr';
+var currentPayMethod = 'razorpay';
+var utrVerified = false;
+var bankDetails = {};
 
 function selectPay(method) {
   currentPayMethod = method;
-  ['qr','upi','card'].forEach(function(m) {
-    document.getElementById('pay-'+m).classList.toggle('active', m===method);
+  utrVerified = false;
+  document.getElementById('utr-status').className = 'utr-status';
+  document.getElementById('utr-status').style.display = 'none';
+  document.getElementById('co-utr').value = '';
+  
+  ['razorpay', 'cod', 'bank'].forEach(function(m) {
+    document.getElementById('pay-' + m).classList.toggle('active', m === method);
   });
-  document.getElementById('qr-panel').classList.toggle('show', method==='qr');
-  document.getElementById('upi-input').classList.toggle('show', method==='upi');
-  document.getElementById('card-form').classList.toggle('show', method==='card');
+  
+  document.getElementById('razorpay-panel').classList.toggle('show', method === 'razorpay');
+  document.getElementById('cod-panel').classList.toggle('show', method === 'cod');
+  document.getElementById('bank-panel').classList.toggle('show', method === 'bank');
 }
 
-function formatCard(inp) {
-  var v = inp.value.replace(/\D/g,'').substring(0,16);
-  inp.value = v.replace(/(.{4})/g,'$1 ').trim();
+function formatPhone(inp) {
+  var v = inp.value.replace(/\D/g, '').substring(0, 10);
+  if (v.length > 0) inp.value = '+91 ' + v;
 }
-function formatExpiry(inp) {
-  var v = inp.value.replace(/\D/g,'');
-  if (v.length >= 2) v = v.substring(0,2)+'/'+v.substring(2,4);
-  inp.value = v;
+
+function validateField(inp, type) {
+  var errorEl = document.getElementById(inp.id + '-error');
+  var successEl = document.getElementById(inp.id + '-success');
+  var value = inp.value.trim();
+  
+  if (type === 'required' || type === 'name') {
+    if (!value || (type === 'name' && value.length < 2)) {
+      inp.classList.add('error');
+      inp.classList.remove('valid');
+      if (errorEl) { errorEl.textContent = type === 'name' ? 'Name must be at least 2 characters' : 'This field is required'; errorEl.style.display = 'block'; }
+      if (successEl) successEl.style.display = 'none';
+      return false;
+    }
+    inp.classList.remove('error');
+    if (errorEl) errorEl.style.display = 'none';
+    return true;
+  }
+  
+  if (type === 'email') {
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!value) {
+      inp.classList.remove('error', 'valid');
+      if (errorEl) errorEl.style.display = 'none';
+      if (successEl) successEl.style.display = 'none';
+      return false;
+    }
+    if (!emailRegex.test(value)) {
+      inp.classList.add('error');
+      inp.classList.remove('valid');
+      if (errorEl) { errorEl.textContent = 'Please enter a valid email address'; errorEl.style.display = 'block'; }
+      if (successEl) successEl.style.display = 'none';
+      return false;
+    }
+    inp.classList.remove('error');
+    inp.classList.add('valid');
+    if (errorEl) errorEl.style.display = 'none';
+    if (successEl) { successEl.textContent = 'Valid email'; successEl.style.display = 'block'; }
+    return true;
+  }
+  
+  if (type === 'phone') {
+    var phone = value.replace(/\D/g, '').substring(0, 10);
+    if (!phone || phone.length < 10) {
+      inp.classList.remove('error', 'valid');
+      if (errorEl) errorEl.style.display = 'none';
+      if (successEl) successEl.style.display = 'none';
+      return false;
+    }
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      inp.classList.add('error');
+      inp.classList.remove('valid');
+      if (errorEl) { errorEl.textContent = 'Please enter a valid 10-digit phone number'; errorEl.style.display = 'block'; }
+      if (successEl) successEl.style.display = 'none';
+      return false;
+    }
+    inp.classList.remove('error');
+    inp.classList.add('valid');
+    if (errorEl) errorEl.style.display = 'none';
+    if (successEl) { successEl.textContent = 'Valid phone'; successEl.style.display = 'block'; }
+    return true;
+  }
+  
+  return true;
+}
+
+function validateAllFields() {
+  var fields = [
+    { id: 'co-name', type: 'name' },
+    { id: 'co-phone', type: 'phone' },
+    { id: 'co-email', type: 'email' },
+    { id: 'co-addr', type: 'required' },
+    { id: 'co-city', type: 'required' }
+  ];
+  
+  var valid = true;
+  fields.forEach(function(f) {
+    if (!validateField(document.getElementById(f.id), f.type)) valid = false;
+  });
+  
+  var state = document.getElementById('co-state').value;
+  if (!state) {
+    document.getElementById('co-state-error').textContent = 'Please select a state';
+    document.getElementById('co-state-error').style.display = 'block';
+    valid = false;
+  } else {
+    document.getElementById('co-state-error').style.display = 'none';
+  }
+  
+  var pin = document.getElementById('co-pin').value;
+  if (!/^[1-9]\d{5}$/.test(pin)) {
+    document.getElementById('co-pin-error').textContent = 'Please enter a valid 6-digit pincode';
+    document.getElementById('co-pin-error').style.display = 'block';
+    valid = false;
+  } else {
+    document.getElementById('co-pin-error').style.display = 'none';
+  }
+  
+  if (currentPayMethod === 'bank' && !utrVerified) {
+    showToast('Please verify your UTR number before proceeding');
+    valid = false;
+  }
+  
+  return valid;
+}
+
+async function fetchPincodeDetails(pincode) {
+  var hintEl = document.getElementById('co-pin-hint');
+  var errorEl = document.getElementById('co-pin-error');
+  
+  if (pincode.length !== 6) return;
+  
+  hintEl.textContent = 'Fetching location...';
+  
+  try {
+    var res = await BC.getPincodeDetails(pincode);
+    if (res.ok) {
+      document.getElementById('co-city').value = res.city || res.district || '';
+      if (res.state) {
+        var stateSelect = document.getElementById('co-state');
+        for (var i = 0; i < stateSelect.options.length; i++) {
+          if (stateSelect.options[i].text === res.state) {
+            stateSelect.value = res.state;
+            break;
+          }
+        }
+      }
+      hintEl.textContent = res.city + ', ' + res.state;
+      errorEl.style.display = 'none';
+    } else {
+      hintEl.textContent = '';
+      errorEl.textContent = 'Pincode not found. Please enter manually.';
+      errorEl.style.display = 'block';
+    }
+  } catch (e) {
+    hintEl.textContent = '';
+  }
+}
+
+function onStateChange(select) {
+  var errorEl = document.getElementById('co-state-error');
+  if (select.value) {
+    errorEl.style.display = 'none';
+  }
+}
+
+async function verifyUtr() {
+  var utr = document.getElementById('co-utr').value.trim();
+  var statusEl = document.getElementById('utr-status');
+  var btn = document.getElementById('verify-utr-btn');
+  
+  if (utr.length !== 12) {
+    statusEl.className = 'utr-status error';
+    statusEl.textContent = 'UTR must be 12 digits';
+    statusEl.style.display = 'block';
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+  statusEl.className = 'utr-status pending';
+  statusEl.textContent = 'Verifying UTR with bank...';
+  statusEl.style.display = 'block';
+  
+  try {
+    var res = await BC.verifyUtr(utr, orderTotal);
+    if (res.ok) {
+      statusEl.className = 'utr-status success';
+      statusEl.textContent = '&#9989; UTR verified! Amount matches: &#8377;' + orderTotal.toLocaleString('en-IN');
+      utrVerified = true;
+    } else {
+      statusEl.className = 'utr-status error';
+      statusEl.textContent = res.error || 'Invalid UTR';
+      utrVerified = false;
+    }
+  } catch (e) {
+    statusEl.className = 'utr-status error';
+    statusEl.textContent = 'Verification failed. Please try again.';
+    utrVerified = false;
+  }
+  
+  btn.disabled = false;
+  btn.textContent = 'Verify UTR';
+}
+
+function verifyUtrLive() {
+  if (utrVerified) {
+    utrVerified = false;
+    var statusEl = document.getElementById('utr-status');
+    statusEl.className = 'utr-status';
+    statusEl.style.display = 'none';
+  }
+}
+
+function copyUpi() {
+  var upi = document.getElementById('bank-upi').textContent;
+  navigator.clipboard.writeText(upi).then(function() {
+    showToast('UPI ID copied!');
+  });
 }
 
 function showToast(msg) {
   var t = document.getElementById('toast');
   if (!t) return;
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 2800);
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2800);
 }
 
 function loadOrderData() {
   var params = new URLSearchParams(window.location.search);
-  var mode   = params.get('mode');
+  var mode = params.get('mode');
 
   if (mode === 'buynow') {
-    var name  = decodeURIComponent(params.get('name') || 'Product');
-    var img   = decodeURIComponent(params.get('img')  || '');
+    var name = decodeURIComponent(params.get('name') || 'Product');
+    var img = decodeURIComponent(params.get('img') || '');
     var price = parseFloat(params.get('price')) || 0;
     orderItems = [{ name: name, price: price, qty: 1, imageUrl: img }];
   } else if (mode === 'cart') {
     try { orderItems = JSON.parse(decodeURIComponent(params.get('items') || '[]')); }
-    catch(e) { orderItems = []; }
+    catch (e) { orderItems = []; }
   }
 
   renderSummary();
 
-  BC.ready.then(function(){ return BC.getSession(); }).then(function(sess) {
+  BC.ready.then(function() { return BC.getSession(); }).then(function(sess) {
     if (!sess) return;
     var n = document.getElementById('co-name');
     var e = document.getElementById('co-email');
     if (n && !n.value) n.value = sess.name;
     if (e && !e.value) e.value = sess.email;
-  }).catch(function(){});
+  }).catch(function() {});
+  
+  loadBankDetails();
+}
+
+async function loadBankDetails() {
+  try {
+    var res = await BC.getBankDetails();
+    if (res.ok) {
+      bankDetails = res.bankDetails;
+      document.getElementById('bank-account-name').textContent = bankDetails.accountName || '';
+      document.getElementById('bank-account-number').textContent = bankDetails.accountNumber || '';
+      document.getElementById('bank-ifsc').textContent = bankDetails.ifsc || '';
+      document.getElementById('bank-name').textContent = bankDetails.bankName || '';
+      document.getElementById('bank-upi').textContent = bankDetails.upiId || '';
+    }
+  } catch (e) {}
 }
 
 function renderSummary() {
-  var subtotal = orderItems.reduce(function(a,b){ return a + b.price*(b.qty||1); }, 0);
-  var mrpTotal = orderItems.reduce(function(a,b){ return a + (b.mrp||b.price)*(b.qty||1); }, 0);
-  var savings  = mrpTotal > subtotal ? mrpTotal - subtotal : 0;
-  var shipping = subtotal >= 999 ? 0 : 49;
-  orderTotal   = subtotal + shipping;
+  var subtotal = orderItems.reduce(function(a, b) { return a + b.price * (b.qty || 1); }, 0);
+  var mrpTotal = orderItems.reduce(function(a, b) { return a + (b.mrp || b.price) * (b.qty || 1); }, 0);
+  var savings = mrpTotal > subtotal ? mrpTotal - subtotal : 0;
+  var shipping = subtotal >= 999 ? 0 : (currentPayMethod === 'cod' && subtotal < 999 ? 49 + 40 : 49);
+  orderTotal = subtotal + shipping;
 
   var itemsHtml = orderItems.map(function(item) {
     return '<div class="os-item">' +
-      '<img class="os-img" src="'+(item.imageUrl||'https://placehold.co/60x54?text=P')+'" onerror="this.src=\'https://placehold.co/60x54?text=P\'" alt="'+item.name+'"/>' +
-      '<div class="os-name">'+item.name+(item.qty>1?' x'+item.qty:'')+'</div>' +
-      '<div class="os-price">&#8377;'+(item.price*(item.qty||1)).toLocaleString('en-IN')+'</div>' +
+      '<img class="os-img" src="' + (item.imageUrl || 'https://placehold.co/60x54?text=P') + '" onerror="this.src=\'https://placehold.co/60x54?text=P\'" alt="' + item.name + '"/>' +
+      '<div class="os-name">' + item.name + (item.qty > 1 ? ' x' + item.qty : '') + '</div>' +
+      '<div class="os-price">&#8377;' + (item.price * (item.qty || 1)).toLocaleString('en-IN') + '</div>' +
     '</div>';
   }).join('');
 
-  document.getElementById('os-items').innerHTML    = itemsHtml;
-  document.getElementById('os-subtotal').innerHTML = '&#8377;'+subtotal.toLocaleString('en-IN');
-  document.getElementById('os-total').innerHTML    = '&#8377;'+orderTotal.toLocaleString('en-IN');
-  document.getElementById('os-discount').innerHTML  = savings > 0 ? '-&#8377;'+savings.toLocaleString('en-IN') : '&#8377;0';
-  document.getElementById('qr-amount').textContent  = orderTotal.toLocaleString('en-IN');
-  document.getElementById('qr-steps-amt').textContent = orderTotal.toLocaleString('en-IN');
+  document.getElementById('os-items').innerHTML = itemsHtml;
+  document.getElementById('os-subtotal').innerHTML = '&#8377;' + subtotal.toLocaleString('en-IN');
+  document.getElementById('os-total').innerHTML = '&#8377;' + orderTotal.toLocaleString('en-IN');
+  document.getElementById('os-discount').innerHTML = savings > 0 ? '-&#8377;' + savings.toLocaleString('en-IN') : '&#8377;0';
 
   if (shipping === 0) {
-    document.getElementById('os-shipping').innerHTML  = 'FREE &#127873;';
+    document.getElementById('os-shipping').innerHTML = 'FREE &#127873;';
     document.getElementById('os-savings').style.display = 'block';
-    document.getElementById('os-savings').innerHTML  = '&#127881; You save &#8377;49 on shipping! on this order';
+    document.getElementById('os-savings').innerHTML = '&#127881; You save &#8377;49 on shipping!';
   } else {
-    document.getElementById('os-shipping').innerHTML  = '&#8377;'+shipping.toLocaleString('en-IN');
-  }
-
-  // Update QR code with actual amount
-  var qrImg = document.getElementById('qr-img');
-  if (qrImg && orderTotal > 0) {
-    qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=8955813948@ptyes%26pn=BlueCart%26am='+orderTotal;
+    document.getElementById('os-shipping').innerHTML = '&#8377;' + shipping.toLocaleString('en-IN');
   }
 }
 
-function placeOrder() {
-  var name  = document.getElementById('co-name').value.trim();
-  var phone = document.getElementById('co-phone').value.trim();
+async function placeOrder() {
+  if (!validateAllFields()) return;
+  
+  var btn = document.getElementById('place-order-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Processing...';
+
+  var name = document.getElementById('co-name').value.trim();
+  var phone = document.getElementById('co-phone').value.trim().replace(/\D/g, '').substring(0, 10);
   var email = document.getElementById('co-email').value.trim();
-  var addr  = document.getElementById('co-addr').value.trim();
-  var city  = document.getElementById('co-city').value.trim();
+  var addr = document.getElementById('co-addr').value.trim();
+  var city = document.getElementById('co-city').value.trim();
   var state = document.getElementById('co-state').value;
-  var pin   = document.getElementById('co-pin').value.trim();
+  var pin = document.getElementById('co-pin').value.trim();
+  var notes = document.getElementById('co-instr').value.trim();
 
-  if (!name||!phone||!email||!addr||!city||!state||!pin) {
-    showToast('Please fill all delivery fields!'); return;
-  }
-  if (currentPayMethod==='qr' && !document.getElementById('co-utr').value.trim()) {
-    showToast('Please enter UTR / Transaction number!'); return;
-  }
-  if (currentPayMethod==='upi' && !document.getElementById('co-upi-id').value.trim()) {
-    showToast('Please enter your UPI ID!'); return;
-  }
-  if (!orderItems.length) { showToast('No items in order!'); return; }
+  var paymentMethod = currentPayMethod === 'razorpay' ? 'Razorpay' : (currentPayMethod === 'cod' ? 'COD' : 'Bank Transfer');
 
-  BC.ready.then(function() {
-    return BC.placeOrder({
-      userEmail  : email,
-      userName   : name,
-      userPhone  : phone,
-      address    : addr + ', ' + city + ', ' + state,
-      pincode    : pin,
-      cartItems  : orderItems.map(function(i){ return { name:i.name, price:i.price, qty:i.qty||1, imageUrl:i.imageUrl||'', category:i.category||'', brand:i.brand||'' }; }),
-      paymentMethod: currentPayMethod==='qr'?'UPI QR':currentPayMethod==='upi'?'UPI ID':'Card'
-    });
-  }).then(function(res) {
-    showSuccess(res.orderId || 'ORD-'+Date.now());
-  }).catch(function(e) {
-    console.error(e);
-    showSuccess('ORD-'+Date.now());
-  });
+  if (currentPayMethod === 'razorpay') {
+    await processRazorpayPayment(name, phone, email, addr, city, state, pin, notes, paymentMethod);
+  } else if (currentPayMethod === 'cod') {
+    await submitOrder(name, phone, email, addr, city, state, pin, notes, paymentMethod);
+  } else {
+    if (!utrVerified) {
+      showToast('Please verify your UTR number first');
+      btn.disabled = false;
+      btn.textContent = 'Place Order';
+      return;
+    }
+    await submitOrder(name, phone, email, addr, city, state, pin, notes, paymentMethod, document.getElementById('co-utr').value.trim());
+  }
 }
 
-function showSuccess(orderId) {
+async function processRazorpayPayment(name, phone, email, addr, city, state, pin, notes, paymentMethod) {
+  var btn = document.getElementById('place-order-btn');
+  
+  try {
+    btn.textContent = 'Creating payment...';
+    var razorpayRes = await BC.createRazorpayOrder(orderTotal, orderItems);
+    
+    if (!razorpayRes.ok) {
+      showToast(razorpayRes.error || 'Failed to create payment order');
+      btn.disabled = false;
+      btn.textContent = 'Place Order';
+      return;
+    }
+    
+    var sess = await BC.getSession();
+    
+    var options = {
+      key: razorpayRes.keyId,
+      amount: razorpayRes.amount,
+      currency: razorpayRes.currency,
+      name: 'BlueCart',
+      description: 'Order Payment',
+      order_id: razorpayRes.razorpayOrderId,
+      prefill: {
+        name: name,
+        email: email,
+        contact: '+91' + phone
+      },
+      notes: {
+        address: addr,
+        city: city,
+        state: state,
+        pincode: pin
+      },
+      theme: {
+        color: '#0ea5a0'
+      },
+      handler: async function(response) {
+        var verifyRes = await BC.verifyRazorpayPayment(
+          response.razorpay_order_id,
+          response.razorpay_payment_id,
+          response.razorpay_signature
+        );
+        
+        if (verifyRes.ok) {
+          await submitOrder(name, phone, email, addr, city, state, pin, notes, paymentMethod, null, response.razorpay_order_id, response.razorpay_payment_id, response.razorpay_signature);
+        } else {
+          showToast('Payment verification failed. Please contact support.');
+          btn.disabled = false;
+          btn.textContent = 'Place Order';
+        }
+      },
+      modal: {
+        ondismiss: function() {
+          btn.disabled = false;
+          btn.textContent = 'Place Order';
+        }
+      }
+    };
+    
+    var rzp = new Razorpay(options);
+    rzp.on('payment.failed', function(response) {
+      showToast('Payment failed: ' + (response.error.description || 'Please try again'));
+      btn.disabled = false;
+      btn.textContent = 'Place Order';
+    });
+    
+    rzp.open();
+  } catch (e) {
+    console.error(e);
+    showToast('Payment error. Please try again.');
+    btn.disabled = false;
+    btn.textContent = 'Place Order';
+  }
+}
+
+async function submitOrder(name, phone, email, addr, city, state, pin, notes, paymentMethod, utrNumber, razorpayOrderId, razorpayPaymentId, razorpaySignature) {
+  var btn = document.getElementById('place-order-btn');
+  
+  try {
+    var orderData = {
+      userEmail: email,
+      userName: name,
+      userPhone: '+91' + phone,
+      address: addr,
+      city: city,
+      state: state,
+      pincode: pin,
+      notes: notes,
+      paymentMethod: paymentMethod,
+      cartItems: orderItems.map(function(i) {
+        return { name: i.name, price: i.price, qty: i.qty || 1, imageUrl: i.imageUrl || '', category: i.category || '', brand: i.brand || '' };
+      })
+    };
+    
+    if (utrNumber) orderData.utrNumber = utrNumber;
+    if (razorpayOrderId) orderData.razorpayOrderId = razorpayOrderId;
+    if (razorpayPaymentId) orderData.razorpayPaymentId = razorpayPaymentId;
+    if (razorpaySignature) orderData.razorpaySignature = razorpaySignature;
+    
+    var res = await BC.placeOrder(orderData);
+    
+    if (res.ok) {
+      var paymentStatus = res.paymentStatus || (paymentMethod === 'COD' ? 'Pending' : 'Paid');
+      showSuccess(res.orderId, paymentStatus);
+    } else {
+      showToast(res.error || 'Failed to place order');
+      btn.disabled = false;
+      btn.textContent = 'Place Order';
+    }
+  } catch (e) {
+    console.error(e);
+    showToast('Order placement failed. Please try again.');
+    btn.disabled = false;
+    btn.textContent = 'Place Order';
+  }
+}
+
+function showSuccess(orderId, paymentStatus) {
   document.getElementById('checkout-wrap').style.display = 'none';
   var ss = document.getElementById('success-screen');
   ss.style.display = 'block';
   document.getElementById('success-order-id').textContent = 'Order ID: ' + orderId;
+  
+  if (paymentStatus === 'Pending') {
+    document.getElementById('success-title').textContent = 'Order Placed Successfully!';
+    document.getElementById('success-sub').textContent = 'Your order is confirmed. Payment will be collected upon delivery.';
+  } else {
+    document.getElementById('success-title').textContent = 'Payment Successful!';
+    document.getElementById('success-sub').textContent = 'Thank you for your purchase. Your order is confirmed and will be delivered soon.';
+  }
 }
 
-// Init on page load
-BC.ready.then(function(){ loadOrderData(); }).catch(function(){ loadOrderData(); });
-</script>
-<script src="shared.js"></script>
-<script>
-function toggleHamburger(){
-  var btn=document.getElementById('hamburger-btn');
-  var drawer=document.getElementById('hm-drawer');
-  var overlay=document.getElementById('hm-overlay');
-  if(!drawer)return;
-  var open=drawer.classList.contains('open');
-  drawer.classList.toggle('open',!open);
-  overlay.classList.toggle('open',!open);
-  btn.classList.toggle('open',!open);
+function toggleHamburger() {
+  var btn = document.getElementById('hamburger-btn');
+  var drawer = document.getElementById('hm-drawer');
+  var overlay = document.getElementById('hm-overlay');
+  if (!drawer) return;
+  var open = drawer.classList.contains('open');
+  drawer.classList.toggle('open', !open);
+  overlay.classList.toggle('open', !open);
+  btn.classList.toggle('open', !open);
 }
-function closeHamburger(){
-  var btn=document.getElementById('hamburger-btn');
-  var drawer=document.getElementById('hm-drawer');
-  var overlay=document.getElementById('hm-overlay');
-  if(drawer){drawer.classList.remove('open');}
-  if(overlay){overlay.classList.remove('open');}
-  if(btn){btn.classList.remove('open');}
+
+function closeHamburger() {
+  var btn = document.getElementById('hamburger-btn');
+  var drawer = document.getElementById('hm-drawer');
+  var overlay = document.getElementById('hm-overlay');
+  if (drawer) drawer.classList.remove('open');
+  if (overlay) overlay.classList.remove('open');
+  if (btn) btn.classList.remove('open');
 }
+
+BC.ready.then(function() {
+  return BC.getSession();
+}).then(function(sess) {
+  if (!sess) {
+    document.getElementById('login-required').classList.add('show');
+    document.getElementById('checkout-wrap').style.display = 'none';
+    sessionStorage.setItem('bc_redirect', window.location.href);
+    return;
+  }
+  
+  document.getElementById('login-required').classList.remove('show');
+  document.getElementById('checkout-wrap').style.display = 'block';
+  loadOrderData();
+  
+  var g = document.getElementById('account-greeting');
+  var lk = document.getElementById('account-link');
+  if (g) g.textContent = 'Hello, ' + sess.name.split(' ')[0];
+  if (lk) lk.href = sess.role === 'admin' ? 'admin.html' : 'account.html';
+}).catch(function() {
+  document.getElementById('login-required').classList.add('show');
+  document.getElementById('checkout-wrap').style.display = 'none';
+});
 </script>
 </body>
 </html>

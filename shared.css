@@ -478,15 +478,16 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
   transition: background var(--trans), color var(--trans);
   border-bottom: 2px solid transparent;
 }
-.nav-item > a::after {
+.nav-item:has(.nav-dropdown) > a::after {
   content: "▾";
-  font-size: 9px;
-  opacity: 0.5;
-  margin-left: 2px;
+  font-size: 10px;
+  opacity: 0.6;
+  margin-left: 3px;
 }
 .nav-item > a.hot        { color: var(--amber); }
 .nav-item > a.hot::after { content: ""; }
 .nav-item > a:hover  { background: rgba(255,255,255,0.12); color: white; }
+.nav-item:hover > a { color: white; }
 .nav-item > a.active {
   background: rgba(255,255,255,0.16);
   color: white;
@@ -622,6 +623,116 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
 .slider-dots { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:10; }
 .dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.4); cursor:pointer; transition:all var(--trans); }
 .dot.active { background:white; width:24px; border-radius:4px; }
+
+/* ── HERO SLIDER MOBILE RESPONSIVE ── */
+@media (max-width: 900px) {
+  .slide {
+    height: 340px;
+    padding: 0 5%;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+  .slide-content {
+    max-width: 100%;
+    padding-right: 0;
+    z-index: 2;
+  }
+  .slide h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  .slide p {
+    font-size: 14px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .slide-btns {
+    justify-content: center;
+    gap: 10px;
+  }
+  .slide-img {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    height: 140px;
+    width: auto;
+    max-width: 50%;
+    margin-top: 12px;
+    z-index: 1;
+    animation: none;
+  }
+  .slide-decor { display: none; }
+  .decor-1, .decor-2 { display: none; }
+  .slider-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+  .slider-prev { left: 8px; }
+  .slider-next { right: 8px; }
+}
+
+@media (max-width: 600px) {
+  .slide {
+    height: 300px;
+    padding: 0 4%;
+  }
+  .slide h1 {
+    font-size: 24px;
+  }
+  .slide p {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .slide-tag {
+    font-size: 10px;
+    padding: 3px 10px;
+    margin-bottom: 10px;
+  }
+  .slide-img {
+    height: 110px;
+    max-width: 55%;
+  }
+  .slide-btns {
+    gap: 8px;
+  }
+  .btn-primary {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+  .btn-outline {
+    padding: 9px 18px;
+    font-size: 13px;
+  }
+  .slider-dots {
+    bottom: 10px;
+    gap: 6px;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+  }
+  .dot.active {
+    width: 18px;
+  }
+}
+
+@media (max-width: 400px) {
+  .slide {
+    height: 280px;
+  }
+  .slide h1 {
+    font-size: 20px;
+  }
+  .slide p {
+    font-size: 12px;
+  }
+  .slide-img {
+    height: 90px;
+    max-width: 60%;
+  }
+}
 
 /* ═══════════════════════════════════════════════════════════
    9. BUTTONS
@@ -949,7 +1060,6 @@ footer { margin-top:50px; background:var(--navy); color:rgba(255,255,255,0.7); }
 ═══════════════════════════════════════════════════════════ */
 @media (max-width: 380px) {
   .logo             { font-size:16px; }
-  .slide h1         { font-size:20px; }
   .products-grid    { grid-template-columns:repeat(2,1fr); gap:6px; padding:0 2% 12px; }
   .prod-img-wrap    { height:120px; }
   .prod-name        { font-size:12px; }
@@ -1023,6 +1133,22 @@ html, body {
   .deal-img         { height: 120px; }
   .deal-name        { font-size: 12.5px; }
   .deal-price-now   { font-size: 15px; }
+}
+
+/* ── Deals strip mobile ── */
+@media (max-width: 600px) {
+  .deals-strip {
+    padding: 10px 3%;
+    gap: 8px;
+  }
+  .deal-chip {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  .deal-chip .badge {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
 }
 
 /* ── New arrivals mobile ── */

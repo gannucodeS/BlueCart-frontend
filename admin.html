@@ -523,6 +523,9 @@ function renderOrds() {
       var delInfo=o.deliveredAt?'<br><small style="color:var(--lime);font-size:10.5px">'+new Date(o.deliveredAt).toLocaleDateString('en-IN')+'</small>':'';
       var items=(o.items||[]).map(function(it){ return it.name+'<br><small style="color:var(--muted)">&#8377;'+it.price.toLocaleString('en-IN')+' x'+(it.qty||1)+'</small>'; }).join('<hr style="margin:3px 0;border-color:#f0f4f8">');
       var opts=STATUSES.map(function(st){ return '<option value="'+st+'"'+(o.deliveryStatus===st?' selected':'')+'>'+st+'</option>'; }).join('');
+      var otpBtn = (o.deliveryStatus === 'Out for Delivery' && !o.deliveryVerified) 
+        ? '<button class="ab" style="background:#fef9c3;color:#92400e;margin-top:4px;" onclick="openOtpModal(\''+o.id+'\',\''+o.userName.replace(/'/g,"\\'")+'\',\''+o.userPhone+'\')">&#128242; OTP</button>' 
+        : (o.deliveryVerified ? '<small style="color:var(--lime);font-size:10.5px">&#9989; Verified</small>' : '');
       return '<tr>'+
         '<td><strong style="color:var(--teal);font-size:12px">'+o.id+'</strong><br><small style="color:var(--muted)">'+dt+'</small></td>'+
         '<td><strong>'+o.userName+'</strong></td>'+
@@ -536,7 +539,7 @@ function renderOrds() {
         '<td><span class="badge '+sc+'">'+o.deliveryStatus+'</span>'+delInfo+'</td>'+
         '<td><span class="badge b-delivered" style="font-size:11px">'+(o.paymentStatus||'Paid')+'</span></td>'+
         '<td><select class="status-sel" data-id="'+o.id+'" onchange="updOrd(this.dataset.id,this.value)">'+opts+'</select>'+
-        '<button class="ab ab-del" data-id="'+o.id+'" onclick="delOrd(this.dataset.id)">Delete</button></td>'+
+        '<button class="ab ab-del" data-id="'+o.id+'" onclick="delOrd(this.dataset.id)">Delete</button>'+otpBtn+'</td>'+
       '</tr>';
     }).join('');
   });
@@ -622,22 +625,6 @@ function toast(msg) {
   setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
-// ── Admin: Location panel ─────────────────────────────────────────────────────
-var _CITIES={
-  'Rajasthan':['Jaipur','Jodhpur','Udaipur','Bhilwara'],'Maharashtra':['Mumbai','Pune'],
-  'Delhi':['New Delhi','Dwarka'],'Karnataka':['Bengaluru','Mysuru'],
-  'Gujarat':['Ahmedabad','Surat'],'Uttar Pradesh':['Lucknow','Noida']
-};
-var _PINS={'311001':'Bhilwara','302001':'Jaipur','400001':'Mumbai','110001':'Delhi','560001':'Bengaluru'};
-function toggleLocationPanel(){var p=document.getElementById('loc-panel'),o=document.getElementById('loc-overlay');if(!p)return;var open=p.style.display==='block';p.style.display=open?'none':'block';o.style.display=open?'none':'block';}
-function closeLocationPanel(){var p=document.getElementById('loc-panel'),o=document.getElementById('loc-overlay');if(p)p.style.display='none';if(o)o.style.display='none';}
-function setLocationDisplay(city){var el=document.getElementById('location-display');if(el)el.textContent='\uD83D\uDCCD '+city;localStorage.setItem('bc_location',city);closeLocationPanel();}
-function applyPincode(){var pin=document.getElementById('loc-pincode'),res=document.getElementById('pin-result');if(!pin||!res)return;var v=pin.value.trim();if(v.length!==6){res.innerHTML='<span style="color:#dc2626">Invalid.</span>';return;}var city=_PINS[v];if(city){setLocationDisplay(city);}else{setLocationDisplay(v);}}
-function loadCities(){var s=document.getElementById('loc-state'),c=document.getElementById('loc-city');if(!s||!c)return;c.innerHTML='<option value="">Select City</option>';(_CITIES[s.value]||[]).forEach(function(ct){var o=document.createElement('option');o.value=ct;o.textContent=ct;c.appendChild(o);});}
-function applyStateCity(){var s=document.getElementById('loc-state'),c=document.getElementById('loc-city');if(!s||!c||!s.value||!c.value)return;setLocationDisplay(c.value);}
-function setCity(city,state){var s=document.getElementById('loc-state');if(s){s.value=state;loadCities();}setTimeout(function(){var c=document.getElementById('loc-city');if(c)c.value=city;},60);setLocationDisplay(city);}
-(function(){var saved=localStorage.getItem('bc_location');if(saved){var el=document.getElementById('location-display');if(el)el.textContent='\uD83D\uDCCD '+saved;}})();
-
 </script>
 <!-- LOCATION PANEL -->
 <div id="loc-overlay" style="display:none;position:fixed;inset:0;background:rgba(15,45,74,0.45);z-index:500;backdrop-filter:blur(3px)" onclick="closeLocationPanel()"></div>
@@ -687,9 +674,43 @@ function setCity(city,state){var s=document.getElementById('loc-state');if(s){s.
     </div>
   </div>
 </div>
+
+<!-- OTP Modal for Delivery Verification -->
+<div id="otp-modal" style="display:none;position:fixed;inset:0;background:rgba(15,45,74,0.5);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:white;border-radius:16px;padding:28px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h3 style="font-family:Syne,sans-serif;font-size:18px;color:#0f2d4a;margin:0;">&#128242; Delivery OTP</h3>
+      <button onclick="closeOtpModal()" style="background:#f4f7fb;border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;">&#10005;</button>
+    </div>
+    <div id="otp-order-info" style="margin-bottom:16px;padding:12px;background:#f4f7fb;border-radius:10px;font-size:13px;color:#6b7a8d;"></div>
+    <div id="otp-action-panel" style="margin-bottom:16px;">
+      <button id="otp-send-btn" onclick="sendDeliveryOtp()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">
+        &#128232; Send OTP to Customer
+      </button>
+      <div id="otp-send-result" style="margin-top:10px;font-size:13px;text-align:center;"></div>
+    </div>
+    <div id="otp-verify-panel" style="display:none;">
+      <div style="margin-bottom:12px;">
+        <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;">Enter OTP from Customer</label>
+        <input type="text" id="otp-input" maxlength="6" placeholder="Enter 6-digit OTP" oninput="this.value=this.value.replace(/[^0-9]/g,'')" style="width:100%;padding:12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:18px;text-align:center;letter-spacing:4px;font-family:Nunito,sans-serif;"/>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="verifyDeliveryOtp()" style="flex:1;padding:12px;background:#0ea5a0;color:white;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">Verify OTP</button>
+        <button onclick="resendDeliveryOtp()" style="padding:12px 16px;background:#f4f7fb;color:#0f2d4a;border:1.5px solid #e0e7ef;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Nunito,sans-serif;">Resend</button>
+      </div>
+      <div id="otp-verify-result" style="margin-top:10px;font-size:13px;text-align:center;"></div>
+    </div>
+    <div style="margin-top:16px;padding:10px;background:#fef9c3;border-radius:8px;font-size:12px;color:#92400e;">
+      &#9432; Share this OTP with the delivery person. Customer will confirm delivery with this OTP.
+    </div>
+  </div>
+</div>
+
 <script src="shared.js"></script>
 
 <script>
+var currentOtpOrderId = null;
+
 function toggleSidebar(){
   var sb = document.querySelector('.sidebar');
   var ov = document.getElementById('sb-overlay');
@@ -715,6 +736,112 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   });
 });
+
+// OTP Modal Functions
+function openOtpModal(orderId, customerName, customerPhone) {
+  currentOtpOrderId = orderId;
+  var modal = document.getElementById('otp-modal');
+  var info = document.getElementById('otp-order-info');
+  var actionPanel = document.getElementById('otp-action-panel');
+  var verifyPanel = document.getElementById('otp-verify-panel');
+  var sendBtn = document.getElementById('otp-send-btn');
+  var sendResult = document.getElementById('otp-send-result');
+  var verifyResult = document.getElementById('otp-verify-result');
+  
+  info.innerHTML = '<strong>Order:</strong> ' + orderId + '<br><strong>Customer:</strong> ' + customerName + '<br><strong>Phone:</strong> ' + customerPhone;
+  sendResult.innerHTML = '';
+  verifyResult.innerHTML = '';
+  verifyPanel.style.display = 'none';
+  actionPanel.style.display = 'block';
+  sendBtn.disabled = false;
+  sendBtn.innerHTML = '&#128232; Send OTP to Customer';
+  
+  modal.style.display = 'flex';
+}
+
+function closeOtpModal() {
+  document.getElementById('otp-modal').style.display = 'none';
+  currentOtpOrderId = null;
+}
+
+async function sendDeliveryOtp() {
+  if (!currentOtpOrderId) return;
+  
+  var sendBtn = document.getElementById('otp-send-btn');
+  var sendResult = document.getElementById('otp-send-result');
+  var verifyPanel = document.getElementById('otp-verify-panel');
+  
+  sendBtn.disabled = true;
+  sendBtn.innerHTML = '&#8987; Sending...';
+  sendResult.innerHTML = '';
+  
+  try {
+    var res = await BC.generateDeliveryOtp(currentOtpOrderId);
+    if (res.ok) {
+      sendResult.innerHTML = '<span style="color:#16a34a;">&#9989; ' + res.message + '</span>';
+      verifyPanel.style.display = 'block';
+      document.getElementById('otp-input').value = '';
+      document.getElementById('otp-verify-result').innerHTML = '';
+      setTimeout(function() {
+        sendResult.innerHTML = '<span style="color:#16a34a;">OTP sent! Customer will receive via WhatsApp.</span>';
+      }, 2000);
+    } else {
+      sendResult.innerHTML = '<span style="color:#dc2626;">' + (res.error || 'Failed to send OTP') + '</span>';
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = '&#128232; Retry Send OTP';
+    }
+  } catch (e) {
+    sendResult.innerHTML = '<span style="color:#dc2626;">Error: Please try again</span>';
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = '&#128232; Retry Send OTP';
+  }
+}
+
+async function verifyDeliveryOtp() {
+  var otp = document.getElementById('otp-input').value.trim();
+  if (!otp || otp.length !== 6) {
+    document.getElementById('otp-verify-result').innerHTML = '<span style="color:#dc2626;">Please enter a valid 6-digit OTP</span>';
+    return;
+  }
+  
+  var verifyResult = document.getElementById('otp-verify-result');
+  verifyResult.innerHTML = '<span style="color:#6b7a8d;">Verifying...</span>';
+  
+  try {
+    var res = await BC.verifyDeliveryOtp(currentOtpOrderId, otp);
+    if (res.ok) {
+      verifyResult.innerHTML = '<span style="color:#16a34a;font-weight:700;">&#9989; Delivery Verified!</span>';
+      toast('Delivery confirmed for order ' + currentOtpOrderId);
+      setTimeout(function() {
+        closeOtpModal();
+        renderOrds();
+        refreshDash();
+      }, 1500);
+    } else {
+      verifyResult.innerHTML = '<span style="color:#dc2626;">' + (res.error || 'Invalid OTP') + '</span>';
+    }
+  } catch (e) {
+    verifyResult.innerHTML = '<span style="color:#dc2626;">Verification failed</span>';
+  }
+}
+
+async function resendDeliveryOtp() {
+  if (!currentOtpOrderId) return;
+  
+  var sendResult = document.getElementById('otp-send-result');
+  sendResult.innerHTML = '<span style="color:#6b7a8d;">Resending...</span>';
+  
+  try {
+    var res = await BC.resendDeliveryOtp(currentOtpOrderId);
+    if (res.ok) {
+      sendResult.innerHTML = '<span style="color:#16a34a;">New OTP sent successfully!</span>';
+    } else {
+      sendResult.innerHTML = '<span style="color:#dc2626;">' + (res.error || 'Failed to resend') + '</span>';
+    }
+  } catch (e) {
+    sendResult.innerHTML = '<span style="color:#dc2626;">Error resending OTP</span>';
+  }
+}
 </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
  * BlueCart — Shared JavaScript
  * Included on every page. Handles:
  *  - Session-aware navbar
- *  - Location panel
+ *  - Location panel (with API-based pincode lookup)
  *  - Search redirect
  *  - Cart sidebar
  *  - Product view linking
@@ -33,12 +33,12 @@ function renderCart() {
   if (!list) return;
   if (!cartItems.length) {
     list.innerHTML = '<div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div>';
-    if (total) total.textContent = '₹;';
+    if (total) total.textContent = '₹0';
     return;
   }
   list.innerHTML = cartItems.map(function(item, i) {
     return '<li class="cart-item"><div><div class="cart-item-name">' + item.name +
-      '</div><div class="cart-item-price">₹'; + item.price.toLocaleString('en-IN') +
+      '</div><div class="cart-item-price">₹' + item.price.toLocaleString('en-IN') +
       '</div></div><button class="remove-btn" onclick="removeFromCart(' + i + ')">Remove</button></li>';
   }).join('');
   var sum = cartItems.reduce(function(a, b) { return a + b.price; }, 0);
@@ -50,16 +50,40 @@ function showToast(msg) {
   t.textContent = msg; t.classList.add('show');
   setTimeout(function() { t.classList.remove('show'); }, 2800);
 }
+function requireLogin(callback) {
+  if (typeof BC !== 'undefined') {
+    BC.ready.then(function() {
+      return BC.getSession();
+    }).then(function(sess) {
+      if (!sess) {
+        sessionStorage.setItem('bc_redirect', window.location.href);
+        window.location.href = 'login.html';
+        return false;
+      }
+      if (callback) callback();
+      return true;
+    }).catch(function() {
+      sessionStorage.setItem('bc_redirect', window.location.href);
+      window.location.href = 'login.html';
+    });
+  } else {
+    window.location.href = 'login.html';
+  }
+}
 function buyNow(name, img, price) {
-  var p = new URLSearchParams();
-  p.set('name', name); p.set('img', img || ''); p.set('price', price); p.set('mode', 'buynow');
-  window.location.href = 'checkout.html?' + p.toString();
+  requireLogin(function() {
+    var p = new URLSearchParams();
+    p.set('name', name); p.set('img', img || ''); p.set('price', price); p.set('mode', 'buynow');
+    window.location.href = 'checkout.html?' + p.toString();
+  });
 }
 function checkoutCart() {
   if (!cartItems.length) { showToast('Your cart is empty!'); return; }
-  var p = new URLSearchParams();
-  p.set('mode', 'cart'); p.set('items', JSON.stringify(cartItems));
-  window.location.href = 'checkout.html?' + p.toString();
+  requireLogin(function() {
+    var p = new URLSearchParams();
+    p.set('mode', 'cart'); p.set('items', JSON.stringify(cartItems));
+    window.location.href = 'checkout.html?' + p.toString();
+  });
 }
 
 // ── SEARCH ────────────────────────────────────────────────────────────────────
@@ -95,12 +119,6 @@ var _LOC_CITIES = {
   'Bihar':        ['Patna','Gaya','Bhagalpur'],
   'Goa':          ['Panaji','Margao']
 };
-var _LOC_PINS = {
-  '311001':'Bhilwara','302001':'Jaipur','400001':'Mumbai','110001':'Delhi',
-  '560001':'Bengaluru','500001':'Hyderabad','600001':'Chennai','700001':'Kolkata',
-  '411001':'Pune','380001':'Ahmedabad','226001':'Lucknow','122001':'Gurugram',
-  '201301':'Noida','313001':'Udaipur','160001':'Chandigarh','248001':'Dehradun'
-};
 
 function toggleLocationPanel() {
   var p = document.getElementById('loc-panel'), o = document.getElementById('loc-overlay');
@@ -114,27 +132,45 @@ function closeLocationPanel() {
   if (p) p.style.display = 'none';
   if (o) o.style.display = 'none';
 }
-function setLocationDisplay(city) {
+function setLocationDisplay(city, state) {
   var el = document.getElementById('location-display');
   if (el) el.textContent = '\uD83D\uDCCD ' + city;
+  if (state) localStorage.setItem('bc_location_state', state);
   localStorage.setItem('bc_location', city);
   closeLocationPanel();
 }
-function applyPincode() {
+
+async function applyPincode() {
   var pin = (document.getElementById('loc-pincode') || {}).value;
   if (!pin) return;
   pin = pin.trim();
   var res = document.getElementById('pin-result');
-  if (pin.length !== 6) { if (res) res.innerHTML = '<span style="color:#dc2626">Enter a valid 6-digit pincode.</span>'; return; }
-  var city = _LOC_PINS[pin];
-  if (city) {
-    if (res) res.innerHTML = '<span style="color:#16a34a">&#10003; Delivering to <b>' + city + '</b></span>';
-    setLocationDisplay(city);
+  
+  if (pin.length !== 6) { 
+    if (res) res.innerHTML = '<span style="color:#dc2626">Enter a valid 6-digit pincode.</span>'; 
+    return; 
+  }
+  
+  if (res) res.innerHTML = '<span style="color:#6b7a8d">Checking...</span>';
+  
+  if (typeof BC !== 'undefined') {
+    try {
+      var data = await BC.getPincodeDetails(pin);
+      if (data.ok) {
+        if (res) res.innerHTML = '<span style="color:#16a34a">&#10003; Delivering to <b>' + data.city + ', ' + data.state + '</b></span>';
+        setLocationDisplay(data.city, data.state);
+      } else {
+        if (res) res.innerHTML = '<span style="color:#dc2626">' + (data.error || 'Pincode not found') + '</span>';
+      }
+    } catch (e) {
+      if (res) res.innerHTML = '<span style="color:#dc2626">Error checking pincode. Please try again.</span>';
+    }
   } else {
     if (res) res.innerHTML = '<span style="color:#0ea5a0">Pincode ' + pin + ' \u2014 delivery available.</span>';
     setLocationDisplay(pin);
   }
 }
+
 function loadCities() {
   var s = document.getElementById('loc-state'), c = document.getElementById('loc-city');
   if (!s || !c) return;
@@ -146,13 +182,13 @@ function loadCities() {
 function applyStateCity() {
   var s = document.getElementById('loc-state'), c = document.getElementById('loc-city');
   if (!s || !c || !s.value || !c.value) { alert('Please select both state and city.'); return; }
-  setLocationDisplay(c.value);
+  setLocationDisplay(c.value, s.value);
 }
 function setCity(city, state) {
   var s = document.getElementById('loc-state');
   if (s) { s.value = state; loadCities(); }
   setTimeout(function() { var c = document.getElementById('loc-city'); if (c) c.value = city; }, 60);
-  setLocationDisplay(city);
+  setLocationDisplay(city, state);
 }
 
 // ── SESSION-AWARE NAVBAR ──────────────────────────────────────────────────────
