@@ -11,21 +11,6 @@
     /* ── SEARCH PAGE LAYOUT ── */
     .search-page-wrap{display:grid;grid-template-columns:280px 1fr;gap:24px;padding:24px 4% 60px;max-width:1300px;margin:0 auto;align-items:start;}
 
-    /* ── SEARCH HERO ── */
-    .search-hero{background:linear-gradient(120deg,#0f2d4a,#1a4a6e);padding:28px 4%;}
-    .search-hero-inner{max-width:1300px;margin:0 auto;}
-    .search-hero h2{font-family:'Syne',sans-serif;font-size:20px;color:rgba(255,255,255,.7);font-weight:700;margin-bottom:14px;}
-    .search-hero h2 span{color:white;font-size:26px;}
-    .search-big-bar{display:flex;border-radius:12px;overflow:hidden;height:52px;box-shadow:0 4px 20px rgba(0,0,0,.3);max-width:700px;}
-    .search-big-bar input{flex:1;border:none;padding:0 20px;font-size:16px;font-family:'Nunito',sans-serif;outline:none;color:var(--navy);}
-    .search-big-bar button{background:var(--teal);border:none;padding:0 28px;font-size:22px;color:white;cursor:pointer;transition:background .2s;font-family:'Nunito',sans-serif;font-weight:800;}
-    .search-big-bar button:hover{background:var(--teal-dark);}
-    .search-meta{display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap;}
-    .result-count{font-size:14px;color:rgba(255,255,255,.75);font-weight:700;}
-    .search-tags{display:flex;gap:8px;flex-wrap:wrap;}
-    .search-tag{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;padding:4px 12px;border-radius:20px;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;}
-    .search-tag:hover{background:rgba(255,255,255,.3);}
-
     /* ── SIDEBAR FILTERS ── */
     .filter-sidebar{background:white;border-radius:16px;padding:0;box-shadow:0 2px 12px rgba(15,45,74,.07);border:1.5px solid #e5eaf0;height:fit-content;position:sticky;top:80px;overflow:visible;}
     .fs-header{padding:16px 20px;border-bottom:1px solid #e5eaf0;display:flex;justify-content:space-between;align-items:center;}
@@ -249,18 +234,23 @@
 </div></div>
 
 <!-- SEARCH HERO -->
-<div class="search-hero">
-  <div class="search-hero-inner">
-    <h2>Results for <span id="query-display">All Products</span></h2>
-    <div class="search-big-bar">
-      <input type="text" id="bigSearch" placeholder="Search products, brands and more..."
-             onkeydown="if(event.key==='Enter')runSearch(this.value)"/>
-      <button onclick="runSearch(document.getElementById('bigSearch').value)">&#128269; Search</button>
+<div class="search-hero" style="display:flex;flex-direction:column;align-items:center;padding:40px 4%;background:linear-gradient(120deg,#0f2d4a,#1a4a6e);">
+  <h2 id="query-display" style="font-family:'Syne',sans-serif;font-size:20px;color:rgba(255,255,255,.7);font-weight:700;margin-bottom:14px;">All Products</h2>
+  <div class="sac-wrapper" style="width:100%;max-width:700px;position:relative;">
+    <input type="text" id="bigSearch" class="sac-input" placeholder="Search products, brands and more..." style="height:52px;border-radius:12px;font-size:16px;box-shadow:0 4px 20px rgba(0,0,0,.3);" onkeydown="if(event.key==='Enter')runSearch(this.value)"/>
+    <button class="sac-search-btn" style="height:52px;width:52px;border-radius:0 12px 12px 0;background:var(--teal);font-size:20px;" onclick="runSearch(document.getElementById('bigSearch').value)">&#128269;</button>
+    <div id="bigSearch-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1.5px solid #d0e0ed;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.12);overflow:hidden;z-index:999999;max-height:340px;overflow-y:auto;margin-top:6px;">
+      <ul style="list-style:none;padding:6px 0;margin:0;max-height:300px;overflow-y:auto;"></ul>
+      <div style="padding:6px 16px 7px;font-size:11.5px;color:#a0b0c0;border-top:1px solid #f0f4f8;display:flex;gap:14px;">
+        <span><kbd style="display:inline-flex;align-items:center;justify-content:center;background:#f0f4f8;border:1px solid #d0e0ed;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#6b8090;">↑</kbd> <kbd style="display:inline-flex;align-items:center;justify-content:center;background:#f0f4f8;border:1px solid #d0e0ed;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#6b8090;">↓</kbd> Navigate</span>
+        <span><kbd style="display:inline-flex;align-items:center;justify-content:center;background:#f0f4f8;border:1px solid #d0e0ed;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#6b8090;">Enter</kbd> Select</span>
+        <span><kbd style="display:inline-flex;align-items:center;justify-content:center;background:#f0f4f8;border:1px solid #d0e0ed;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#6b8090;">Esc</kbd> Close</span>
+      </div>
     </div>
-    <div class="search-meta">
-      <span class="result-count" id="result-count">0 results</span>
-      <div class="search-tags" id="popular-tags"></div>
-    </div>
+  </div>
+  <div style="margin-top:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;">
+    <span id="result-count" style="font-size:14px;color:rgba(255,255,255,.75);font-weight:700;"></span>
+    <div id="popular-tags" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
   </div>
 </div>
 
@@ -963,6 +953,143 @@ function setMobilePriceRange(min,max){
   document.getElementById('price-slider-mob').value=max;
   document.getElementById('price-display-mob').textContent='₹'+min.toLocaleString('en-IN')+' – ₹'+max.toLocaleString('en-IN');
   applyMobileFilters();
+}
+
+// ── SEARCH SUGGESTIONS FOR SEARCH PAGE ──
+var searchSuggestions = [
+  'iPhone 15 Pro', 'iPhone 15', 'Samsung Galaxy S24 Ultra', 'MacBook Air M3',
+  'MacBook Pro 16"', 'Sony WH-1000XM5', 'AirPods Pro 2', 'PlayStation 5',
+  'Xbox Series X', 'Apple Watch Ultra 2', 'Samsung Galaxy Watch 6', 'Canon EOS R6',
+  'Sony Alpha A7 IV', 'iPad Pro 12.9"', 'Amazon Echo Dot', 'OnePlus 12',
+  'Dell XPS 15', 'Smartphones', 'Laptops', 'Audio', 'Gaming', 'Wearables',
+  'Cameras', 'Tablets', 'Smart Home', 'Accessories', 'Electronics',
+  'Apple', 'Samsung', 'Sony', 'LG', 'Dell', 'HP', 'Asus', 'OnePlus',
+  'Bose', 'JBL', 'Canon', 'Razer', 'Logitech', 'Realme', 'Xiaomi', 'Vivo', 'Oppo',
+  'Wireless Earbuds', 'Bluetooth Speaker', 'Smart TV', 'LED TV', '4K TV',
+  'Gaming Laptop', 'Business Laptop', 'Mechanical Keyboard', 'Gaming Mouse',
+  'USB Cable', 'Phone Charger', 'Power Bank', 'Laptop Bag', 'Screen Protector'
+];
+
+var searchTimeout = null;
+var bigSearchActiveIndex = -1;
+
+function initBigSearch() {
+  var bigSearch = document.getElementById('bigSearch');
+  if (!bigSearch || bigSearch.dataset.suggestionsInit) return;
+  bigSearch.dataset.suggestionsInit = 'true';
+
+  var dropdown = document.getElementById('bigSearch-dropdown');
+  var ul = dropdown.querySelector('ul');
+
+  function escapeRegex(text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function renderSuggestions(items, query) {
+    ul.innerHTML = '';
+    bigSearchActiveIndex = -1;
+
+    if (items.length === 0) {
+      var li = document.createElement('li');
+      li.style.cssText = 'padding:10px 16px;font-size:14.5px;color:#a0b0c0;cursor:default;';
+      li.textContent = 'No suggestions found';
+      ul.appendChild(li);
+      dropdown.style.display = 'block';
+      return;
+    }
+
+    items.forEach(function(item) {
+      var li = document.createElement('li');
+      li.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:14.5px;color:#1a3c5e;cursor:pointer;transition:background .13s;border-bottom:1px solid #f0f4f8;';
+      
+      var safeValue = escapeRegex(query);
+      var regex = new RegExp('(' + safeValue + ')', 'gi');
+      var highlighted = item.replace(regex, '<strong style="font-weight:800;color:#0c5f5c;">$1</strong>');
+      
+      li.innerHTML = '<span style="font-size:14px;color:#a0b8c8;">&#128269;</span><span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + highlighted + '</span><span style="font-size:13px;color:#c0d0e0;opacity:0;transition:opacity .15s;">&#10140;</span>';
+      
+      li.addEventListener('mouseenter', function() {
+        ul.querySelectorAll('li').forEach(function(l) { l.style.background = ''; l.querySelectorAll('span')[2].style.opacity = '0'; });
+        li.style.background = '#f0fdfc';
+        li.querySelectorAll('span')[2].style.opacity = '1';
+        li.querySelectorAll('span')[2].style.color = '#0ea5a0';
+      });
+      
+      li.addEventListener('click', function() {
+        bigSearch.value = item;
+        dropdown.style.display = 'none';
+        runSearch(item);
+      });
+      
+      ul.appendChild(li);
+    });
+    
+    dropdown.style.display = 'block';
+  }
+
+  bigSearch.addEventListener('input', function(e) {
+    var q = e.target.value.trim();
+    dropdown.style.display = 'none';
+    if (q.length < 1) return;
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(function() {
+      var filtered = searchSuggestions.filter(function(item) {
+        return item.toLowerCase().includes(q.toLowerCase());
+      }).slice(0, 10);
+      renderSuggestions(filtered, q);
+    }, 150);
+  });
+
+  bigSearch.addEventListener('keydown', function(e) {
+    var items = ul.querySelectorAll('li');
+    if (!items.length || dropdown.style.display === 'none') return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      bigSearchActiveIndex = bigSearchActiveIndex >= items.length - 1 ? 0 : bigSearchActiveIndex + 1;
+      updateBigSearchActive(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      bigSearchActiveIndex = bigSearchActiveIndex <= 0 ? items.length - 1 : bigSearchActiveIndex - 1;
+      updateBigSearchActive(items);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (bigSearchActiveIndex >= 0 && items[bigSearchActiveIndex]) {
+        items[bigSearchActiveIndex].click();
+      } else if (bigSearch.value.trim()) {
+        runSearch(bigSearch.value.trim());
+      }
+    } else if (e.key === 'Escape') {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  function updateBigSearchActive(items) {
+    items.forEach(function(item) {
+      item.style.background = '';
+      var arrow = item.querySelector('span:last-child');
+      if (arrow) arrow.style.opacity = '0';
+    });
+    if (bigSearchActiveIndex >= 0 && items[bigSearchActiveIndex]) {
+      items[bigSearchActiveIndex].style.background = '#f0fdfc';
+      var arrow = items[bigSearchActiveIndex].querySelector('span:last-child');
+      if (arrow) { arrow.style.opacity = '1'; arrow.style.color = '#0ea5a0'; }
+      items[bigSearchActiveIndex].scrollIntoView({ block: 'nearest' });
+    }
+  }
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.sac-wrapper')) {
+      dropdown.style.display = 'none';
+    }
+  });
+}
+
+// Initialize on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initBigSearch);
+} else {
+  initBigSearch();
 }
 </script>
 </body>

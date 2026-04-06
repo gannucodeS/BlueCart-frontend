@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Live Search Autocomplete</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/CLfZ0htM/bluecart-favicon.png"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2d4a 0%, #1a5f7a 50%, #0ea5a0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 16px 40px;
+    }
+
+    .logo-container {
+      margin-bottom: 20px;
+    }
+
+    .logo-container img {
+      width: 140px;
+      cursor: pointer;
+      transition: transform .2s;
+    }
+
+    .logo-container img:hover {
+      transform: scale(1.08);
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 28px;
+      letter-spacing: -.3px;
+    }
+
+    .sac-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 580px;
+    }
+
+    #sac-input {
+      width: 100%;
+      height: 50px;
+      padding: 0 50px 0 18px;
+      border: 2px solid #c8d8e8;
+      border-radius: 10px;
+      font-size: 15px;
+      color: #1a3c5e;
+      background: #fff;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    #sac-input:focus {
+      border-color: #0ea5a0;
+      box-shadow: 0 0 0 3px rgba(14,165,160,.15);
+    }
+    #sac-input::placeholder { color: #a0b0c0; }
+
+    .sac-search-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 50px;
+      width: 50px;
+      background: #0ea5a0;
+      border: none;
+      border-radius: 0 10px 10px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #fff;
+      transition: background .2s;
+    }
+    .sac-search-btn:hover { background: #0c8f8a; }
+
+    #sac-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1.5px solid #d0e0ed;
+      border-radius: 10px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.12);
+      overflow: hidden;
+      z-index: 1000;
+      animation: sacFadeIn .12s ease;
+    }
+    @keyframes sacFadeIn {
+      from { opacity:0; transform:translateY(-6px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    #sac-dropdown ul {
+      list-style: none;
+      padding: 6px 0;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+    #sac-dropdown ul::-webkit-scrollbar { width: 4px; }
+    #sac-dropdown ul::-webkit-scrollbar-track { background: #f4f7fb; }
+    #sac-dropdown ul::-webkit-scrollbar-thumb { background: #c8d8e8; border-radius: 4px; }
+
+    .sac-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      font-size: 14.5px;
+      color: #1a3c5e;
+      cursor: pointer;
+      transition: background .13s;
+      border-bottom: 1px solid #f0f4f8;
+    }
+    .sac-item:last-child { border-bottom: none; }
+
+    .sac-item:hover,
+    .sac-item--active {
+      background: #f0fdfc;
+      color: #0c8f8a;
+    }
+
+    .sac-item-icon {
+      font-size: 14px;
+      color: #a0b8c8;
+      flex-shrink: 0;
+    }
+    .sac-item--active .sac-item-icon,
+    .sac-item:hover .sac-item-icon { color: #0ea5a0; }
+
+    .sac-item-text {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sac-item-text strong {
+      font-weight: 800;
+      color: #0c5f5c;
+    }
+    .sac-item--active .sac-item-text strong { color: #0ea5a0; }
+
+    .sac-item-arrow {
+      font-size: 13px;
+      color: #c0d0e0;
+      opacity: 0;
+      transition: opacity .15s;
+    }
+    .sac-item:hover .sac-item-arrow,
+    .sac-item--active .sac-item-arrow { opacity: 1; color: #0ea5a0; }
+
+    .sac-footer {
+      padding: 6px 16px 7px;
+      font-size: 11.5px;
+      color: #a0b0c0;
+      border-top: 1px solid #f0f4f8;
+      display: flex;
+      gap: 14px;
+    }
+    .sac-footer kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f4f8;
+      border: 1px solid #d0e0ed;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 10.5px;
+      font-family: inherit;
+      color: #6b8090;
+    }
+
+    .sac-tips {
+      margin-top: 14px;
+      font-size: 12.5px;
+      color: #fff;
+      text-align: center;
+    }
+    .sac-tips span {
+      display: inline-block;
+      margin: 3px 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 3px 11px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .sac-tips span:hover { background: rgba(255,255,255,0.35); }
+  </style>
+</head>
+<body>
+
+  <div class="logo-container">
+    <img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" onclick="window.location.href='index.html'"/>
+  </div>
+
+  <h1>&#128269; Live Search Autocomplete</h1>
+
+  <div class="sac-wrapper">
+    <input type="text" id="sac-input" placeholder="Search products, brands and more..." />
+    <button class="sac-search-btn" onclick="document.getElementById('sac-input').focus()" aria-label="Search">&#128269;</button>
+
+    <div id="sac-dropdown">
+      <ul></ul>
+      <div class="sac-footer">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> Navigate</span>
+        <span><kbd>Enter</kbd> Select</span>
+        <span><kbd>Esc</kbd> Close</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sac-tips">
+    Try: 
+    <span onclick="fillAndSearch('electronic')">electronic</span>
+    <span onclick="fillAndSearch('smart')">smart</span>
+    <span onclick="fillAndSearch('wire')">wire</span>
+    <span onclick="fillAndSearch('apple')">apple</span>
+    <span onclick="fillAndSearch('gaming')">gaming</span>
+    <span onclick="fillAndSearch('4k')">4k</span>
+  </div>
+
+  <script>
+    const SUGGESTIONS = [
+      'iPhone 15 Pro', 'iPhone 15', 'Samsung Galaxy S24 Ultra', 'MacBook Air M3',
+      'MacBook Pro 16"', 'Sony WH-1000XM5', 'AirPods Pro 2', 'PlayStation 5',
+      'Xbox Series X', 'Apple Watch Ultra 2', 'Samsung Galaxy Watch 6', 'Canon EOS R6',
+      'Sony Alpha A7 IV', 'iPad Pro 12.9"', 'Amazon Echo Dot', 'OnePlus 12',
+      'Dell XPS 15', 'Smartphones', 'Laptops', 'Audio', 'Gaming', 'Wearables',
+      'Cameras', 'Tablets', 'Smart Home', 'Accessories', 'Electronics',
+      'Apple', 'Samsung', 'Sony', 'LG', 'Dell', 'HP', 'Asus', 'OnePlus',
+      'Bose', 'JBL', 'Canon', 'Razer', 'Logitech', 'Realme', 'Xiaomi', 'Vivo', 'Oppo',
+      'Wireless Earbuds', 'Bluetooth Speaker', 'Smart TV', 'LED TV', '4K TV',
+      'Gaming Laptop', 'Business Laptop', 'Mechanical Keyboard', 'Gaming Mouse',
+      'USB Cable', 'Phone Charger', 'Power Bank', 'Laptop Bag', 'Screen Protector'
+    ];
+
+    const searchInput = document.getElementById('sac-input');
+    const dropdown = document.getElementById('sac-dropdown');
+    const ul = dropdown.querySelector('ul');
+    let activeIndex = -1;
+
+    function escapeRegex(text) {
+      return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function renderSuggestions(items, query) {
+      ul.innerHTML = '';
+      activeIndex = -1;
+
+      if (items.length === 0) {
+        const li = document.createElement('li');
+        li.className = 'sac-item';
+        li.textContent = 'No suggestions found';
+        li.style.color = '#a0b0c0';
+        li.style.cursor = 'default';
+        ul.appendChild(li);
+        dropdown.style.display = 'block';
+        return;
+      }
+
+      items.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'sac-item';
+        
+        const safeValue = escapeRegex(query);
+        const regex = new RegExp(`(${safeValue})`, 'gi');
+        const highlighted = item.replace(regex, '<strong>$1</strong>');
+
+        li.innerHTML = `
+          <span class="sac-item-icon">&#128269;</span>
+          <span class="sac-item-text">${highlighted}</span>
+          <span class="sac-item-arrow">&#10140;</span>
+        `;
+
+        li.addEventListener('click', () => {
+          searchInput.value = item;
+          dropdown.style.display = 'none';
+          window.location.href = 'search.html?q=' + encodeURIComponent(item);
+        });
+
+        ul.appendChild(li);
+      });
+
+      dropdown.style.display = 'block';
+    }
+
+    searchInput.addEventListener('input', function() {
+      const value = this.value.toLowerCase();
+      dropdown.style.display = 'none';
+
+      if (!value) return;
+
+      const filtered = SUGGESTIONS
+        .filter(item => item.toLowerCase().includes(value))
+        .slice(0, 10);
+
+      renderSuggestions(filtered, value);
+    });
+
+    searchInput.addEventListener('keydown', function(e) {
+      const items = ul.querySelectorAll('.sac-item');
+      if (!items.length || dropdown.style.display === 'none') return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeIndex = activeIndex >= items.length - 1 ? 0 : activeIndex + 1;
+        updateActive(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIndex = activeIndex <= 0 ? items.length - 1 : activeIndex - 1;
+        updateActive(items);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeIndex >= 0 && items[activeIndex]) {
+          items[activeIndex].click();
+        } else if (searchInput.value.trim()) {
+          window.location.href = 'search.html?q=' + encodeURIComponent(searchInput.value.trim());
+        }
+      } else if (e.key === 'Escape') {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    function updateActive(items) {
+      items.forEach(item => item.classList.remove('sac-item--active'));
+      if (activeIndex >= 0 && items[activeIndex]) {
+        items[activeIndex].classList.add('sac-item--active');
+        items[activeIndex].scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.sac-wrapper')) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    function fillAndSearch(text) {
+      searchInput.value = text;
+      searchInput.focus();
+      searchInput.dispatchEvent(new Event('input'));
+    }
+  </script>
+
+</body>
+</html>

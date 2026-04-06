@@ -7,25 +7,7 @@
   <link rel="icon" type="image/png" href="https://i.postimg.cc/CLfZ0htM/bluecart-favicon.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="shared.css"/>
-  <style>.sh-hero{background:linear-gradient(120deg,#0c2b0c,#15803d,#4ade80);}
-/* ── BUY NOW BUTTON ── */
-.btn-buy {
-  background: linear-gradient(90deg, var(--amber), #f59e0b);
-  color: var(--navy);
-  border: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 12.5px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all var(--trans);
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.btn-buy:hover { background: #e6a300; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,183,3,0.4); }
-</style>
+  <style>.sh-hero{background:linear-gradient(120deg,#0c2b0c,#15803d,#4ade80);}</style>
 </head>
 <body>
 <!-- TOPBAR -->
@@ -48,9 +30,9 @@
   </nav>
   <!-- Search Row -->
   <div class="navbar-search-row">
-    <div class="search-bar" style="flex:1;">
-      <input type="text" id="searchInput" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
-      <button onclick="doSearchNav()">&#128269;</button>
+    <div class="sac-wrapper" style="flex:1;position:relative;">
+      <input type="text" id="searchInput" class="sac-input" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
+      <button class="sac-search-btn" onclick="doSearchNav()">&#128269;</button>
     </div>
   </div>
 </div><!-- end .navbar-wrap -->

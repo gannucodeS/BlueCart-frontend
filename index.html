@@ -87,8 +87,6 @@
     .exp-cart:hover{background:var(--teal-dark);}
     .exp-buy{padding:9px 12px;border-radius:8px;border:none;background:var(--amber);color:var(--navy);font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;}
     .exp-buy:hover{background:#e6a300;}
-    .btn-buy{background:var(--amber);color:var(--navy);border:none;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;transition:all .2s;white-space:nowrap;}
-    .btn-buy:hover{background:#e6a300;transform:translateY(-1px);}
     #loc-overlay{display:none;position:fixed;inset:0;background:rgba(15,45,74,0.45);z-index:500;}
     #loc-panel{display:none;position:fixed;top:0;left:0;width:100%;max-width:400px;height:100vh;background:white;z-index:600;box-shadow:8px 0 40px rgba(15,45,74,0.2);overflow-y:auto;font-family:'Nunito',sans-serif;}
   </style>
@@ -116,9 +114,9 @@
   </nav>
   <!-- Search Row -->
   <div class="navbar-search-row">
-    <div class="search-bar" style="flex:1;">
-      <input type="text" id="searchInput" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
-      <button onclick="doSearchNav()">&#128269;</button>
+    <div class="sac-wrapper" style="flex:1;position:relative;">
+      <input type="text" id="searchInput" class="sac-input" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
+      <button class="sac-search-btn" onclick="doSearchNav()">&#128269;</button>
     </div>
   </div>
 </div><!-- end .navbar-wrap -->

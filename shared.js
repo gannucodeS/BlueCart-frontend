@@ -95,7 +95,24 @@ function doSearchNav() {
 
 // ── LIVE SEARCH SUGGESTIONS ─────────────────────────────────────────────────
 var searchTimeout = null;
-var suggestionsData = null;
+
+var searchSuggestions = [
+  'iPhone 15 Pro', 'iPhone 15', 'Samsung Galaxy S24 Ultra', 'MacBook Air M3',
+  'MacBook Pro 16"', 'Sony WH-1000XM5', 'AirPods Pro 2', 'PlayStation 5',
+  'Xbox Series X', 'Apple Watch Ultra 2', 'Samsung Galaxy Watch 6', 'Canon EOS R6',
+  'Sony Alpha A7 IV', 'iPad Pro 12.9"', 'Amazon Echo Dot', 'OnePlus 12',
+  'Dell XPS 15', 'Smartphones', 'Laptops', 'Audio', 'Gaming', 'Wearables',
+  'Cameras', 'Tablets', 'Smart Home', 'Accessories', 'Electronics',
+  'Apple', 'Samsung', 'Sony', 'LG', 'Dell', 'HP', 'Asus', 'OnePlus',
+  'Bose', 'JBL', 'Canon', 'Razer', 'Logitech', 'Realme', 'Xiaomi', 'Vivo', 'Oppo',
+  'Wireless Earbuds', 'Bluetooth Speaker', 'Smart TV', 'LED TV', '4K TV',
+  'Gaming Laptop', 'Business Laptop', 'Mechanical Keyboard', 'Gaming Mouse',
+  'USB Cable', 'Phone Charger', 'Power Bank', 'Laptop Bag', 'Screen Protector'
+];
+
+function escapeRegex(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 function initSearchSuggestions() {
   var searchInputs = document.querySelectorAll('#searchInput, #navSearch');
@@ -103,27 +120,138 @@ function initSearchSuggestions() {
     if (inp.dataset.suggestionsInit) return;
     inp.dataset.suggestionsInit = 'true';
     
-    inp.addEventListener('input', function(e) {
-      var q = e.target.value.trim();
-      if (q.length < 2) {
-        hideSearchSuggestions();
+    var wrapper = inp.closest('.sac-wrapper') || inp.closest('.search-bar');
+    if (!wrapper) return;
+    
+    wrapper.style.position = 'relative';
+    wrapper.style.zIndex = '1';
+    
+    var dropdown = document.createElement('div');
+    dropdown.className = 'sac-dropdown';
+    dropdown.style.cssText = 'display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid #d0e0ed;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.12);overflow:hidden;z-index:2147483647;max-height:340px;overflow-y:auto;margin-top:6px;animation:sacFadeIn .12s ease;';
+    dropdown.innerHTML = '<ul style="list-style:none;padding:6px 0;margin:0;max-height:300px;overflow-y:auto;"></ul><div style="padding:6px 16px 7px;font-size:11.5px;color:#a0b0c0;border-top:1px solid #f0f4f8;display:flex;gap:14px;"><span><kbd style="display:inline-flex;align-items:center;justify-content:center;background:#f0f4f8;border:1px solid #d0e0ed;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#6b8090;">↑</kbd> <kbd style="display:inline-flex;align-items:center;justify-content:center;background:#f0f4f8;border:1px solid #d0e0ed;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#6b8090;">↓</kbd> Navigate</span><span><kbd style="display:inline-flex;align-items:center;justify-content:center;background:#f0f4f8;border:1px solid #d0e0ed;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#6b8090;">Enter</kbd> Select</span><span><kbd style="display:inline-flex;align-items:center;justify-content:center;background:#f0f4f8;border:1px solid #d0e0ed;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#6b8090;">Esc</kbd> Close</span></div>';
+    
+    // Add animation style
+    var animStyle = document.createElement('style');
+    animStyle.textContent = '@keyframes sacFadeIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }';
+    document.head.appendChild(animStyle);
+    
+    wrapper.appendChild(dropdown);
+    
+    var ul = dropdown.querySelector('ul');
+    var activeIndex = -1;
+    
+    function renderSuggestions(items, query) {
+      ul.innerHTML = '';
+      activeIndex = -1;
+      
+      if (items.length === 0) {
+        var li = document.createElement('li');
+        li.style.cssText = 'padding:10px 16px;font-size:14.5px;color:#a0b0c0;cursor:default;';
+        li.textContent = 'No suggestions found';
+        ul.appendChild(li);
+        dropdown.style.display = 'block';
         return;
       }
+      
+      items.forEach(function(item, index) {
+        var li = document.createElement('li');
+        li.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:14.5px;color:#1a3c5e;cursor:pointer;transition:background .13s;border-bottom:1px solid #f0f4f8;';
+        
+        var safeValue = escapeRegex(query);
+        var regex = new RegExp('(' + safeValue + ')', 'gi');
+        var highlighted = item.replace(regex, '<strong style="font-weight:800;color:#0c5f5c;">$1</strong>');
+        
+        li.innerHTML = '<span style="font-size:14px;color:#a0b8c8;">&#128269;</span><span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + highlighted + '</span><span style="font-size:13px;color:#c0d0e0;opacity:0;transition:opacity .15s;">&#10140;</span>';
+        
+        li.addEventListener('mouseenter', function() {
+          ul.querySelectorAll('li').forEach(function(l) { l.style.background = ''; l.querySelectorAll('span')[2].style.opacity = '0'; });
+          li.style.background = '#f0fdfc';
+          li.querySelectorAll('span')[2].style.opacity = '1';
+          li.querySelectorAll('span')[2].style.color = '#0ea5a0';
+        });
+        
+        li.addEventListener('click', function() {
+          inp.value = item;
+          dropdown.style.display = 'none';
+          window.location.href = 'search.html?q=' + encodeURIComponent(item);
+        });
+        
+        ul.appendChild(li);
+      });
+      
+      dropdown.style.display = 'block';
+    }
+    
+    function hideDropdown() {
+      dropdown.style.display = 'none';
+    }
+    
+    inp.addEventListener('input', function(e) {
+      var q = e.target.value.trim();
+      hideDropdown();
+      if (q.length < 1) return;
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(function() {
-        fetchSearchSuggestions(q);
-      }, 300);
+        var filtered = searchSuggestions.filter(function(item) {
+          return item.toLowerCase().includes(q.toLowerCase());
+        }).slice(0, 10);
+        renderSuggestions(filtered, q);
+      }, 150);
     });
     
     inp.addEventListener('focus', function(e) {
       var q = e.target.value.trim();
-      if (q.length >= 2 && suggestionsData) {
-        showSearchSuggestions();
+      if (q.length >= 1) {
+        var filtered = searchSuggestions.filter(function(item) {
+          return item.toLowerCase().includes(q.toLowerCase());
+        }).slice(0, 10);
+        renderSuggestions(filtered, q);
       }
     });
     
-    inp.addEventListener('blur', function() {
-      setTimeout(hideSearchSuggestions, 200);
+    inp.addEventListener('keydown', function(e) {
+      var items = ul.querySelectorAll('li');
+      if (!items.length || dropdown.style.display === 'none') return;
+      
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeIndex = activeIndex >= items.length - 1 ? 0 : activeIndex + 1;
+        updateActive(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIndex = activeIndex <= 0 ? items.length - 1 : activeIndex - 1;
+        updateActive(items);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeIndex >= 0 && items[activeIndex]) {
+          items[activeIndex].click();
+        } else if (inp.value.trim()) {
+          window.location.href = 'search.html?q=' + encodeURIComponent(inp.value.trim());
+        }
+      } else if (e.key === 'Escape') {
+        hideDropdown();
+      }
+    });
+    
+    function updateActive(items) {
+      items.forEach(function(item) {
+        item.style.background = '';
+        var arrow = item.querySelector('span:last-child');
+        if (arrow) arrow.style.opacity = '0';
+      });
+      if (activeIndex >= 0 && items[activeIndex]) {
+        items[activeIndex].style.background = '#f0fdfc';
+        var arrow = items[activeIndex].querySelector('span:last-child');
+        if (arrow) { arrow.style.opacity = '1'; arrow.style.color = '#0ea5a0'; }
+        items[activeIndex].scrollIntoView({ block: 'nearest' });
+      }
+    }
+    
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.search-bar') && !e.target.closest('.sac-dropdown')) {
+        hideDropdown();
+      }
     });
   });
 }
@@ -158,20 +286,27 @@ function showSearchSuggestions() {
   
   var html = '';
   
-  // Categories
+  // Categories with icons
   if (suggestionsData.categories && suggestionsData.categories.length) {
     html += '<div class="suggest-section"><div class="suggest-label">Categories</div>';
     suggestionsData.categories.forEach(function(cat) {
-      html += '<a class="suggest-item" href="search.html?q=' + encodeURIComponent(cat) + '">' + cat + '</a>';
+      var icon = getCategoryIcon(cat);
+      html += '<a class="suggest-item suggest-item-cat" href="search.html?q=' + encodeURIComponent(cat) + '">';
+      html += '<span class="suggest-icon">' + icon + '</span>';
+      html += '<span>' + cat + '</span>';
+      html += '</a>';
     });
     html += '</div>';
   }
   
-  // Brands
+  // Brands with icons
   if (suggestionsData.brands && suggestionsData.brands.length) {
     html += '<div class="suggest-section"><div class="suggest-label">Brands</div>';
     suggestionsData.brands.forEach(function(brand) {
-      html += '<a class="suggest-item" href="search.html?q=' + encodeURIComponent(brand) + '">' + brand + '</a>';
+      html += '<a class="suggest-item suggest-item-brand" href="search.html?q=' + encodeURIComponent(brand) + '">';
+      html += '<span class="suggest-icon">★</span>';
+      html += '<span>' + brand + '</span>';
+      html += '</a>';
     });
     html += '</div>';
   }
@@ -180,24 +315,45 @@ function showSearchSuggestions() {
   if (suggestionsData.products && suggestionsData.products.length) {
     html += '<div class="suggest-section"><div class="suggest-label">Products</div>';
     suggestionsData.products.forEach(function(p) {
-      var img = p.imageUrl || 'https://via.placeholder.com/40';
+      var img = p.imageUrl || 'https://via.placeholder.com/44x44?text=📦';
       html += '<a class="suggest-item suggest-product" href="product.html?name=' + encodeURIComponent(p.name) + '&price=' + (p.price || 0) + '&img=' + encodeURIComponent(img) + '&cat=' + encodeURIComponent(p.category || '') + '">';
       html += '<img src="' + img + '" alt=""/>';
       html += '<div class="suggest-prod-info"><span class="suggest-prod-name">' + p.name + '</span>';
-      html += '<span class="suggest-prod-cat">' + p.category + '</span></div>';
-      html += '<span class="suggest-prod-price">₹' + (p.price ? p.price.toLocaleString('en-IN') : '') + '</span>';
+      html += '<span class="suggest-prod-cat">' + (p.brand || p.category || '') + '</span></div>';
+      html += '<span class="suggest-prod-price">' + (p.price ? '₹' + p.price.toLocaleString('en-IN') : '') + '</span>';
       html += '</a>';
     });
     html += '</div>';
   }
   
+  // Trending searches (when no results or minimal)
   if (!html) {
-    hideSearchSuggestions();
-    return;
+    html += '<div class="suggest-section"><div class="suggest-label">Trending</div>';
+    html += '<a class="suggest-item" href="search.html?q=iPhone"><span class="suggest-icon">📱</span><span>iPhone 15 Pro</span></a>';
+    html += '<a class="suggest-item" href="search.html?q=MacBook"><span class="suggest-icon">💻</span><span>MacBook Air</span></a>';
+    html += '<a class="suggest-item" href="search.html?q=Headphones"><span class="suggest-icon">🎧</span><span>Wireless Headphones</span></a>';
+    html += '</div>';
   }
   
   container.innerHTML = html;
   container.style.display = 'block';
+}
+
+function getCategoryIcon(category) {
+  var icons = {
+    'Smartphones': '📱',
+    'Laptops': '💻',
+    'Audio': '🎧',
+    'Cameras': '📷',
+    'Gaming': '🎮',
+    'Accessories': '⌚',
+    'Wearables': '⌚',
+    'Smart Home': '🏠',
+    'Tablets': '📱',
+    'Televisions': '📺',
+    'Electronics': '⚡'
+  };
+  return icons[category] || '📦';
 }
 
 function hideSearchSuggestions() {
@@ -214,26 +370,114 @@ function addSuggestionStyles() {
       top: 100%;
       left: 0;
       right: 0;
-      background: white;
-      border-radius: 0 0 10px 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-      max-height: 400px;
+      background: #fff;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 10px 40px rgba(15,45,74,0.2), 0 2px 12px rgba(0,0,0,0.1);
+      max-height: 420px;
       overflow-y: auto;
-      z-index: 9999;
+      z-index: 99999;
       display: none;
+      border: 1px solid #e5eaf0;
+      margin-top: 4px;
     }
-    .suggest-section { padding: 8px 0; border-bottom: 1px solid #eee; }
+    .suggest-section { border-bottom: 1px solid #f0f4f8; }
     .suggest-section:last-child { border-bottom: none; }
-    .suggest-label { padding: 4px 16px; font-size: 11px; font-weight: 800; color: #6b7a8d; text-transform: uppercase; }
-    .suggest-item { display: block; padding: 10px 16px; color: #0f2d4a; text-decoration: none; font-size: 14px; }
-    .suggest-item:hover { background: #f4f7fb; }
-    .suggest-product { display: flex; align-items: center; gap: 12px; }
-    .suggest-product img { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; }
-    .suggest-prod-info { flex: 1; }
-    .suggest-prod-name { font-weight: 600; display: block; }
-    .suggest-prod-cat { font-size: 12px; color: #6b7a8d; }
-    .suggest-prod-price { font-weight: 700; color: #0ea5a0; }
+    .suggest-label {
+      padding: 10px 16px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #0ea5a0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: #f8fafc;
+    }
+    .suggest-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      color: #0f2d4a;
+      text-decoration: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .suggest-item:hover, .suggest-item.active {
+      background: linear-gradient(90deg, rgba(14,165,160,0.08) 0%, rgba(14,165,160,0.03) 100%);
+    }
+    .suggest-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #f0f7fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .suggest-product { gap: 0; }
+    .suggest-product img {
+      width: 44px;
+      height: 44px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 12px;
+      border: 1px solid #e5eaf0;
+    }
+    .suggest-prod-info { flex: 1; min-width: 0; }
+    .suggest-prod-name {
+      font-weight: 600;
+      color: #0f2d4a;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .suggest-prod-cat {
+      font-size: 12px;
+      color: #6b7a8d;
+      margin-top: 2px;
+    }
+    .suggest-prod-price {
+      font-weight: 700;
+      color: #059669;
+      font-size: 14px;
+      white-space: nowrap;
+      margin-left: auto;
+      padding-left: 12px;
+    }
+    .suggest-item-cat {
+      font-size: 13px;
+    }
+    .suggest-item-cat .suggest-icon {
+      background: linear-gradient(135deg, #0ea5a0 0%, #0891b2 100%);
+      color: white;
+    }
+    .suggest-item-brand {
+      font-size: 13px;
+    }
+    .suggest-item-brand .suggest-icon {
+      background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+      color: white;
+    }
     .search-bar { position: relative; }
+    .search-bar input {
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 600px) {
+      .search-suggestions {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 60vh;
+        border-radius: 20px 20px 0 0;
+        margin: 0;
+      }
+    }
   `;
   document.head.appendChild(style);
 }
