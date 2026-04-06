@@ -93,6 +93,178 @@ function doSearchNav() {
   if (q) window.location.href = 'search.html?q=' + encodeURIComponent(q);
 }
 
+// ── LIVE SEARCH SUGGESTIONS ─────────────────────────────────────────────────
+var searchTimeout = null;
+var suggestionsData = null;
+
+function initSearchSuggestions() {
+  var searchInputs = document.querySelectorAll('#searchInput, #navSearch');
+  searchInputs.forEach(function(inp) {
+    if (inp.dataset.suggestionsInit) return;
+    inp.dataset.suggestionsInit = 'true';
+    
+    inp.addEventListener('input', function(e) {
+      var q = e.target.value.trim();
+      if (q.length < 2) {
+        hideSearchSuggestions();
+        return;
+      }
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(function() {
+        fetchSearchSuggestions(q);
+      }, 300);
+    });
+    
+    inp.addEventListener('focus', function(e) {
+      var q = e.target.value.trim();
+      if (q.length >= 2 && suggestionsData) {
+        showSearchSuggestions();
+      }
+    });
+    
+    inp.addEventListener('blur', function() {
+      setTimeout(hideSearchSuggestions, 200);
+    });
+  });
+}
+
+function fetchSearchSuggestions(q) {
+  if (typeof BC === 'undefined' || !BC.searchProducts) {
+    return;
+  }
+  BC.ready.then(function() {
+    return BC.searchProducts(q);
+  }).then(function(res) {
+    if (res && res.products) {
+      suggestionsData = res;
+      showSearchSuggestions();
+    }
+  }).catch(function() {
+    suggestionsData = null;
+  });
+}
+
+function showSearchSuggestions() {
+  var inp = document.getElementById('searchInput') || document.getElementById('navSearch');
+  if (!inp || !suggestionsData) return;
+  
+  var container = document.getElementById('search-suggestions');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'search-suggestions';
+    container.className = 'search-suggestions';
+    inp.parentNode.appendChild(container);
+  }
+  
+  var html = '';
+  
+  // Categories
+  if (suggestionsData.categories && suggestionsData.categories.length) {
+    html += '<div class="suggest-section"><div class="suggest-label">Categories</div>';
+    suggestionsData.categories.forEach(function(cat) {
+      html += '<a class="suggest-item" href="search.html?q=' + encodeURIComponent(cat) + '">' + cat + '</a>';
+    });
+    html += '</div>';
+  }
+  
+  // Brands
+  if (suggestionsData.brands && suggestionsData.brands.length) {
+    html += '<div class="suggest-section"><div class="suggest-label">Brands</div>';
+    suggestionsData.brands.forEach(function(brand) {
+      html += '<a class="suggest-item" href="search.html?q=' + encodeURIComponent(brand) + '">' + brand + '</a>';
+    });
+    html += '</div>';
+  }
+  
+  // Products
+  if (suggestionsData.products && suggestionsData.products.length) {
+    html += '<div class="suggest-section"><div class="suggest-label">Products</div>';
+    suggestionsData.products.forEach(function(p) {
+      var img = p.imageUrl || 'https://via.placeholder.com/40';
+      html += '<a class="suggest-item suggest-product" href="product.html?name=' + encodeURIComponent(p.name) + '&price=' + (p.price || 0) + '&img=' + encodeURIComponent(img) + '&cat=' + encodeURIComponent(p.category || '') + '">';
+      html += '<img src="' + img + '" alt=""/>';
+      html += '<div class="suggest-prod-info"><span class="suggest-prod-name">' + p.name + '</span>';
+      html += '<span class="suggest-prod-cat">' + p.category + '</span></div>';
+      html += '<span class="suggest-prod-price">₹' + (p.price ? p.price.toLocaleString('en-IN') : '') + '</span>';
+      html += '</a>';
+    });
+    html += '</div>';
+  }
+  
+  if (!html) {
+    hideSearchSuggestions();
+    return;
+  }
+  
+  container.innerHTML = html;
+  container.style.display = 'block';
+}
+
+function hideSearchSuggestions() {
+  var container = document.getElementById('search-suggestions');
+  if (container) container.style.display = 'none';
+}
+
+// Add CSS for suggestions
+function addSuggestionStyles() {
+  var style = document.createElement('style');
+  style.textContent = `
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 9999;
+      display: none;
+    }
+    .suggest-section { padding: 8px 0; border-bottom: 1px solid #eee; }
+    .suggest-section:last-child { border-bottom: none; }
+    .suggest-label { padding: 4px 16px; font-size: 11px; font-weight: 800; color: #6b7a8d; text-transform: uppercase; }
+    .suggest-item { display: block; padding: 10px 16px; color: #0f2d4a; text-decoration: none; font-size: 14px; }
+    .suggest-item:hover { background: #f4f7fb; }
+    .suggest-product { display: flex; align-items: center; gap: 12px; }
+    .suggest-product img { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; }
+    .suggest-prod-info { flex: 1; }
+    .suggest-prod-name { font-weight: 600; display: block; }
+    .suggest-prod-cat { font-size: 12px; color: #6b7a8d; }
+    .suggest-prod-price { font-weight: 700; color: #0ea5a0; }
+    .search-bar { position: relative; }
+  `;
+  document.head.appendChild(style);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    initSearchSuggestions();
+    addSuggestionStyles();
+  });
+} else {
+  initSearchSuggestions();
+  addSuggestionStyles();
+}
+
+// ── SCROLL TO PRODUCTS ─────────────────────────────────────────────────────────
+function scrollToProducts() {
+  var el = document.getElementById('products-section');
+  if (!el) {
+    el = document.querySelector('#products-section') || 
+         document.querySelector('.products-grid') || 
+         document.querySelector('.dotd-body') || 
+         document.querySelector('.deal-card') ||
+         document.querySelector('.section-header + .products-grid');
+  }
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+  }
+}
+
 // ── ORDERS REDIRECT ───────────────────────────────────────────────────────────
 function goOrders() {
   BC.ready.then(function() { return BC.getSession(); }).then(function(sess) {

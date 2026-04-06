@@ -110,14 +110,14 @@
         <div class="page-hero-tag" style="background:#a78bfa;color:#0d0d1a">🎮 Gaming</div>
         <h1 class="fade-up">Level Up Your Game</h1>
         <p class="fade-up d1">Consoles, controllers, gaming laptops, peripherals & accessories for every gamer.</p>
-        <div style="display:flex;gap:12px;margin-top:8px;justify-content:center;flex-wrap:wrap;" class="fade-up d2">
-          <button class="btn-primary" style="background:#7c3aed;padding:10px 22px;font-size:14px">Shop Gaming</button>
-          <button class="btn-outline" style="padding:10px 22px;font-size:14px">New Releases</button>
+        <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;" class="fade-up d2">
+          <button class="btn-primary" style="background:#7c3aed" onclick="scrollToProducts()">Shop Gaming</button>
+          <button class="btn-outline" onclick="scrollToProducts()">New Releases</button>
         </div>
       </div>
       <img class="page-hero-img" src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&h=400&fit=crop&q=90" alt="Gaming"/>
     </div><div class="filter-bar"><span class="filter-label">Filter:</span><span class="filter-chip active">All Gaming</span><span class="filter-chip">Consoles</span><span class="filter-chip">Controllers</span><span class="filter-chip">Gaming Laptops</span><span class="filter-chip">Headsets</span><span class="filter-chip">Keyboards</span><span class="filter-chip">Mice</span><span class="filter-chip">Monitors</span><select class="filter-sort"><option>Sort: Featured</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Newest First</option><option>Best Rated</option></select></div><div class="section-header"><div class="section-title title-teal">All Gaming Products</div><a href="#" class="see-all">See all →</a></div>
-<div class="products-grid">
+<div class="products-grid" id="products-section">
   <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=PlayStation 5 Slim&price=54990&img=https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&h=400&fit=crop&q=90&cat=Sony';}})(event)">
     <div class="prod-img-wrap">
       <span class="prod-badge badge-hot">HOT</span>

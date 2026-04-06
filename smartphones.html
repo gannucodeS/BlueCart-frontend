@@ -111,12 +111,12 @@
         <h1 class="fade-up">Find Your Perfect Phone</h1>
         <p class="fade-up d1">From flagship killers to budget champions — every smartphone at the best price.</p>
         <div style="display:flex;gap:12px;margin-top:8px;" class="fade-up d2">
-          <button class="btn-primary" style="background:#7c3aed;padding:10px 22px;font-size:14px">Explore All</button>
+          <button class="btn-primary" style="background:#7c3aed" onclick="scrollToProducts()">Explore All</button>
         </div>
       </div>
       <img class="page-hero-img" src="https://i.postimg.cc/90CW7TC0/16-pro.png" alt="Phone"/>
     </div><div class="filter-bar"><span class="filter-label">Filter:</span><span class="filter-chip active">All</span><span class="filter-chip">Under ₹10K</span><span class="filter-chip">₹10K–₹25K</span><span class="filter-chip">₹25K–₹50K</span><span class="filter-chip">₹50K+</span><span class="filter-chip">5G Phones</span><span class="filter-chip">Camera Phones</span><span class="filter-chip">Gaming Phones</span><select class="filter-sort"><option>Sort: Featured</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Newest First</option><option>Best Rated</option></select></div><div class="section-header"><div class="section-title title-teal">All Smartphones</div><a href="#" class="see-all">Compare phones →</a></div>
-<div class="products-grid">
+<div class="products-grid" id="products-section">
   <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=iPhone 15 Pro Max 256GB&price=119900&img=https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=500&h=400&fit=crop&q=90&cat=Apple';}})(event)">
     <div class="prod-img-wrap">
       <span class="prod-badge badge-sale">-40%</span>

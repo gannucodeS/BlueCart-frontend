@@ -170,6 +170,10 @@
       return apiJson('/products', { method: 'GET' });
     };
 
+    publicAPI.searchProducts = function (query) {
+      return apiJson('/products/search?q=' + encodeURIComponent(query), { method: 'GET' });
+    };
+
     publicAPI.getProductById = function (id) {
       return apiJson('/products/' + encodeURIComponent(id), { method: 'GET' });
     };

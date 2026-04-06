@@ -110,11 +110,11 @@
         <div class="page-hero-tag" style="background:var(--lime);color:#0f2d0f">🎧 Audio</div>
         <h1 class="fade-up">Hear Every Detail</h1>
         <p class="fade-up d1">Studio-grade headphones, earbuds, speakers & soundbars. Your music deserves the best.</p>
-        <button class="btn-primary fade-up d2" style="background:var(--lime);color:#0f2d0f;padding:10px 22px;font-size:14px">Shop Audio</button>
+        <button class="btn-primary fade-up d2" style="background:var(--lime);color:#0f2d0f" onclick="scrollToProducts()">Shop Audio</button>
       </div>
       <img class="page-hero-img" src="https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90" alt="Headphones"/>
     </div><div class="filter-bar"><span class="filter-label">Filter:</span><span class="filter-chip active">All Audio</span><span class="filter-chip">Headphones</span><span class="filter-chip">Earbuds</span><span class="filter-chip">Speakers</span><span class="filter-chip">Soundbars</span><span class="filter-chip">Microphones</span><span class="filter-chip">Under ₹2K</span><span class="filter-chip">Under ₹5K</span><select class="filter-sort"><option>Sort: Featured</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Newest First</option><option>Best Rated</option></select></div><div class="section-header"><div class="section-title title-teal">All Audio Products</div><a href="#" class="see-all">See all →</a></div>
-<div class="products-grid">
+<div class="products-grid" id="products-section">
   <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=WH-1000XM5 ANC Headphones&price=24990&img=https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=500&h=400&fit=crop&q=90&cat=Sony';}})(event)">
     <div class="prod-img-wrap">
       <span class="prod-badge badge-hot">HOT</span>

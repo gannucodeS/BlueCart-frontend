@@ -110,11 +110,11 @@
         <div class="page-hero-tag" style="background:#38bdf8;color:#0c4a6e">💻 Laptops</div>
         <h1 class="fade-up">Work. Create. Dominate.</h1>
         <p class="fade-up d1">From ultra-thin ultrabooks to powerhouse gaming rigs — find the laptop that fits your life.</p>
-        <button class="btn-primary fade-up d2" style="padding:10px 22px;font-size:14px">Shop Laptops</button>
+        <button class="btn-primary fade-up d2" onclick="scrollToProducts()">Shop Laptops</button>
       </div>
       <img class="page-hero-img" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=400&fit=crop&q=90" alt="Laptop"/>
     </div><div class="filter-bar"><span class="filter-label">Filter:</span><span class="filter-chip active">All</span><span class="filter-chip">Ultrabooks</span><span class="filter-chip">Gaming</span><span class="filter-chip">Business</span><span class="filter-chip">Budget (<₹40K)</span><span class="filter-chip">MacBooks</span><span class="filter-chip">Student Picks</span><select class="filter-sort"><option>Sort: Featured</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Newest First</option><option>Best Rated</option></select></div><div class="section-header"><div class="section-title title-teal">All Laptops</div><a href="#" class="see-all">See all →</a></div>
-<div class="products-grid">
+<div class="products-grid" id="products-section">
   <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=MacBook Air M3 15&quot;&price=114900&img=https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=400&fit=crop&q=90&cat=Apple';}})(event)">
     <div class="prod-img-wrap">
       <span class="prod-badge badge-sale">-15%</span>

@@ -806,15 +806,15 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
     max-width: 55%;
   }
   .slide-btns {
-    gap: 8px;
+    gap: 6px;
   }
   .btn-primary {
-    padding: 10px 20px;
-    font-size: 13px;
+    padding: 6px 12px !important;
+    font-size: 11px !important;
   }
   .btn-outline {
-    padding: 9px 18px;
-    font-size: 13px;
+    padding: 5px 10px !important;
+    font-size: 11px !important;
   }
   .slider-dots {
     bottom: 10px;
@@ -898,13 +898,14 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
 
 /* ═══════════════════════════════════════════════════════════
    12. FILTER BAR  (inner pages)
-═══════════════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════════ */
 .filter-bar { background:white; padding:14px 4%; display:flex; align-items:center; gap:10px; border-bottom:1px solid #e5eaf0; flex-wrap:wrap; }
 .filter-label { font-size:13px; font-weight:800; color:var(--navy); white-space:nowrap; }
 .filter-chip { background:var(--off); border:1.5px solid #e0e7ef; border-radius:20px; padding:6px 14px; font-size:13px; font-weight:700; color:var(--navy); cursor:pointer; transition:all var(--trans); white-space:nowrap; user-select:none; }
 .filter-chip:hover, .filter-chip.active { background:var(--teal); color:white; border-color:var(--teal); }
 .filter-sort { margin-left:auto; background:var(--off); border:1.5px solid #e0e7ef; border-radius:8px; padding:7px 12px; font-size:13px; color:var(--navy); cursor:pointer; outline:none; transition:border-color var(--trans); }
 .filter-sort:hover { border-color:var(--teal); }
+@media (max-width: 900px) { .filter-bar { display: none; } }
 
 /* ═══════════════════════════════════════════════════════════
    13. CATEGORY CARDS GRID  (home page)
