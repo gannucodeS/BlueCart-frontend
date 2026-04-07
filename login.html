@@ -134,7 +134,6 @@
 <script src="shared.js"></script>
 <script>
 var isAdminLogin = false;
-var googleConfigured = false;
 
 function switchTab(tab) {
   document.getElementById('tab-login').classList.toggle('active', tab==='login');
@@ -322,38 +321,14 @@ async function signInWithGoogle() {
   clearMsgs();
   
   if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-    google.accounts.id.initialize({
-      client_id: window.GOOGLE_CLIENT_ID || '',
-      callback: handleGoogleResponse
-    });
-    
-    try {
-      google.accounts.id.prompt(function(response) {
-        if (response.isNotDisplayed() || response.isSkippedMoment()) {
-          google.accounts.id.requestIdToken({
-            client_id: window.GOOGLE_CLIENT_ID || '',
-            callback: handleGoogleResponse
-          });
-        }
-      });
-    } catch (e) {
-      try {
-        google.accounts.id.requestIdToken({
-          client_id: window.GOOGLE_CLIENT_ID || '',
-          callback: handleGoogleResponse
-        });
-      } catch (e2) {
-        showMsg('login-err', 'Google Sign-In failed. Please use email/password.', 'err');
-        if (btn) btn.disabled = false;
-      }
-    }
+    google.accounts.id.prompt();
   } else {
-    showMsg('login-err', 'Google Sign-In is not configured. Please use email/password.', 'err');
+    showMsg('login-err', 'Google Sign-In is not ready. Please refresh the page.', 'err');
     if (btn) btn.disabled = false;
   }
 }
 
-async function handleGoogleResponse(response) {
+async function handleCredentialResponse(response) {
   var btn = document.getElementById('google-btn') || document.getElementById('google-reg-btn');
   if (btn) btn.disabled = true;
   
@@ -505,33 +480,19 @@ BC.ready.then(function() {
   window.location.href = rd;
 }).catch(function() {});
 
-// Load Google Sign-In config
-BC.ready.then(function() {
-  return BC.getGoogleConfig();
-}).then(function(res) {
-  console.log('Google Config Response:', res);
-  if (res && res.clientId) {
-    window.GOOGLE_CLIENT_ID = res.clientId;
-    googleConfigured = true;
-    console.log('Google Client ID loaded:', window.GOOGLE_CLIENT_ID);
-    
-    var script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    script.onload = function() {
-      console.log('Google Sign-In script loaded successfully');
-    };
-    script.onerror = function() {
-      console.error('Failed to load Google Sign-In script');
-    };
-    document.head.appendChild(script);
-  } else {
-    console.log('Google Sign-In not configured - no client ID');
-  }
-}).catch(function(err) {
-  console.error('Error loading Google config:', err);
-});
+// Load Google Sign-In
+var script = document.createElement('script');
+script.src = 'https://accounts.google.com/gsi/client';
+script.async = true;
+script.defer = true;
+script.onload = function() {
+  google.accounts.id.initialize({
+    client_id: '963041432927-jtm0sukpul0ic0785q4pd2v2qa75mu5v.apps.googleusercontent.com',
+    callback: handleCredentialResponse
+  });
+  google.accounts.id.prompt();
+};
+document.head.appendChild(script);
 
 // Enter key handlers
 document.addEventListener('DOMContentLoaded', function() {
