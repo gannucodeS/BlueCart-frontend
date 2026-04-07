@@ -327,28 +327,18 @@ async function signInWithGoogle() {
   try {
     // Get Google OAuth URL from backend
     var oauthData = await BC.getGoogleOAuthUrl();
+    console.log('OAuth URL response:', oauthData);
     
     if (oauthData && oauthData.ok && oauthData.url) {
+      console.log('Redirecting to:', oauthData.url);
       // Store current page to redirect back after Google login
       sessionStorage.setItem('bc_redirect', window.location.href);
       
       // Redirect to Google
       window.location.href = oauthData.url;
     } else {
-      // Fallback: try One Tap if OAuth URL fails
-      console.log('OAuth URL failed, trying One Tap');
-      showMsg('login-ok', 'Opening Google Sign-In...', 'ok');
-      
-      if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-        google.accounts.id.initialize({
-          client_id: BC.getGoogleClientId(),
-          callback: handleCredentialResponse
-        });
-        google.accounts.id.prompt();
-      } else {
-        showMsg('login-err', 'Google Sign-In not available. Use email/password.', 'err');
-        if (btn) btn.disabled = false;
-      }
+      showMsg('login-err', 'Failed to get Google OAuth URL. Use email/password.', 'err');
+      if (btn) btn.disabled = false;
     }
   } catch (e) {
     console.error('Error getting OAuth URL:', e);
@@ -359,14 +349,21 @@ async function signInWithGoogle() {
 
 // Handle Google OAuth callback - check for token in URL on page load
 function handleGoogleCallback() {
-  // Check both query params for id_token (from response_type=id_token)
+  // Get URL parameters
   var urlParams = new URLSearchParams(window.location.search);
   
   // Check for error
   var error = urlParams.get('error');
   var errorDescription = urlParams.get('error_description');
+  var flowName = urlParams.get('flowName');
+  
   if (error) {
-    showMsg('login-err', 'Google sign-in error: ' + (errorDescription || error), 'err');
+    console.log('Google OAuth error:', error, errorDescription, flowName);
+    if (flowName === 'GeneralOAuthFlow') {
+      showMsg('login-err', 'Google redirect not configured. Use email/password.', 'err');
+    } else {
+      showMsg('login-err', 'Google sign-in error: ' + (errorDescription || error), 'err');
+    }
     return;
   }
   
@@ -375,9 +372,10 @@ function handleGoogleCallback() {
   
   // Check state parameter
   var state = urlParams.get('state');
+  console.log('URL params - id_token:', idToken ? 'present' : 'missing', 'state:', state);
   
-  if (idToken && state && state.startsWith('bluecart_login')) {
-    console.log('Google token received from redirect');
+  if (idToken) {
+    console.log('Google token received from redirect, processing...');
     showMsg('login-ok', 'Processing Google sign-in...', 'ok');
     handleCredentialResponse({ credential: idToken });
     
@@ -418,10 +416,10 @@ async function handleCredentialResponse(response) {
     }
     
     showMsg('login-ok', 'Welcome! Redirecting...', 'ok');
+    
+    // Redirect to index.html after successful login (not back to login page)
     setTimeout(function(){
-      var rd = sessionStorage.getItem('bc_redirect') || 'index.html';
-      sessionStorage.removeItem('bc_redirect');
-      window.location.href = rd;
+      window.location.href = 'index.html';
     }, 800);
   }).catch(function(e) {
     console.error('Login error:', e);
