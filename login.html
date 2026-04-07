@@ -383,11 +383,43 @@ function handleGoogleCallback() {
     setTimeout(function() {
       history.replaceState(null, '', window.location.pathname);
     }, 1000);
+    return true; // Indicates this is a Google OAuth callback
   }
+  return false;
 }
 
 // Run callback check when page loads
-document.addEventListener('DOMContentLoaded', handleGoogleCallback);
+var isGoogleCallback = false;
+document.addEventListener('DOMContentLoaded', function() {
+  isGoogleCallback = handleGoogleCallback();
+  
+  // If NOT returning from Google, check session after a short delay
+  if (!isGoogleCallback) {
+    setTimeout(checkExistingSession, 500);
+  }
+});
+
+function checkExistingSession() {
+  console.log('Checking existing session...');
+  BC.ready.then(function() {
+    console.log('BC ready, checking session...');
+    return BC.getSession();
+  }).then(function(sess) {
+    console.log('Session check result:', sess);
+    if (!sess) {
+      console.log('No session, staying on login page');
+      return;
+    }
+    console.log('Session found, redirecting...');
+    if (sess.role === 'admin') {
+      window.location.href = 'admin.html';
+      return;
+    }
+    window.location.href = 'index.html';
+  }).catch(function(e) {
+    console.log('Session check error:', e);
+  });
+}
 
 async function handleCredentialResponse(response) {
   console.log('Google callback received:', response);
@@ -540,19 +572,6 @@ function doRegister() {
     setBtnNormal('reg-btn', 'Create Account');
   });
 }
-
-// Auto-redirect if already logged in
-BC.ready.then(function() {
-  return BC.getSession();
-}).then(function(sess) {
-  if (!sess) return;
-  if (sess.role === 'admin') {
-    window.location.href = 'admin.html';
-    return;
-  }
-  var rd = sessionStorage.getItem('bc_redirect') || 'index.html';
-  window.location.href = rd;
-}).catch(function() {});
 
 // Load Google Sign-In script
 var script = document.createElement('script');
