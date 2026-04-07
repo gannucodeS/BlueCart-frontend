@@ -320,29 +320,33 @@ async function signInWithGoogle() {
   
   clearMsgs();
   
-  try {
-    if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-      // Use requestIdToken for button-based sign-in
-      google.accounts.id.requestIdToken({
-        client_id: BC.getGoogleClientId(),
-        callback: function(response) {
-          if (response.credential) {
-            handleCredentialResponse({ credential: response.credential });
-          } else {
-            showMsg('login-err', 'No account selected.', 'err');
-            if (btn) btn.disabled = false;
-          }
-        }
-      });
-    } else {
-      showMsg('login-err', 'Google not loaded. Refresh the page.', 'err');
+  // Check if GSI is loaded
+  if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+    showMsg('login-err', 'Google not loaded. Refresh the page.', 'err');
+    if (btn) btn.disabled = false;
+    return;
+  }
+  
+  // Initialize and show One Tap
+  google.accounts.id.initialize({
+    client_id: BC.getGoogleClientId(),
+    callback: handleCredentialResponse,
+    auto_select: false,
+    cancel_on_tap_outside: false
+  });
+  
+  // Show the One Tap prompt
+  google.accounts.id.prompt(function(notification) {
+    if (notification.isNotDisplayed()) {
+      // If One Tap is not displayed, try fallback
+      showMsg('login-err', 'Please try again or use email/password.', 'err');
+      if (btn) btn.disabled = false;
+    } else if (notification.isSkippedMoment()) {
+      // User skipped the prompt
+      showMsg('login-err', 'Sign in cancelled.', 'err');
       if (btn) btn.disabled = false;
     }
-  } catch (e) {
-    console.error('Google Sign-In error:', e);
-    showMsg('login-err', 'Google Sign-In failed. Try again.', 'err');
-    if (btn) btn.disabled = false;
-  }
+  });
 }
 
 async function handleCredentialResponse(response) {
