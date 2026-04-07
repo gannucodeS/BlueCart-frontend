@@ -314,6 +314,9 @@ function setBtnNormal(id, text) {
   var btn=document.getElementById(id); btn.disabled=false; btn.textContent=text;
 }
 
+// Global flag to track Google initialization
+var googleInitialized = false;
+
 async function signInWithGoogle() {
   var btn = document.getElementById('google-btn') || document.getElementById('google-reg-btn');
   if (btn) btn.disabled = true;
@@ -327,36 +330,49 @@ async function signInWithGoogle() {
     return;
   }
   
-  // Initialize and show One Tap
+  // Initialize fresh each time
   google.accounts.id.initialize({
     client_id: BC.getGoogleClientId(),
-    callback: handleCredentialResponse,
-    auto_select: false,
-    cancel_on_tap_outside: false
+    callback: handleCredentialResponse
   });
   
-  // Show the One Tap prompt
+  googleInitialized = true;
+  
+  // Use prompt with callback to handle result
   google.accounts.id.prompt(function(notification) {
     if (notification.isNotDisplayed()) {
-      // If One Tap is not displayed, try fallback
-      showMsg('login-err', 'Please try again or use email/password.', 'err');
+      showMsg('login-err', 'Google Sign-In not available. Use email/password.', 'err');
       if (btn) btn.disabled = false;
     } else if (notification.isSkippedMoment()) {
-      // User skipped the prompt
-      showMsg('login-err', 'Sign in cancelled.', 'err');
+      showMsg('login-err', 'Sign in skipped.', 'err');
+      if (btn) btn.disabled = false;
+    } else if (notification.isDismissedMoment()) {
+      // User dismissed - don't show error, just re-enable button
       if (btn) btn.disabled = false;
     }
   });
 }
 
 async function handleCredentialResponse(response) {
+  console.log('Google callback received:', response);
+  
+  if (!response.credential) {
+    console.error('No credential in response:', response);
+    showMsg('login-err', 'Google sign-in failed. No token received.', 'err');
+    var btn = document.getElementById('google-btn') || document.getElementById('google-reg-btn');
+    if (btn) btn.disabled = false;
+    return;
+  }
+  
   var btn = document.getElementById('google-btn') || document.getElementById('google-reg-btn');
   if (btn) btn.disabled = true;
   
   clearMsgs();
   showMsg('login-ok', 'Signing in with Google...', 'ok');
+  console.log('Sending token to backend...');
   
   BC.loginWithGoogle(response.credential).then(function(res) {
+    console.log('Backend response:', res);
     if (!res.ok) {
       showMsg('login-err', res.error || 'Google sign-in failed.', 'err');
       if (btn) btn.disabled = false;
@@ -370,6 +386,7 @@ async function handleCredentialResponse(response) {
       window.location.href = rd;
     }, 800);
   }).catch(function(e) {
+    console.error('Login error:', e);
     showMsg('login-err', 'Something went wrong. Please try again.', 'err');
     if (btn) btn.disabled = false;
   });
@@ -501,16 +518,16 @@ BC.ready.then(function() {
   window.location.href = rd;
 }).catch(function() {});
 
-// Load Google Sign-In
+// Load Google Sign-In script
 var script = document.createElement('script');
 script.src = 'https://accounts.google.com/gsi/client';
 script.async = true;
 script.defer = true;
 script.onload = function() {
-  google.accounts.id.initialize({
-    client_id: BC.getGoogleClientId(),
-    callback: handleCredentialResponse
-  });
+  console.log('Google GSI script loaded');
+};
+script.onerror = function() {
+  console.error('Failed to load Google GSI script');
 };
 document.head.appendChild(script);
 
