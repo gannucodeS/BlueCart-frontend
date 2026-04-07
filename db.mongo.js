@@ -11,6 +11,8 @@
   var API_BASE = 'https://bluecart.onrender.com/api';
   
   var SESSION_KEY = 'bc_token';
+  
+  var GOOGLE_CLIENT_ID = '963041432927-jtm0sukpul0ic0785q4pd2v2qa75mu5v.apps.googleusercontent.com';
 
   function authHeaders() {
     var token = localStorage.getItem(SESSION_KEY);

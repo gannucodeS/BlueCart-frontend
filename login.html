@@ -480,25 +480,18 @@ BC.ready.then(function() {
   window.location.href = rd;
 }).catch(function() {});
 
-// Load Google Sign-In from backend config
-BC.ready.then(function() {
-  return BC.getGoogleConfig();
-}).then(function(res) {
-  if (res && res.clientId) {
-    var script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    script.onload = function() {
-      google.accounts.id.initialize({
-        client_id: res.clientId,
-        callback: handleCredentialResponse
-      });
-      google.accounts.id.prompt();
-    };
-    document.head.appendChild(script);
-  }
-}).catch(function() {});
+// Load Google Sign-In
+var script = document.createElement('script');
+script.src = 'https://accounts.google.com/gsi/client';
+script.async = true;
+script.defer = true;
+script.onload = function() {
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleCredentialResponse
+  });
+};
+document.head.appendChild(script);
 
 // Enter key handlers
 document.addEventListener('DOMContentLoaded', function() {
