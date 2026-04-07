@@ -321,29 +321,11 @@ async function signInWithGoogle() {
   clearMsgs();
   
   if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-    // Reinitialize right before calling prompt
-    google.accounts.id.initialize({
-      client_id: BC.getGoogleClientId(),
-      callback: handleCredentialResponse
-    });
+    // Just call prompt - already initialized on page load
     google.accounts.id.prompt();
   } else {
-    // Try loading script dynamically
-    var script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.onload = function() {
-      google.accounts.id.initialize({
-        client_id: BC.getGoogleClientId(),
-        callback: handleCredentialResponse
-      });
-      google.accounts.id.prompt();
-    };
-    script.onerror = function() {
-      showMsg('login-err', 'Failed to load Google Sign-In.', 'err');
-      if (btn) btn.disabled = false;
-    };
-    document.head.appendChild(script);
+    showMsg('login-err', 'Google not loaded. Refresh the page.', 'err');
+    if (btn) btn.disabled = false;
   }
 }
 
