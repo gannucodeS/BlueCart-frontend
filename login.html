@@ -349,10 +349,10 @@ async function signInWithGoogle() {
 
 // Handle Google OAuth callback - check for token in URL on page load
 function handleGoogleCallback() {
-  // Get URL parameters
+  // Get URL parameters (query string)
   var urlParams = new URLSearchParams(window.location.search);
   
-  // Check for error
+  // Check for error in query string
   var error = urlParams.get('error');
   var errorDescription = urlParams.get('error_description');
   var flowName = urlParams.get('flowName');
@@ -367,19 +367,26 @@ function handleGoogleCallback() {
     return;
   }
   
-  // Check for id_token from Google OAuth redirect
+  // Check for id_token from Google OAuth redirect - check BOTH query params AND hash
   var idToken = urlParams.get('id_token');
-  
-  // Check state parameter
   var state = urlParams.get('state');
-  console.log('URL params - id_token:', idToken ? 'present' : 'missing', 'state:', state);
+  
+  // If not in query params, check the URL hash (fragment)
+  // Google returns id_token in fragment with response_type=id_token
+  if (!idToken && window.location.hash) {
+    var hashParams = new URLSearchParams(window.location.hash.substring(1)); // skip leading #
+    idToken = hashParams.get('id_token');
+    state = hashParams.get('state');
+  }
+  
+  console.log('URL params - id_token:', idToken ? 'present' : 'missing', 'state:', state, 'hash:', window.location.hash ? 'yes' : 'no');
   
   if (idToken) {
     console.log('Google token received from redirect, processing...');
     showMsg('login-ok', 'Processing Google sign-in...', 'ok');
     handleCredentialResponse({ credential: idToken });
     
-    // Clean URL after processing
+    // Clean URL after processing (both query and hash)
     setTimeout(function() {
       history.replaceState(null, '', window.location.pathname);
     }, 1000);
