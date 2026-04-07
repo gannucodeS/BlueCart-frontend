@@ -12,7 +12,7 @@
   
   var SESSION_KEY = 'bc_token';
   
-  var GOOGLE_CLIENT_ID = '963041432927-jtm0sukpul0ic0785q4pd2v2qa75mu5v.apps.googleusercontent.com';
+  var GOOGLE_CLIENT_ID = '963041432927-o109jfqg3k6tiobpq7kpaecmqmen4gtn.apps.googleusercontent.com';
 
   function authHeaders() {
     var token = localStorage.getItem(SESSION_KEY);
