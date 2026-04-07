@@ -322,36 +322,74 @@ async function signInWithGoogle() {
   if (btn) btn.disabled = true;
   
   clearMsgs();
+  showMsg('login-ok', 'Redirecting to Google...', 'ok');
   
-  // Check if GSI is loaded
-  if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
-    showMsg('login-err', 'Google not loaded. Refresh the page.', 'err');
+  try {
+    // Get Google OAuth URL from backend
+    var oauthData = await BC.getGoogleOAuthUrl();
+    
+    if (oauthData && oauthData.ok && oauthData.url) {
+      // Store current page to redirect back after Google login
+      sessionStorage.setItem('bc_redirect', window.location.href);
+      
+      // Redirect to Google
+      window.location.href = oauthData.url;
+    } else {
+      // Fallback: try One Tap if OAuth URL fails
+      console.log('OAuth URL failed, trying One Tap');
+      showMsg('login-ok', 'Opening Google Sign-In...', 'ok');
+      
+      if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+        google.accounts.id.initialize({
+          client_id: BC.getGoogleClientId(),
+          callback: handleCredentialResponse
+        });
+        google.accounts.id.prompt();
+      } else {
+        showMsg('login-err', 'Google Sign-In not available. Use email/password.', 'err');
+        if (btn) btn.disabled = false;
+      }
+    }
+  } catch (e) {
+    console.error('Error getting OAuth URL:', e);
+    showMsg('login-err', 'Error. Try again or use email/password.', 'err');
     if (btn) btn.disabled = false;
+  }
+}
+
+// Handle Google OAuth callback - check for token in URL on page load
+function handleGoogleCallback() {
+  // Check both query params for id_token (from response_type=id_token)
+  var urlParams = new URLSearchParams(window.location.search);
+  
+  // Check for error
+  var error = urlParams.get('error');
+  var errorDescription = urlParams.get('error_description');
+  if (error) {
+    showMsg('login-err', 'Google sign-in error: ' + (errorDescription || error), 'err');
     return;
   }
   
-  // Initialize fresh each time
-  google.accounts.id.initialize({
-    client_id: BC.getGoogleClientId(),
-    callback: handleCredentialResponse
-  });
+  // Check for id_token from Google OAuth redirect
+  var idToken = urlParams.get('id_token');
   
-  googleInitialized = true;
+  // Check state parameter
+  var state = urlParams.get('state');
   
-  // Use prompt with callback to handle result
-  google.accounts.id.prompt(function(notification) {
-    if (notification.isNotDisplayed()) {
-      showMsg('login-err', 'Google Sign-In not available. Use email/password.', 'err');
-      if (btn) btn.disabled = false;
-    } else if (notification.isSkippedMoment()) {
-      showMsg('login-err', 'Sign in skipped.', 'err');
-      if (btn) btn.disabled = false;
-    } else if (notification.isDismissedMoment()) {
-      // User dismissed - don't show error, just re-enable button
-      if (btn) btn.disabled = false;
-    }
-  });
+  if (idToken && state && state.startsWith('bluecart_login')) {
+    console.log('Google token received from redirect');
+    showMsg('login-ok', 'Processing Google sign-in...', 'ok');
+    handleCredentialResponse({ credential: idToken });
+    
+    // Clean URL after processing
+    setTimeout(function() {
+      history.replaceState(null, '', window.location.pathname);
+    }, 1000);
+  }
 }
+
+// Run callback check when page loads
+document.addEventListener('DOMContentLoaded', handleGoogleCallback);
 
 async function handleCredentialResponse(response) {
   console.log('Google callback received:', response);

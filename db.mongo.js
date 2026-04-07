@@ -121,6 +121,10 @@
       return GOOGLE_CLIENT_ID;
     };
 
+    publicAPI.getGoogleOAuthUrl = function () {
+      return apiJson('/oauth/google-url', { method: 'GET' });
+    };
+
     publicAPI.getSession = function () {
       var token = localStorage.getItem(SESSION_KEY);
       if (!token) return Promise.resolve(null);
