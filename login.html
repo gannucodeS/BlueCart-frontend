@@ -480,19 +480,25 @@ BC.ready.then(function() {
   window.location.href = rd;
 }).catch(function() {});
 
-// Load Google Sign-In
-var script = document.createElement('script');
-script.src = 'https://accounts.google.com/gsi/client';
-script.async = true;
-script.defer = true;
-script.onload = function() {
-  google.accounts.id.initialize({
-    client_id: '963041432927-jtm0sukpul0ic0785q4pd2v2qa75mu5v.apps.googleusercontent.com',
-    callback: handleCredentialResponse
-  });
-  google.accounts.id.prompt();
-};
-document.head.appendChild(script);
+// Load Google Sign-In from backend config
+BC.ready.then(function() {
+  return BC.getGoogleConfig();
+}).then(function(res) {
+  if (res && res.clientId) {
+    var script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = function() {
+      google.accounts.id.initialize({
+        client_id: res.clientId,
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.prompt();
+    };
+    document.head.appendChild(script);
+  }
+}).catch(function() {});
 
 // Enter key handlers
 document.addEventListener('DOMContentLoaded', function() {
