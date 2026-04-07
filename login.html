@@ -320,11 +320,32 @@ async function signInWithGoogle() {
   
   clearMsgs();
   
-  if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-    // Just call prompt - already initialized on page load
-    google.accounts.id.prompt();
-  } else {
-    showMsg('login-err', 'Google not loaded. Refresh the page.', 'err');
+  try {
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+      // Request the credential (this shows the One Tap or account chooser)
+      const result = await new Promise((resolve, reject) => {
+        google.accounts.id.requestCredential({
+          client_id: BC.getGoogleClientId(),
+          callback: resolve
+        }, {
+          // Optional: specify which accounts to show
+          // 'select_account' or leave empty for One Tap
+        });
+      });
+      
+      if (result && result.credential) {
+        handleCredentialResponse(result);
+      } else {
+        showMsg('login-err', 'No account selected.', 'err');
+        if (btn) btn.disabled = false;
+      }
+    } else {
+      showMsg('login-err', 'Google not loaded. Refresh the page.', 'err');
+      if (btn) btn.disabled = false;
+    }
+  } catch (e) {
+    console.error('Google Sign-In error:', e);
+    showMsg('login-err', 'Google Sign-In failed. Try again.', 'err');
     if (btn) btn.disabled = false;
   }
 }
