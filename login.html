@@ -395,29 +395,61 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // If NOT returning from Google, check session after a short delay
   if (!isGoogleCallback) {
+    // Check if this is a redirect BACK from index.html (user already tried to login)
+    var fromRedirect = sessionStorage.getItem('bc_login_failed');
+    if (fromRedirect) {
+      console.log('Detected redirect back from index.html - clearing flag and NOT checking session');
+      sessionStorage.removeItem('bc_login_failed');
+      return; // Don't run session check - user just tried to login and failed
+    }
     setTimeout(checkExistingSession, 500);
   }
 });
 
 function checkExistingSession() {
-  console.log('Checking existing session...');
-  BC.ready.then(function() {
-    console.log('BC ready, checking session...');
-    return BC.getSession();
-  }).then(function(sess) {
-    console.log('Session check result:', sess);
-    if (!sess) {
-      console.log('No session, staying on login page');
+  // Skip session check if we just logged in via Google OAuth
+  if (window.justLoggedIn) {
+    console.log('✓ Just logged in via Google, skipping session check');
+    window.justLoggedIn = false;
+    return;
+  }
+  
+  // NEW: Check if we just saved a token (within last 2 seconds)
+  var tokenSaveTime = sessionStorage.getItem('bc_token_saved_at');
+  if (tokenSaveTime) {
+    var now = Date.now();
+    if (now - parseInt(tokenSaveTime) < 2000) {
+      console.log('✓ Token was just saved, skipping session check');
+      sessionStorage.removeItem('bc_token_saved_at');
       return;
     }
-    console.log('Session found, redirecting...');
+    sessionStorage.removeItem('bc_token_saved_at');
+  }
+  
+  var existingToken = localStorage.getItem('bc_token');
+  if (existingToken) {
+    console.log('✓ Token exists in localStorage, checking session...');
+  }
+  
+  console.log('→ Starting session check...');
+  BC.ready.then(function() {
+    console.log('→ BC ready, calling getSession()...');
+    return BC.getSession();
+  }).then(function(sess) {
+    console.log('→ Session check result:', sess);
+    if (!sess) {
+      console.log('✓ No valid session, staying on login page');
+      return;
+    }
+    console.log('✓ Session found, redirecting to:', sess.role === 'admin' ? 'admin.html' : 'index.html');
     if (sess.role === 'admin') {
       window.location.href = 'admin.html';
       return;
     }
     window.location.href = 'index.html';
   }).catch(function(e) {
-    console.log('Session check error:', e);
+    console.error('→ Session check ERROR:', e);
+    console.log('✓ Session check failed, staying on login page');
   });
 }
 
@@ -453,6 +485,9 @@ async function handleCredentialResponse(response) {
     
     // Set a flag to prevent session check from running after login
     window.justLoggedIn = true;
+    
+    // Also save timestamp to detect rapid re-loads
+    sessionStorage.setItem('bc_token_saved_at', Date.now().toString());
     
     showMsg('login-ok', 'Welcome! Redirecting...', 'ok');
     
