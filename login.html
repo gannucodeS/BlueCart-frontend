@@ -96,7 +96,7 @@
         </div>
         
         <button class="submit-btn" id="login-btn" onclick="doLogin()">Sign In</button>
-        <div class="hint"><b>Admin:</b> Use Admin Login link above with key: bluecart@admin2026<br><b>User:</b> Register a new account or use Google Sign-In</div>
+        <!-- /*<div class="hint"><b>Admin:</b> Use Admin Login link above with key: bluecart@admin2026<br><b>User:</b> Register a new account or use Google Sign-In</div> -->
       </div>
       <div class="note">New here? <a onclick="switchTab('register')">Create a free account</a></div>
     </div>
@@ -509,17 +509,29 @@ BC.ready.then(function() {
 BC.ready.then(function() {
   return BC.getGoogleConfig();
 }).then(function(res) {
+  console.log('Google Config Response:', res);
   if (res && res.clientId) {
     window.GOOGLE_CLIENT_ID = res.clientId;
     googleConfigured = true;
+    console.log('Google Client ID loaded:', window.GOOGLE_CLIENT_ID);
     
     var script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
     script.defer = true;
+    script.onload = function() {
+      console.log('Google Sign-In script loaded successfully');
+    };
+    script.onerror = function() {
+      console.error('Failed to load Google Sign-In script');
+    };
     document.head.appendChild(script);
+  } else {
+    console.log('Google Sign-In not configured - no client ID');
   }
-}).catch(function() {});
+}).catch(function(err) {
+  console.error('Error loading Google config:', err);
+});
 
 // Enter key handlers
 document.addEventListener('DOMContentLoaded', function() {
