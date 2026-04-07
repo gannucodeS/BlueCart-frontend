@@ -393,17 +393,9 @@ var isGoogleCallback = false;
 document.addEventListener('DOMContentLoaded', function() {
   isGoogleCallback = handleGoogleCallback();
   
-  // If NOT returning from Google, check session after a short delay
-  if (!isGoogleCallback) {
-    // Check if this is a redirect BACK from index.html (user already tried to login)
-    var fromRedirect = sessionStorage.getItem('bc_login_failed');
-    if (fromRedirect) {
-      console.log('Detected redirect back from index.html - clearing flag and NOT checking session');
-      sessionStorage.removeItem('bc_login_failed');
-      return; // Don't run session check - user just tried to login and failed
-    }
-    setTimeout(checkExistingSession, 500);
-  }
+  // Skip session check completely - let user stay on login page
+  // The session will be validated when they try to access protected pages
+  console.log('Login page loaded, session check disabled for debugging');
 });
 
 function checkExistingSession() {
