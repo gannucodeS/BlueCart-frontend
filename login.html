@@ -447,12 +447,19 @@ async function handleCredentialResponse(response) {
       return;
     }
     
+    // Check if token was saved
+    var savedToken = localStorage.getItem('bc_token');
+    console.log('Token saved in localStorage:', savedToken ? 'YES - ' + savedToken.substring(0, 20) + '...' : 'NO');
+    
+    // Set a flag to prevent session check from running after login
+    window.justLoggedIn = true;
+    
     showMsg('login-ok', 'Welcome! Redirecting...', 'ok');
     
-    // Redirect to index.html after successful login (not back to login page)
+    // Redirect immediately 
     setTimeout(function(){
       window.location.href = 'index.html';
-    }, 800);
+    }, 500);
   }).catch(function(e) {
     console.error('Login error:', e);
     showMsg('login-err', 'Something went wrong. Please try again.', 'err');
