@@ -116,6 +116,34 @@
       align-items: center;
       gap: 16px;
     }
+    .ah-menu-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.2s;
+    }
+    .ah-menu-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .ah-menu-btn span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: white;
+      border-radius: 2px;
+    }
+    @media (max-width: 900px) {
+      .ah-menu-btn { display: flex; }
+    }
     .admin-header .logo-img {
       height: 44px;
       width: auto;
@@ -211,10 +239,10 @@
 
   @media (max-width: 768px) {
     .hb-btn { display: flex !important; }
-    .sidebar { position: fixed; left: -260px; top: 0; height: 100vh; z-index: 300; transition: left .28s ease; width: 240px !important; }
+    .sidebar { position: fixed; left: -260px; top: 68px; height: calc(100vh - 68px); z-index: 300; transition: left .28s ease; width: 240px !important; }
     .sidebar.open { left: 0; box-shadow: 8px 0 40px rgba(0,0,0,0.25); }
     .main { margin-left: 0 !important; }
-    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 299; display: none; }
+    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 299; display: none; top: 68px; height: calc(100% - 68px); }
     .sidebar-overlay.open { display: block; }
     .topbar { padding: 0 14px !important; }
     .content { padding: 14px !important; }
@@ -234,12 +262,16 @@
 <!-- Admin Header - similar to index page navbar -->
 <header class="admin-header">
   <div class="admin-header-left">
+    <button class="ah-menu-btn" onclick="toggleSidebar()" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
     <a href="/index"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
   </div>
   <div class="admin-header-right">
     <a href="/index" class="ah-link"><span>&#127968;</span> <span>Home</span></a>
     <a href="/search" class="ah-link"><span>&#128269;</span> <span>Search</span></a>
     <a href="/orders" class="ah-link"><span>&#128722;</span> <span>Orders</span></a>
+    <a href="/login" class="ah-link ah-logout" onclick="doLogout(); return false;"><span>&#128682;</span> <span>Logout</span></a>
     <div class="ah-user">
       <div class="ah-avatar" id="ah-av">A</div>
       <span id="ah-name">Admin</span>
@@ -275,18 +307,6 @@
 <div class="main">
   <!-- Sidebar overlay for mobile -->
   <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
-  <div class="topbar">
-    <div style="display:flex;align-items:center;gap:12px;">
-      <button class="hb-btn" id="hb-btn" onclick="toggleSidebar()" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
-      </button>
-      <h1 id="ptitle">&#128202; Dashboard</h1>
-    </div>
-    <div class="t-right">
-      <button class="t-chip" onclick="showPanel('orders')">&#128722; Orders: <span id="ord-badge">0</span></button>
-      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
-    </div>
-  </div>
   <div class="content">
 
     <!-- DASHBOARD -->
@@ -454,7 +474,7 @@ BC.ready.then(function() {
   refreshDash();
 }).catch(function() { window.location.href = 'login.html'; });
 
-function doLogout() { BC.clearSession().then(function() { window.location.href='login.html'; }); }
+function doLogout() { BC.clearSession().then(function() { window.location.href='/login'; }); }
 
 // PANEL
 function showPanel(id) {
@@ -841,16 +861,16 @@ var currentOtpOrderId = null;
 function toggleSidebar(){
   var sb = document.querySelector('.sidebar');
   var ov = document.getElementById('sb-overlay');
-  var btn = document.getElementById('hb-btn');
+  var btn = document.getElementById('hb-btn') || document.querySelector('.ah-menu-btn');
   var isOpen = sb.classList.contains('open');
   sb.classList.toggle('open', !isOpen);
   ov.classList.toggle('open', !isOpen);
-  btn.classList.toggle('open', !isOpen);
+  if(btn) btn.classList.toggle('open', !isOpen);
 }
 function closeSidebar(){
   var sb = document.querySelector('.sidebar');
   var ov = document.getElementById('sb-overlay');
-  var btn = document.getElementById('hb-btn');
+  var btn = document.getElementById('hb-btn') || document.querySelector('.ah-menu-btn');
   if(sb) sb.classList.remove('open');
   if(ov) ov.classList.remove('open');
   if(btn) btn.classList.remove('open');
