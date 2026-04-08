@@ -327,16 +327,12 @@
 </div>
 
 <script src="db.mongo.js"></script>
+<script src="shared.js"></script>
 <script>
 // ── CART ─────────────────────────────────────────────────────────────────────
-// Cart is now handled by shared.js - just track quantity here
+// Cart functions are now provided by shared.js
 var currentQty = 1;
-function addToCart(name,price,qty){
-  qty=qty||currentQty||1;
-  for(var i=0;i<qty;i++) addToCart(name,price);
-  showToast(qty>1?'Added '+qty+' x '+name:'Added: '+name);
-}
-// removeFromCart and renderCart are provided by shared.js
+
 function showToast(msg){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
 function requireLogin(callback) {
   BC.ready.then(function() {
@@ -355,7 +351,7 @@ function requireLogin(callback) {
   });
 }
 function buyNow(name,img,price){requireLogin(function(){var p=new URLSearchParams();p.set('name',name);p.set('img',img||'');p.set('price',price);p.set('mode','buynow');window.location.href='checkout.html?'+p.toString();});}
-function checkoutCart(){if(!cartItems.length){showToast('Your cart is empty!');return;}requireLogin(function(){var p=new URLSearchParams();p.set('mode','cart');p.set('items',JSON.stringify(cartItems));window.location.href='checkout.html?'+p.toString();});}
+function checkoutCart(){if(!window.cartItems.length){showToast('Your cart is empty!');return;}requireLogin(function(){var p=new URLSearchParams();p.set('mode','cart');p.set('items',JSON.stringify(window.cartItems));window.location.href='checkout.html?'+p.toString();});}
 function switchTab(id,btn){
   document.querySelectorAll('.pv-tab-content').forEach(function(t){t.classList.remove('active');});
   document.querySelectorAll('.pv-tab').forEach(function(b){b.classList.remove('active');});
@@ -469,9 +465,13 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
 
   // Try to load product - don't block on BC.ready
   var loadProduct = function() {
+    console.log('loadProduct called - pid:', pid, 'pName:', pName, 'pPrice:', pPrice);
+    
     if(pid) {
       // Load from database by ID
+      console.log('Fetching product from DB with id:', pid);
       BC.getProductById(pid).then(function(p) {
+        console.log('Product fetched from DB:', p);
         if(!p) {
           main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2><p>This product may have been removed.</p><a href="/index" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;padding:12px 28px;border-radius:30px;background:#0ea5a0;color:white;font-weight:800;">Back to Home</a></div>';
           return;
@@ -488,6 +488,7 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
         }
       });
     } else if(pName && pPrice) {
+      console.log('Loading static product:', pName);
       // Static product fallback
       loadStaticProduct();
     } else {
@@ -615,21 +616,20 @@ function renderProduct(p) {
   var pNameJs = p.name.replace(/'/g, "\\'");
   var pImgJs  = (p.imageUrl||'').replace(/'/g, "\\'");
 
+  // Build images array - use p.images if available, otherwise fall back to imageUrl
+  var productImages = p.images || (p.imageUrl ? [p.imageUrl] : []);
+  if (productImages.length === 0) {
+    productImages = ['https://placehold.co/600x600?text=' + encodeURIComponent(p.name)];
+  }
+  
+  var mainImg = productImages[0];
+  var thumbsHtml = productImages.map(function(img, idx) {
+    var activeClass = idx === 0 ? ' active' : '';
+    return '<img class="pv-thumb' + activeClass + '" src="' + (img || 'https://placehold.co/200x200?text=Img' + (idx+1)) + '" onclick="setMainImg(this.src,this)" alt="image ' + (idx+1) + '"/>';
+  }).join('');
+
   var mainHtml =
     '<div class="pv-wrap">' +
-      // LEFT — Gallery
-      // Build images array - use p.images if available, otherwise fall back to imageUrl
-      var productImages = p.images || (p.imageUrl ? [p.imageUrl] : []);
-      if (productImages.length === 0) {
-        productImages = ['https://placehold.co/600x600?text=' + encodeURIComponent(p.name)];
-      }
-      
-      var mainImg = productImages[0];
-      var thumbsHtml = productImages.map(function(img, idx) {
-        var activeClass = idx === 0 ? ' active' : '';
-        return '<img class="pv-thumb' + activeClass + '" src="' + (img || 'https://placehold.co/200x200?text=Img' + (idx+1)) + '" onclick="setMainImg(this.src,this)" alt="image ' + (idx+1) + '"/>';
-      }).join('');
-      
       '<div class="pv-gallery">' +
         '<div class="pv-main-img-wrap">' +
           '<div class="pv-badge-wrap">'+badgeHtml+'</div>' +
