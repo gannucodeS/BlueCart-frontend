@@ -12,7 +12,7 @@
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:'Nunito',sans-serif;background:var(--off);color:var(--navy);display:flex;min-height:100vh;}
     a{text-decoration:none;color:inherit;} img{display:block;} button,input,select,textarea{font-family:'Nunito',sans-serif;}
-    .sidebar{width:var(--sidebar);background:var(--navy);display:flex;flex-direction:column;position:fixed;top:68px;left:0;height:calc(100vh - 68px);z-index:50;box-shadow:4px 0 20px rgba(0,0,0,0.15);}
+    .sidebar{width:var(--sidebar);background:var(--navy);display:flex;flex-direction:column;position:fixed;top:68px;left:0;height:calc(100vh - 68px);z-index:50;box-shadow:4px 0 20px rgba(0,0,0,0.15); overflow: hidden;}
     .sb-logo{padding:22px 20px 14px;border-bottom:1px solid rgba(255,255,255,0.1);}
     .sb-logo h2{font-family:'Syne',sans-serif;font-size:22px;color:white;}
     .sb-logo h2 span{color:#ccf2f1;} .sb-logo p{font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;}
@@ -110,6 +110,8 @@
       top: 0;
       z-index: 100;
       box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      height: 68px;
+      box-sizing: border-box;
     }
     .admin-header-left {
       display: flex;
@@ -198,7 +200,7 @@
       font-weight: 800;
     }
     @media (max-width: 768px) {
-      .admin-header { padding: 10px 16px; }
+      .admin-header { padding: 10px 16px; height: 54px; }
       .admin-header .ah-link span { display: none; }
       .admin-header .ah-link { padding: 8px 12px; }
       .sidebar { top: 54px; height: calc(100vh - 54px); }
@@ -239,10 +241,10 @@
 
   @media (max-width: 768px) {
     .hb-btn { display: flex !important; }
-    .sidebar { position: fixed; left: -260px; top: 68px; height: calc(100vh - 68px); z-index: 300; transition: left .28s ease; width: 240px !important; }
+    .sidebar { position: fixed; left: -260px; top: 54px; height: calc(100vh - 54px); z-index: 300; transition: left .28s ease; width: 240px !important; }
     .sidebar.open { left: 0; box-shadow: 8px 0 40px rgba(0,0,0,0.25); }
     .main { margin-left: 0 !important; }
-    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 299; display: none; top: 68px; height: calc(100% - 68px); }
+    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 299; display: none; top: 54px; height: calc(100% - 54px); }
     .sidebar-overlay.open { display: block; }
     .topbar { padding: 0 14px !important; }
     .content { padding: 14px !important; }
