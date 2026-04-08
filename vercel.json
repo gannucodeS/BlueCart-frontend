@@ -1,24 +1,3 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/index", "destination": "/index.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/account", "destination": "/account.html" },
-    { "source": "/orders", "destination": "/orders.html" },
-    { "source": "/checkout", "destination": "/checkout.html" },
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/search", "destination": "/search.html" },
-    { "source": "/product", "destination": "/product.html" },
-    { "source": "/customer-service", "destination": "/customer-service.html" },
-    { "source": "/electronics", "destination": "/electronics.html" },
-    { "source": "/gaming", "destination": "/gaming.html" },
-    { "source": "/deals", "destination": "/deals.html" },
-    { "source": "/new-arrivals", "destination": "/new-arrivals.html" },
-    { "source": "/smarthome", "destination": "/smarthome.html" },
-    { "source": "/accessories", "destination": "/accessories.html" },
-    { "source": "/cameras", "destination": "/cameras.html" },
-    { "source": "/audio", "destination": "/audio.html" },
-    { "source": "/laptops", "destination": "/laptops.html" },
-    { "source": "/smartphones", "destination": "/smartphones.html" }
-  ]
+  "cleanUrls": true
 }

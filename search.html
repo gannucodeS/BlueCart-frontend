@@ -588,6 +588,56 @@ function buyNow(name,img,price){window.location.href='product.html?name='+encode
 // checkoutCart and goOrders are provided by shared.js
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
+// Load products immediately without waiting for BC.ready
+var initProducts = function() {
+  var main = document.getElementById('query-display');
+  if(main) main.textContent = 'Loading...';
+  
+  BC.getAllProducts().then(function(dbProds) {
+    // Merge DB products with static ones
+    var dbMapped = (dbProds||[]).filter(function(p){return p.status==='active';}).map(function(p){
+      return {id:p.id,name:p.name,brand:p.brand,category:p.category,price:p.price,mrp:p.mrp||p.price,img:p.imageUrl||'',badge:p.badge||'',stock:p.stock,fromDB:true};
+    });
+    allProducts = STATIC_PRODUCTS.concat(dbMapped);
+
+    // Get query from URL
+    var params = new URLSearchParams(window.location.search);
+    currentQuery = params.get('q') || '';
+    var bigSearch = document.getElementById('bigSearch');
+    if(bigSearch) bigSearch.value = currentQuery;
+    var queryDisplay = document.getElementById('query-display');
+    if(queryDisplay) queryDisplay.textContent = currentQuery ? '\u201C'+currentQuery+'\u201D' : 'All Products';
+    document.title = currentQuery ? 'Search: '+currentQuery+' \u2014 BlueCart' : 'All Products \u2014 BlueCart';
+
+    buildBrandFilters();
+    applyFilters();
+    renderPopularTags();
+  }).catch(function(e){ 
+    console.error('Failed to load products:', e);
+    // Use static products only if DB fails
+    allProducts = STATIC_PRODUCTS;
+    buildBrandFilters();
+    applyFilters();
+    renderPopularTags();
+  });
+};
+
+// Start loading products with timeout fallback
+var timeout = setTimeout(function() {
+  console.log('BC.ready timeout, loading products anyway');
+  initProducts();
+}, 5000);
+
+BC.ready.then(function() {
+  clearTimeout(timeout);
+  initProducts();
+}).catch(function(e) {
+  clearTimeout(timeout);
+  console.log('BC.ready failed, loading anyway:', e);
+  initProducts();
+});
+
+// Update navbar (separate from product loading)
 BC.ready.then(function() {
   return BC.getSession();
 }).then(function(sess) {
@@ -595,35 +645,17 @@ BC.ready.then(function() {
     var g=document.getElementById('account-greeting'),l=document.getElementById('account-label'),lk=document.getElementById('account-link');
     if(g)g.textContent='Hello, '+sess.name.split(' ')[0];
     if(l)l.textContent='My Account';
-    if(lk)lk.href=sess.role==='admin'?'admin.html':'account.html';
+    if(lk)lk.href=sess.role==='admin'?'/admin':'/account';
   }
   var saved=localStorage.getItem('bc_location');
   if(saved){var el=document.getElementById('location-display');if(el)el.textContent='\u{1F4CD} '+saved;}
-  return BC.getAllProducts();
-}).then(function(dbProds) {
-  // Merge DB products with static ones
-  var dbMapped = (dbProds||[]).filter(function(p){return p.status==='active';}).map(function(p){
-    return {id:p.id,name:p.name,brand:p.brand,category:p.category,price:p.price,mrp:p.mrp||p.price,img:p.imageUrl||'',badge:p.badge||'',stock:p.stock,fromDB:true};
-  });
-  allProducts = STATIC_PRODUCTS.concat(dbMapped);
-
-  // Get query from URL
-  var params = new URLSearchParams(window.location.search);
-  currentQuery = params.get('q') || '';
-  document.getElementById('bigSearch').value = currentQuery;
-  document.getElementById('query-display').textContent = currentQuery ? '\u201C'+currentQuery+'\u201D' : 'All Products';
-  document.title = currentQuery ? 'Search: '+currentQuery+' \u2014 BlueCart' : 'All Products \u2014 BlueCart';
-
-  buildBrandFilters();
-  applyFilters();
-  renderPopularTags();
-}).catch(function(e){ console.error(e); });
+});
 
 // ── SEARCH ───────────────────────────────────────────────────────────────────
 function runSearch(q) {
   q = q.trim();
   if (!q) return;
-  window.location.href = 'search.html?q=' + encodeURIComponent(q);
+  window.location.href = '/search?q=' + encodeURIComponent(q);
 }
 
 // ── BUILD BRAND FILTERS FROM RESULTS ─────────────────────────────────────────

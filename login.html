@@ -442,10 +442,10 @@ function checkExistingSession() {
     }
     console.log('✓ Session found, redirecting to:', sess.role === 'admin' ? 'admin.html' : 'index.html');
     if (sess.role === 'admin') {
-      window.location.href = 'admin.html';
+      window.location.href = '/admin';
       return;
     }
-    window.location.href = 'index.html';
+    window.location.href = '/index';
   }).catch(function(e) {
     console.error('→ Session check ERROR:', e);
     console.log('✓ Session check failed, staying on login page');

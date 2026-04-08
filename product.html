@@ -455,43 +455,47 @@ var SAMPLE_REVIEWS = [
 function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';return s;}
 
 // ── MAIN: LOAD AND RENDER PRODUCT ────────────────────────────────────────────
-BC.ready.then(function() {
-  // Session-aware navbar
-  return BC.getSession();
-}).then(function(sess) {
-  if(sess){
-    var g=document.getElementById('account-greeting'),l=document.getElementById('account-label'),lk=document.getElementById('account-link');
-    if(g)g.textContent='Hello, '+sess.name.split(' ')[0];
-    if(l)l.textContent='My Account';
-    if(lk)lk.href=sess.role==='admin'?'admin.html':'account.html';
-  }
-  var saved=localStorage.getItem('bc_location');
-  if(saved){var el=document.getElementById('location-display');if(el)el.textContent='\u{1F4CD} '+saved;}
-
-  // Read product ID from URL
+// Start loading immediately without waiting for BC.ready (prevents hanging)
+(function() {
   var params = new URLSearchParams(window.location.search);
   var pid    = params.get('id');
-  var pName  = params.get('name');   // fallback for static products
+  var pName  = params.get('name');
   var pImg   = params.get('img');
   var pPrice = params.get('price');
   var pCat   = params.get('cat');
 
+  // Show loading state
   var main = document.getElementById('pv-main');
 
-  // If we have a DB id, load from IndexedDB
-  if(pid) {
-    return BC.getProductById(pid).then(function(p) {
-      if(!p) {
-        main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2><p>This product may have been removed.</p><a href="index.html" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;padding:12px 28px;border-radius:30px;background:#0ea5a0;color:white;font-weight:800;">Back to Home</a></div>';
-        return;
-      }
-      renderProduct(p);
-      loadRelated(p.category, p.id);
-    });
-  }
+  // Try to load product - don't block on BC.ready
+  var loadProduct = function() {
+    if(pid) {
+      // Load from database by ID
+      BC.getProductById(pid).then(function(p) {
+        if(!p) {
+          main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2><p>This product may have been removed.</p><a href="/index" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;padding:12px 28px;border-radius:30px;background:#0ea5a0;color:white;font-weight:800;">Back to Home</a></div>';
+          return;
+        }
+        renderProduct(p);
+        loadRelated(p.category, p.id);
+      }).catch(function(e) {
+        console.error('Product load error:', e);
+        // Fallback to static product if DB fails
+        if(pName && pPrice) {
+          loadStaticProduct();
+        } else {
+          main.innerHTML = '<div class="pv-not-found"><h2>Could not load product</h2><p>Please try again later.</p></div>';
+        }
+      });
+    } else if(pName && pPrice) {
+      // Static product fallback
+      loadStaticProduct();
+    } else {
+      main.innerHTML = '<div class="pv-not-found"><h2>No product specified</h2><p>Please navigate from a product page.</p><a href="/index" style="color:#0ea5a0;font-weight:700;">Go to Home</a></div>';
+    }
+  };
 
-  // Static product fallback (from category pages)
-  if(pName && pPrice) {
+  function loadStaticProduct() {
     var staticProd = {
       id:null, name:decodeURIComponent(pName),
       imageUrl:decodeURIComponent(pImg||''),
@@ -504,14 +508,36 @@ BC.ready.then(function() {
     };
     renderProduct(staticProd);
     loadRelated(staticProd.category, null);
-    return;
   }
 
-  main.innerHTML = '<div class="pv-not-found"><h2>No product specified</h2><p>Please navigate from a product page.</p><a href="index.html" style="color:#0ea5a0;font-weight:700;">Go to Home</a></div>';
+  // Wait for BC.ready but with timeout - if it takes too long, load anyway
+  var timeout = setTimeout(function() {
+    console.log('BC.ready timeout, loading product anyway');
+    loadProduct();
+  }, 5000);
 
-}).catch(function(e){
-  console.error('Product load error:', e);
-  document.getElementById('pv-main').innerHTML = '<div class="pv-not-found"><h2>Something went wrong</h2><p>'+e.message+'</p></div>';
+  BC.ready.then(function() {
+    clearTimeout(timeout);
+    loadProduct();
+  }).catch(function(e) {
+    clearTimeout(timeout);
+    console.log('BC.ready failed, trying anyway:', e);
+    loadProduct();
+  });
+})();
+
+// Update navbar when ready (separate from product loading)
+BC.ready.then(function() {
+  return BC.getSession();
+}).then(function(sess) {
+  if(sess){
+    var g=document.getElementById('account-greeting'),l=document.getElementById('account-label'),lk=document.getElementById('account-link');
+    if(g)g.textContent='Hello, '+sess.name.split(' ')[0];
+    if(l)l.textContent='My Account';
+    if(lk)lk.href=sess.role==='admin'?'/admin':'/account';
+  }
+  var saved=localStorage.getItem('bc_location');
+  if(saved){var el=document.getElementById('location-display');if(el)el.textContent='\u{1F4CD} '+saved;}
 });
 
 function renderProduct(p) {
