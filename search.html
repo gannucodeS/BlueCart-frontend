@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Search — BlueCart</title>
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/CLfZ0htM/bluecart-favicon.png"/>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/FRWzcgqv/bluecart-favicon.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="shared.css"/>
   <style>
@@ -86,6 +86,11 @@
     .active-filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
     .active-chip{background:var(--teal-light);color:var(--teal-dark);border-radius:20px;padding:4px 12px;font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:6px;}
     .active-chip button{background:none;border:none;cursor:pointer;font-size:14px;color:var(--teal-dark);padding:0;line-height:1;}
+
+    /* Popular Search Tags */
+    .popular-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+    .popular-tags .search-tag{background:white;border:1.5px solid #e0e7ef;color:var(--navy);padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+    .popular-tags .search-tag:hover{background:var(--teal);color:white;border-color:var(--teal);}
 
     /* Pagination */
     .pagination{display:flex;justify-content:center;gap:8px;margin-top:28px;flex-wrap:wrap;}
@@ -247,10 +252,6 @@
         <span><kbd style="display:inline-flex;align-items:center;justify-content:center;background:#f0f4f8;border:1px solid #d0e0ed;border-radius:4px;padding:1px 5px;font-size:10.5px;color:#6b8090;">Esc</kbd> Close</span>
       </div>
     </div>
-  </div>
-  <div style="margin-top:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;">
-    <span id="result-count" style="font-size:14px;color:rgba(255,255,255,.75);font-weight:700;"></span>
-    <div id="popular-tags" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
   </div>
 </div>
 
@@ -427,6 +428,9 @@
     <button class="mobile-filter-btn" onclick="openMobileFilter()" style="margin-bottom:14px;">
       &#127775; Filters &amp; Sort
     </button>
+
+    <!-- Popular Search Tags -->
+    <div class="popular-tags" id="popular-tags" style="margin-bottom:14px;"></div>
 
     <!-- Active filter chips -->
     <div class="active-filters" id="active-filters"></div>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Product — BlueCart</title>
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/CLfZ0htM/bluecart-favicon.png"/>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/FRWzcgqv/bluecart-favicon.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="shared.css"/>
   <style>
@@ -472,6 +472,7 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
       console.log('Fetching product from DB with id:', pid);
       BC.getProductById(pid).then(function(p) {
         console.log('Product fetched from DB:', p);
+        console.log('Images from DB:', p ? p.images : 'no product');
         if(!p) {
           main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2><p>This product may have been removed.</p><a href="/index" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;padding:12px 28px;border-radius:30px;background:#0ea5a0;color:white;font-weight:800;">Back to Home</a></div>';
           return;
@@ -616,11 +617,21 @@ function renderProduct(p) {
   var pNameJs = p.name.replace(/'/g, "\\'");
   var pImgJs  = (p.imageUrl||'').replace(/'/g, "\\'");
 
+  // Debug: log what we received from backend
+  console.log('Product images data:', p.images, 'imageUrl:', p.imageUrl);
+  
   // Build images array - use p.images if available, otherwise fall back to imageUrl
-  var productImages = p.images || (p.imageUrl ? [p.imageUrl] : []);
+  var productImages = [];
+  if (p.images && Array.isArray(p.images) && p.images.length > 0) {
+    productImages = p.images;
+  } else if (p.imageUrl) {
+    productImages = [p.imageUrl];
+  }
   if (productImages.length === 0) {
     productImages = ['https://placehold.co/600x600?text=' + encodeURIComponent(p.name)];
   }
+  
+  console.log('Final productImages array:', productImages);
   
   var mainImg = productImages[0];
   var thumbsHtml = productImages.map(function(img, idx) {
