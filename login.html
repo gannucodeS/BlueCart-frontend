@@ -492,7 +492,7 @@ async function handleCredentialResponse(response) {
     
     // Redirect immediately 
     setTimeout(function(){
-      window.location.href = 'index.html';
+window.location.href = '/index';
     }, 500);
   }).catch(function(e) {
     console.error('Login error:', e);
@@ -537,7 +537,7 @@ function doLogin() {
     showMsg('login-ok', 'Welcome back, ' + res.user.name.split(' ')[0] + '! Redirecting...', 'ok');
     setTimeout(function() {
       if (res.user.role === 'admin') {
-        window.location.href = 'admin.html';
+window.location.href = '/admin';
         return;
       }
       var rd = sessionStorage.getItem('bc_redirect') || 'index.html';

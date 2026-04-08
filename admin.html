@@ -249,9 +249,13 @@
           <div class="fg"><label>Weight</label><input type="text" id="p-wt" placeholder="232g"/></div>
           <div class="fg"><label>Warranty</label><input type="text" id="p-war" placeholder="1 Year Manufacturer"/></div>
           <div class="fsec">Image and Listing</div>
-          <div class="fg ff"><label>Product Image URL *</label>
+          <div class="fg ff"><label>Product Image URLs (Main Image)</label>
             <input type="url" id="p-img" placeholder="https://images.unsplash.com/..." oninput="prevImg()"/>
             <div class="img-prev-row" id="img-prev"></div>
+          </div>
+          <div class="fg ff"><label>Additional Image URLs (comma-separated or one per line)</label>
+            <textarea id="p-imgs" rows="3" placeholder="https://images.unsplash.com/...&#10;https://images.unsplash.com/...&#10;https://images.unsplash.com/..."></textarea>
+            <small style="color:var(--muted);">Add multiple image URLs, one per line</small>
           </div>
           <div class="fg"><label>Status</label>
             <select id="p-status"><option value="active">Active</option><option value="inactive">Inactive</option><option value="pending">Pending Review</option></select>
@@ -423,6 +427,22 @@ function saveProd() {
   var desc=document.getElementById('p-desc').value.trim();
   var img=document.getElementById('p-img').value.trim();
   if (!name||!cat||!brand||!stock||!mrp||!price||!desc||!img) { toast('Fill all required fields!'); return; }
+  
+  // Parse additional images
+  var additionalImages = [];
+  var imgsInput = document.getElementById('p-imgs').value.trim();
+  if (imgsInput) {
+    additionalImages = imgsInput.split(/[\n,]/).map(function(url) { return url.trim(); }).filter(function(url) { return url.length > 0; });
+  }
+  
+  // Set main image as first in images array if not already included
+  var imagesArray = [img];
+  additionalImages.forEach(function(url) {
+    if (url !== img && imagesArray.indexOf(url) === -1) {
+      imagesArray.push(url);
+    }
+  });
+  
   BC.saveProduct({
     id:EDIT_ID||undefined, name:name, category:cat, brand:brand,
     sku:document.getElementById('p-sku').value.trim(),
@@ -436,7 +456,7 @@ function saveProd() {
     connectivity:document.getElementById('p-conn').value.trim(),
     weight:document.getElementById('p-wt').value.trim(),
     warranty:document.getElementById('p-war').value.trim(),
-    imageUrl:img, status:document.getElementById('p-status').value, badge:document.getElementById('p-badge').value
+    imageUrl:img, images:imagesArray, status:document.getElementById('p-status').value, badge:document.getElementById('p-badge').value
   }).then(function() {
     toast(EDIT_ID ? 'Product updated!' : 'Product listed successfully!');
     EDIT_ID = null; document.getElementById('save-btn').textContent='List Product';
@@ -445,6 +465,7 @@ function saveProd() {
 }
 function resetForm() {
   ['p-name','p-brand','p-sku','p-stock','p-mrp','p-price','p-disc','p-desc','p-img','p-display','p-proc','p-bat','p-conn','p-wt','p-war'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('p-imgs').value = '';
   document.getElementById('p-cat').value=''; document.getElementById('p-status').value='active'; document.getElementById('p-badge').value='';
   document.getElementById('img-prev').innerHTML='';
   TAGS={features:[],colors:[],storage:[]}; ['features','colors','storage'].forEach(function(t){ renderTags(t); });
@@ -493,6 +514,14 @@ function editProd(id) {
     document.getElementById('p-stock').value=p.stock; document.getElementById('p-mrp').value=p.mrp;
     document.getElementById('p-price').value=p.price; document.getElementById('p-disc').value=p.discount||'';
     document.getElementById('p-desc').value=p.description; document.getElementById('p-img').value=p.imageUrl;
+    // Load additional images if available
+    var additionalImgs = p.images || [];
+    if (additionalImgs.length > 1) {
+      // Skip first image (main image), join rest
+      document.getElementById('p-imgs').value = additionalImgs.slice(1).join('\n');
+    } else {
+      document.getElementById('p-imgs').value = '';
+    }
     document.getElementById('p-display').value=p.display||''; document.getElementById('p-proc').value=p.processor||'';
     document.getElementById('p-bat').value=p.battery||''; document.getElementById('p-conn').value=p.connectivity||'';
     document.getElementById('p-wt').value=p.weight||''; document.getElementById('p-war').value=p.warranty||'';

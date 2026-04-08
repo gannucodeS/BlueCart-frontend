@@ -582,23 +582,10 @@ var ITEMS_PER_PAGE = 12;
 var isListView   = false;
 
 // ── CART ─────────────────────────────────────────────────────────────────────
-var cartItems = [], cartOpen = false;
-function toggleCart(){cartOpen=!cartOpen;document.getElementById('cart').classList.toggle('active',cartOpen);document.getElementById('cart-overlay').classList.toggle('open',cartOpen);}
-function addToCart(name,price){cartItems.push({name:name,price:price});renderCart();showToast('Added: '+name);}
-function removeFromCart(i){cartItems.splice(i,1);renderCart();}
-function renderCart(){
-  var list=document.getElementById('cart-items'),total=document.getElementById('cart-total'),count=document.getElementById('cart-count');
-  if(count)count.textContent=cartItems.length;
-  if(!list)return;
-  if(!cartItems.length){list.innerHTML='<div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div>';if(total)total.textContent='₹0';return;}
-  list.innerHTML=cartItems.map(function(item,i){return '<li class="cart-item"><div><div class="cart-item-name">'+item.name+'</div><div class="cart-item-price">₹'+item.price.toLocaleString('en-IN')+'</div></div><button class="remove-btn" onclick="removeFromCart('+i+')">Remove</button></li>';}).join('');
-  var sum=cartItems.reduce(function(a,b){return a+b.price;},0);
-  if(total)total.textContent='₹'+sum.toLocaleString('en-IN');
-}
-function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
+// Cart functions are provided by shared.js - cart auto-loads from localStorage on page init
+
 function buyNow(name,img,price){window.location.href='product.html?name='+encodeURIComponent(name)+'&img='+encodeURIComponent(img||'')+'&price='+price+'&cat=Electronics';}
-function checkoutCart(){if(!cartItems.length){showToast('Cart is empty!');return;}var p=new URLSearchParams();p.set('mode','cart');p.set('items',JSON.stringify(cartItems));window.location.href='checkout.html?'+p.toString();}
-function goOrders(){BC.ready.then(function(){return BC.getSession();}).then(function(sess){if(!sess){sessionStorage.setItem('bc_redirect','orders.html');window.location.href='login.html';}else window.location.href='orders.html';});}
+// checkoutCart and goOrders are provided by shared.js
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
 BC.ready.then(function() {

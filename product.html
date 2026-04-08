@@ -329,23 +329,14 @@
 <script src="db.mongo.js"></script>
 <script>
 // ── CART ─────────────────────────────────────────────────────────────────────
-var cartItems = [], cartOpen = false, currentQty = 1;
-function toggleCart(){cartOpen=!cartOpen;var c=document.getElementById('cart'),o=document.getElementById('cart-overlay');if(c)c.classList.toggle('active',cartOpen);if(o)o.classList.toggle('open',cartOpen);}
+// Cart is now handled by shared.js - just track quantity here
+var currentQty = 1;
 function addToCart(name,price,qty){
   qty=qty||currentQty||1;
-  for(var i=0;i<qty;i++) cartItems.push({name:name,price:price});
-  renderCart(); showToast(qty>1?'Added '+qty+' x '+name:'Added: '+name);
+  for(var i=0;i<qty;i++) addToCart(name,price);
+  showToast(qty>1?'Added '+qty+' x '+name:'Added: '+name);
 }
-function removeFromCart(i){cartItems.splice(i,1);renderCart();}
-function renderCart(){
-  var list=document.getElementById('cart-items'),total=document.getElementById('cart-total'),count=document.getElementById('cart-count');
-  if(count)count.textContent=cartItems.length;
-  if(!list)return;
-  if(!cartItems.length){list.innerHTML='<div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div>';if(total)total.textContent='&#8377;0';return;}
-  list.innerHTML=cartItems.map(function(item,i){return '<li class="cart-item"><div><div class="cart-item-name">'+item.name+'</div><div class="cart-item-price">&#8377;'+item.price.toLocaleString('en-IN')+'</div></div><button class="remove-btn" onclick="removeFromCart('+i+')">Remove</button></li>';}).join('');
-  var sum=cartItems.reduce(function(a,b){return a+b.price;},0);
-  if(total)total.textContent='&#8377;'+sum.toLocaleString('en-IN');
-}
+// removeFromCart and renderCart are provided by shared.js
 function showToast(msg){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
 function requireLogin(callback) {
   BC.ready.then(function() {
@@ -601,14 +592,25 @@ function renderProduct(p) {
   var mainHtml =
     '<div class="pv-wrap">' +
       // LEFT — Gallery
+      // Build images array - use p.images if available, otherwise fall back to imageUrl
+      var productImages = p.images || (p.imageUrl ? [p.imageUrl] : []);
+      if (productImages.length === 0) {
+        productImages = ['https://placehold.co/600x600?text=' + encodeURIComponent(p.name)];
+      }
+      
+      var mainImg = productImages[0];
+      var thumbsHtml = productImages.map(function(img, idx) {
+        var activeClass = idx === 0 ? ' active' : '';
+        return '<img class="pv-thumb' + activeClass + '" src="' + (img || 'https://placehold.co/200x200?text=Img' + (idx+1)) + '" onclick="setMainImg(this.src,this)" alt="image ' + (idx+1) + '"/>';
+      }).join('');
+      
       '<div class="pv-gallery">' +
         '<div class="pv-main-img-wrap">' +
           '<div class="pv-badge-wrap">'+badgeHtml+'</div>' +
           '<button class="pv-wish" id="pv-wish-btn" onclick="toggleWish()">&#129293;</button>' +
-          '<img class="pv-main-img" id="pv-main-img" src="'+(p.imageUrl||'https://placehold.co/600x600?text='+encodeURIComponent(p.name))+'" alt="'+p.name+'"/>' +
+          '<img class="pv-main-img" id="pv-main-img" src="'+mainImg+'" alt="'+p.name+'"/>' +
         '</div>' +
-        '<div class="pv-thumbs" id="pv-thumbs">' +
-          '<img class="pv-thumb active" src="'+(p.imageUrl||'https://placehold.co/200x200?text=Main')+'" onclick="setMainImg(this.src,this)" alt="main"/>' +
+        '<div class="pv-thumbs" id="pv-thumbs">' + thumbsHtml +
         '</div>' +
       '</div>' +
 

@@ -299,45 +299,8 @@
 
 <script src="db.mongo.js"></script>
 <script>
-// ── CART ──
-var cartItems = [], cartOpen = false;
-function toggleCart() {
-  cartOpen = !cartOpen;
-  var c = document.getElementById('cart');
-  var o = document.getElementById('cart-overlay');
-  if (c) c.classList.toggle('active', cartOpen);
-  if (o) o.classList.toggle('open', cartOpen);
-}
-function addToCart(name, price) {
-  cartItems.push({name: name, price: price});
-  renderCart();
-  showToast('✅ ' + name + ' added to cart!');
-}
-function removeFromCart(i) { cartItems.splice(i, 1); renderCart(); }
-function renderCart() {
-  var list  = document.getElementById('cart-items');
-  var total = document.getElementById('cart-total');
-  var count = document.getElementById('cart-count');
-  if (count) count.textContent = cartItems.length;
-  if (!list) return;
-  if (!cartItems.length) {
-    list.innerHTML = '<div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p></div>';
-    if (total) total.textContent = '₹0'; return;
-  }
-  list.innerHTML = cartItems.map(function(item, i) {
-    return '<li class="cart-item"><div><div class="cart-item-name">' + item.name + '</div>' +
-      '<div class="cart-item-price">₹' + item.price.toLocaleString('en-IN') + '</div></div>' +
-      '<button class="remove-btn" onclick="removeFromCart(' + i + ')">Remove</button></li>';
-  }).join('');
-  var sum = cartItems.reduce(function(a,b){return a+b.price;}, 0);
-  if (total) total.textContent = '₹' + sum.toLocaleString('en-IN');
-}
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  if (!t) return;
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 2800);
-}
+// Cart functions provided by shared.js
+// addToCart, removeFromCart, renderCart, toggleCart are in shared.js
 
 // ── SLIDER ──
 (function() {
