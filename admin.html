@@ -539,7 +539,8 @@ function showPanel(id) {
   document.querySelectorAll('.sb-btn').forEach(function(b){
     var oc = b.getAttribute('onclick')||''; b.classList.toggle('active', oc.indexOf("'"+id+"'") !== -1);
   });
-  document.getElementById('ptitle').textContent = PANEL_TITLES[id]||id;
+  var ptitleEl = document.getElementById('ptitle');
+  if (ptitleEl) ptitleEl.textContent = PANEL_TITLES[id]||id;
   if (id==='products')  renderProds();
   if (id==='orders')    renderOrds();
   if (id==='customers') renderCusts();
@@ -633,10 +634,19 @@ function saveProd() {
     weight:document.getElementById('p-wt').value.trim(),
     warranty:document.getElementById('p-war').value.trim(),
     imageUrl:img, images:imagesArray, status:document.getElementById('p-status').value, badge:document.getElementById('p-badge').value
-  }).then(function() {
+  }).then(function(res) {
+    console.log('Product saved, response:', res);
+    // Re-fetch the product to verify images are saved
+    return BC.getProductById(EDIT_ID || res.id);
+  }).then(function(p) {
+    console.log('Re-fetched product after save:', p);
+    console.log('Images after save:', p ? p.images : 'no product');
     toast(EDIT_ID ? 'Product updated!' : 'Product listed successfully!');
     EDIT_ID = null; document.getElementById('save-btn').textContent='List Product';
     resetForm(); refreshDash();
+  }).catch(function(err) {
+    console.error('Save error:', err);
+    toast('Error saving product: ' + err.message);
   });
 }
 function resetForm() {
