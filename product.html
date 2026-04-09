@@ -476,76 +476,36 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
   var pImg   = params.get('img');
   var pPrice = params.get('price');
   var pCat   = params.get('cat');
-  var pImgs  = params.get('imgs'); // Additional images from search page
+  var pImgs  = params.get('imgs');
 
   // Show loading state
   var main = document.getElementById('pv-main');
 
-  // Try to load product - don't block on BC.ready
+  // DB-only architecture - require id param
   var loadProduct = function() {
     console.log('=== loadProduct called ===');
-    console.log('Full URL:', window.location.href);
-    console.log('URL params:', window.location.search);
-    console.log('pid:', pid, 'pName:', pName, 'pPrice:', pPrice, 'pImgs:', pImgs);
+    console.log('pid:', pid);
     
     if(pid) {
-      // Load from database by ID
+      // Load from database by ID only
       console.log('Fetching product from DB with id:', pid);
       BC.getProductById(pid).then(function(p) {
-        console.log('Product fetched from DB:', p);
-        console.log('Images from DB:', p ? p.images : 'no product');
-        console.log('imageUrl from DB:', p ? p.imageUrl : 'none');
+        console.log('Product fetched:', p ? p.name : 'not found');
+        console.log('Images from DB:', p ? p.images : 'none');
         if(!p) {
-          main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2><p>This product may have been removed.</p><a href="/index" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;padding:12px 28px;border-radius:30px;background:#0ea5a0;color:white;font-weight:800;">Back to Home</a></div>';
+          main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2><p>This product may have been removed.</p><a href="/search" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;padding:12px 28px;border-radius:30px;background:#0ea5a0;color:white;font-weight:800;">Back to Search</a></div>';
           return;
         }
         renderProduct(p);
         loadRelated(p.category, p.id);
       }).catch(function(e) {
         console.error('Product load error:', e);
-        // Fallback to static product if DB fails
-        if(pName && pPrice) {
-          loadStaticProduct();
-        } else {
-          main.innerHTML = '<div class="pv-not-found"><h2>Could not load product</h2><p>Please try again later.</p></div>';
-        }
+        main.innerHTML = '<div class="pv-not-found"><h2>Could not load product</h2><p>Please try again later.</p><a href="/search" style="color:#0ea5a0;font-weight:700;">Go to Search</a></div>';
       });
-    } else if(pName && pPrice) {
-      console.log('Loading static product:', pName);
-      // Static product fallback
-      loadStaticProduct();
     } else {
-      main.innerHTML = '<div class="pv-not-found"><h2>No product specified</h2><p>Please navigate from a product page.</p><a href="/index" style="color:#0ea5a0;font-weight:700;">Go to Home</a></div>';
+      main.innerHTML = '<div class="pv-not-found"><h2>No product specified</h2><p>Please navigate from the search page.</p><a href="/search" style="color:#0ea5a0;font-weight:700;">Go to Search</a></div>';
     }
   };
-
-  function loadStaticProduct() {
-    // Parse additional images from URL parameter
-    var additionalImages = [];
-    if (pImgs) {
-      try {
-        additionalImages = JSON.parse(decodeURIComponent(pImgs));
-        console.log('Parsed additional images from URL:', additionalImages);
-      } catch (e) {
-        console.error('Failed to parse additional images:', e);
-      }
-    }
-    
-    var staticProd = {
-      id:null, name:decodeURIComponent(pName),
-      imageUrl:decodeURIComponent(pImg||''),
-      images: additionalImages.length > 0 ? additionalImages : [],
-      price:parseFloat(pPrice), mrp:parseFloat(pPrice)*1.2,
-      category:decodeURIComponent(pCat||'Electronics'),
-      brand:'BlueCart', description:'Premium quality product.',
-      features:[], colors:[], storage:[], display:'', processor:'',
-      battery:'', connectivity:'', weight:'', warranty:'1 Year',
-      gst:'18%', stock:10, badge:'', sku:'', status:'active'
-    };
-    console.log('Static product created with images:', staticProd.images);
-    renderProduct(staticProd);
-    loadRelated(staticProd.category, null);
-  }
 
   // Wait for BC.ready but with timeout - if it takes too long, load anyway
   var timeout = setTimeout(function() {
