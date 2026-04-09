@@ -637,6 +637,7 @@ function renderProduct(p) {
   console.log('Full product object keys:', Object.keys(p));
   console.log('Product images data:', p.images, 'imageUrl:', p.imageUrl);
   console.log('p.images type:', typeof p.images);
+  console.log('p.images value:', JSON.stringify(p.images));
   console.log('Is array:', Array.isArray(p.images));
   
   // Build images array - use p.images if available, otherwise fall back to imageUrl
