@@ -459,13 +459,14 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
   var pImg   = params.get('img');
   var pPrice = params.get('price');
   var pCat   = params.get('cat');
+  var pImgs  = params.get('imgs'); // Additional images from search page
 
   // Show loading state
   var main = document.getElementById('pv-main');
 
   // Try to load product - don't block on BC.ready
   var loadProduct = function() {
-    console.log('loadProduct called - pid:', pid, 'pName:', pName, 'pPrice:', pPrice);
+    console.log('loadProduct called - pid:', pid, 'pName:', pName, 'pPrice:', pPrice, 'pImgs:', pImgs);
     
     if(pid) {
       // Load from database by ID
@@ -499,9 +500,21 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
   };
 
   function loadStaticProduct() {
+    // Parse additional images from URL parameter
+    var additionalImages = [];
+    if (pImgs) {
+      try {
+        additionalImages = JSON.parse(decodeURIComponent(pImgs));
+        console.log('Parsed additional images from URL:', additionalImages);
+      } catch (e) {
+        console.error('Failed to parse additional images:', e);
+      }
+    }
+    
     var staticProd = {
       id:null, name:decodeURIComponent(pName),
       imageUrl:decodeURIComponent(pImg||''),
+      images: additionalImages.length > 0 ? additionalImages : [],
       price:parseFloat(pPrice), mrp:parseFloat(pPrice)*1.2,
       category:decodeURIComponent(pCat||'Electronics'),
       brand:'BlueCart', description:'Premium quality product.',
@@ -509,6 +522,7 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
       battery:'', connectivity:'', weight:'', warranty:'1 Year',
       gst:'18%', stock:10, badge:'', sku:'', status:'active'
     };
+    console.log('Static product created with images:', staticProd.images);
     renderProduct(staticProd);
     loadRelated(staticProd.category, null);
   }
