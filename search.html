@@ -603,7 +603,9 @@ var initProducts = function() {
     console.log('DB products fetched:', dbProds ? dbProds.length : 0);
     // Merge DB products with static ones
     var dbMapped = (dbProds||[]).filter(function(p){return p.status==='active';}).map(function(p){
-      return {id:p.id,name:p.name,brand:p.brand,category:p.category,price:p.price,mrp:p.mrp||p.price,img:p.imageUrl||'',images:p.images||[],badge:p.badge||'',stock:p.stock,fromDB:true};
+      var mapped = {id:p.id,name:p.name,brand:p.brand,category:p.category,price:p.price,mrp:p.mrp||p.price,img:p.imageUrl||'',images:p.images||[],badge:p.badge||'',stock:p.stock,fromDB:true};
+      console.log('Mapping DB product:', p.name, 'images:', p.images);
+      return mapped;
     });
     console.log('Active DB products:', dbMapped.length);
     console.log('First DB product images:', dbMapped[0] ? dbMapped[0].images : 'none');

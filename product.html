@@ -636,13 +636,18 @@ function renderProduct(p) {
   console.log('=== renderProduct called ===');
   console.log('Full product object keys:', Object.keys(p));
   console.log('Product images data:', p.images, 'imageUrl:', p.imageUrl);
+  console.log('p.images type:', typeof p.images);
+  console.log('Is array:', Array.isArray(p.images));
   
   // Build images array - use p.images if available, otherwise fall back to imageUrl
   var productImages = [];
   console.log('Checking p.images:', typeof p.images, Array.isArray(p.images), p.images ? p.images.length : 0);
+  console.log('p.images value:', JSON.stringify(p.images));
+  
   if (p.images && Array.isArray(p.images) && p.images.length > 0) {
     productImages = p.images;
-    console.log('Using p.images array');
+    console.log('Using p.images array, length:', productImages.length);
+    console.log('First few image URLs:', productImages.slice(0, 3));
   } else if (p.imageUrl) {
     productImages = [p.imageUrl];
     console.log('Using p.imageUrl as fallback');
@@ -653,12 +658,17 @@ function renderProduct(p) {
   }
   
   console.log('Final productImages array:', productImages);
+  console.log('Number of thumbnails to render:', productImages.length);
   
   var mainImg = productImages[0];
   var thumbsHtml = productImages.map(function(img, idx) {
     var activeClass = idx === 0 ? ' active' : '';
+    console.log('Creating thumb', idx, ':', img);
     return '<img class="pv-thumb' + activeClass + '" src="' + (img || 'https://placehold.co/200x200?text=Img' + (idx+1)) + '" onclick="setMainImg(this.src,this)" alt="image ' + (idx+1) + '"/>';
   }).join('');
+  
+  console.log('Generated thumbsHtml length:', thumbsHtml.length);
+  console.log('thumbsHtml sample:', thumbsHtml.substring(0, 200));
 
   var mainHtml =
     '<div class="pv-wrap">' +
