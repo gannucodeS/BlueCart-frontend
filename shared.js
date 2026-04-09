@@ -663,9 +663,8 @@ function attachProductLinks() {
   function goProduct(name, price, img, cat, pid) {
     if (pid) {
       window.location.href = '/product?id=' + encodeURIComponent(pid);
-    } else {
-      window.location.href = '/product?name=' + encodeURIComponent(name) +
-        '&price=' + price + '&img=' + encodeURIComponent(img || '') + '&cat=' + encodeURIComponent(cat || 'Electronics');
+    } else if (name) {
+      window.location.href = '/product?id=' + encodeURIComponent(name);
     }
   }
   function getImg(card) { var i = card.querySelector('img'); return i ? i.src : ''; }

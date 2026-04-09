@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/product", "destination": "/product.html" }
+    { "source": "/product(.*)", "destination": "/product.html" }
   ]
 }

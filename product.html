@@ -453,6 +453,12 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
 // ── MAIN: LOAD AND RENDER PRODUCT ────────────────────────────────────────────
 // Start loading immediately without waiting for BC.ready (prevents hanging)
 (function() {
+  // Debug: log the full URL
+  console.log('=== Page Load Debug ===');
+  console.log('Full URL:', window.location.href);
+  console.log('Pathname:', window.location.pathname);
+  console.log('Search:', window.location.search);
+  
   // Support both query params (?id=) and path params (/p/PRD-XXX or /product/id/XXX)
   var pathParts = window.location.pathname.split('/').filter(Boolean);
   var pid = null;
@@ -467,16 +473,14 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
     console.log('Product ID from legacy path:', pid);
   } else {
     // Check for query param format: ?id=PRD-XXX
-    var params = new URLSearchParams(window.location.search);
-    pid = params.get('id');
-  }
-  
   var params = new URLSearchParams(window.location.search);
-  var pName  = params.get('name');
-  var pImg   = params.get('img');
+  pid = params.get('id');
+  
+  // Fallback: if no id, check for name param (legacy support)
+  var pName = params.get('name');
+  var pImg = params.get('img');
   var pPrice = params.get('price');
-  var pCat   = params.get('cat');
-  var pImgs  = params.get('imgs');
+  var pCat = params.get('cat');
 
   // Show loading state
   var main = document.getElementById('pv-main');
@@ -485,6 +489,7 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
   var loadProduct = function() {
     console.log('=== loadProduct called ===');
     console.log('pid:', pid);
+    console.log('pName (fallback):', pName);
     
     if(pid) {
       // Load from database by ID only
@@ -501,6 +506,64 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
       }).catch(function(e) {
         console.error('Product load error:', e);
         main.innerHTML = '<div class="pv-not-found"><h2>Could not load product</h2><p>Please try again later.</p><a href="/search" style="color:#0ea5a0;font-weight:700;">Go to Search</a></div>';
+      });
+    } else if (pName) {
+      // Fallback: legacy URL with name param - try to find product by name
+      console.log('Legacy URL detected, trying to find product by name:', pName);
+      BC.getAllProducts().then(function(products) {
+        console.log('Total products in DB:', products.length);
+        // Try exact match first, then partial match
+        var p = products.find(function(prod) { 
+          return prod.name.toLowerCase() === pName.toLowerCase(); 
+        });
+        // If no exact match, try partial match
+        if (!p) {
+          p = products.find(function(prod) { 
+            return prod.name.toLowerCase().includes(pName.toLowerCase().split(' ')[0]); 
+          });
+        }
+        
+        if (p) {
+          console.log('Found product:', p.name);
+          renderProduct(p);
+          loadRelated(p.category, p.id);
+        } else {
+          console.log('Product not found in DB, showing fallback for:', pName);
+          // Fallback: render basic product from URL params
+          var fallbackProduct = {
+            name: pName,
+            price: parseInt(pPrice) || 0,
+            mrp: parseInt(pPrice) || 0,
+            category: pCat || 'Electronics',
+            imageUrl: pImg || '',
+            images: pImg ? [pImg] : [],
+            description: '',
+            features: [],
+            brand: '',
+            rating: '4.5',
+            reviews: '0'
+          };
+          renderProduct(fallbackProduct);
+          main.innerHTML += '<div style="background:#fff3cd;padding:10px;text-align:center;">⚠️ Showing preview mode - product data coming soon</div>';
+        }
+      }).catch(function(e) {
+        console.error('Product load error:', e);
+        // Show fallback even on error
+        var fallbackProduct = {
+          name: pName,
+          price: parseInt(pPrice) || 0,
+          mrp: parseInt(pPrice) || 0,
+          category: pCat || 'Electronics',
+          imageUrl: pImg || '',
+          images: pImg ? [pImg] : [],
+          description: '',
+          features: [],
+          brand: '',
+          rating: '4.5',
+          reviews: '0'
+        };
+        renderProduct(fallbackProduct);
+        main.innerHTML += '<div style="background:#fff3cd;padding:10px;text-align:center;">⚠️ Showing preview mode - database connection issue</div>';
       });
     } else {
       main.innerHTML = '<div class="pv-not-found"><h2>No product specified</h2><p>Please navigate from the search page.</p><a href="/search" style="color:#0ea5a0;font-weight:700;">Go to Search</a></div>';
