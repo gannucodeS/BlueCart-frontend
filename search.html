@@ -602,9 +602,16 @@ var initProducts = function() {
   BC.getAllProducts().then(function(dbProds) {
     console.log('DB products fetched:', dbProds ? dbProds.length : 0);
     // Merge DB products with static ones
+    console.log('Raw DB products:', dbProds ? dbProds.length : 0);
+    if (dbProds && dbProds.length > 0) {
+      console.log('First raw DB product keys:', Object.keys(dbProds[0]));
+      console.log('First raw DB product images:', dbProds[0].images);
+      console.log('First raw DB product images type:', typeof dbProds[0].images);
+      console.log('First raw DB product is array:', Array.isArray(dbProds[0].images));
+    }
     var dbMapped = (dbProds||[]).filter(function(p){return p.status==='active';}).map(function(p){
       var mapped = {id:p.id,name:p.name,brand:p.brand,category:p.category,price:p.price,mrp:p.mrp||p.price,img:p.imageUrl||'',images:p.images||[],badge:p.badge||'',stock:p.stock,fromDB:true};
-      console.log('Mapping DB product:', p.name, 'images:', p.images, 'mapped.images:', mapped.images);
+      console.log('Mapping DB product:', p.name, 'raw images:', p.images, 'mapped.images:', mapped.images);
       return mapped;
     });
     console.log('Active DB products:', dbMapped.length);
@@ -777,11 +784,13 @@ function renderResults() {
     var badgeHtml = (p.badge||disc>0) ? '<span class="prod-badge '+(disc>0?'badge-sale':badgeCls)+'">'+(disc>0?'-'+disc+'%':p.badge)+'</span>' : '';
     var pName = p.name.replace(/'/g,"\\'");
     var pImg  = (p.img||'').replace(/'/g,"\\'");
+    // Debug: log each product's fromDB and images
+    console.log('Render product:', p.name, 'fromDB:', p.fromDB, 'has id:', !!p.id, 'images:', p.images ? p.images.length : 0, 'p.images:', JSON.stringify(p.images).substring(0, 100));
     // Include images array in URL if available - only for DB products (has fromDB flag)
     var pImgs = (p.fromDB && p.images && p.images.length > 0) ? '&imgs=' + encodeURIComponent(JSON.stringify(p.images)) : '';
     // Use ID-based URL for DB products (has fromDB flag), name-based for static
     var viewUrl = (p.fromDB && p.id) ? ('product.html?id='+encodeURIComponent(p.id)) : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category)+pImgs);
-    console.log('Rendering product:', p.name, 'fromDB:', p.fromDB, 'id:', p.id, 'viewUrl:', viewUrl.substring(0, 80));
+    console.log('  -> viewUrl starts with:', viewUrl.substring(0, 50));
 
     return '<div class="product-card">' +
       '<div class="prod-img-wrap" style="cursor:pointer" onclick="window.location.href=\''+viewUrl+'\'">' +
