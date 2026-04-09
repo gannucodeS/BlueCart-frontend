@@ -679,8 +679,10 @@ function delProd(id) {
   BC.deleteProduct(id).then(function(){ renderProds(); refreshDash(); toast('Product deleted.'); });
 }
 function editProd(id) {
+  console.log('Editing product:', id);
   BC.getProductById(id).then(function(p) {
-    if (!p) return;
+    console.log('Product fetched:', p);
+    if (!p) { toast('Product not found'); return; }
     showPanel('add-product');
     document.getElementById('p-name').value=p.name; document.getElementById('p-cat').value=p.category;
     document.getElementById('p-brand').value=p.brand; document.getElementById('p-sku').value=p.sku||'';
