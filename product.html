@@ -486,20 +486,32 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
     
     if (pName) {
       console.log('Rendering product from URL params:', pName);
-      var product = {
-        name: decodeURIComponent(pName),
-        price: parseInt(pPrice) || 0,
-        mrp: parseInt(pPrice) || 0,
-        category: pCat || 'Electronics',
-        imageUrl: pImg || '',
-        images: pImg ? [pImg] : [],
-        description: '',
-        features: [],
-        brand: '',
-        rating: '4.5',
-        reviews: '0'
-      };
-      renderProduct(product);
+      console.log('pImg:', pImg, 'pPrice:', pPrice, 'pCat:', pCat);
+      
+      // If main still has loading, clear it
+      main.innerHTML = '<div style="text-align:center;padding:40px;">Building product page...</div>';
+      
+      try {
+        var product = {
+          name: decodeURIComponent(pName),
+          price: parseInt(pPrice) || 0,
+          mrp: parseInt(pPrice) || 0,
+          category: pCat || 'Electronics',
+          imageUrl: pImg || '',
+          images: pImg ? [pImg] : [],
+          description: '',
+          features: [],
+          brand: '',
+          rating: '4.5',
+          reviews: '0'
+        };
+        console.log('Calling renderProduct with:', product.name);
+        renderProduct(product);
+        console.log('renderProduct completed for:', product.name);
+      } catch (e) {
+        console.error('Error in renderProduct:', e);
+        main.innerHTML = '<div class="pv-not-found"><h2>Error loading product</h2><p>' + e.message + '</p></div>';
+      }
     } else if (pid) {
       // Try to load from DB using id
       main.innerHTML = '<div style="text-align:center;padding:60px;">Loading from database...</div>';
@@ -540,8 +552,13 @@ BC.ready.then(function() {
 });
 
 function renderProduct(p) {
-  p = p || {};
+  try {
+    console.log('renderProduct function START');
+    p = p || {};
+    console.log('p object:', p);
+  
   var disc = (p.mrp || 0) > (p.price || 0) ? Math.round((1-(p.price||0)/(p.mrp||1))*100) : 0;
+  console.log('disc:', disc);
   var savings = (p.mrp || 0) > (p.price || 0) ? ((p.mrp || 0) - (p.price || 0)) : 0;
   var category = p.category || 'Electronics';
   var catPage = CAT_PAGE[category] || 'electronics.html';
@@ -580,13 +597,18 @@ function renderProduct(p) {
       p.storage.map(function(s,i){return '<span class="pv-chip'+(i===0?' active':'')+'" onclick="document.querySelectorAll(\'.pv-chip.stor-chip\').forEach(function(e){e.classList.remove(\'active\')});this.classList.add(\'active\')">'+s+'</span>';}).join('') +
     '</div></div>';
   }
+  
+  console.log('About to call buildSpecRows');
 
   // Specs
   var specRows = buildSpecRows(p);
+  console.log('specRows:', specRows);
   var specsHtml = '<table class="pv-specs-table">';
   specsHtml += '<tr><td class="pv-spec-section" colspan="2">&#128203; Product Specifications</td></tr>';
   specRows.forEach(function(row){ specsHtml += '<tr><td>'+row[0]+'</td><td>'+row[1]+'</td></tr>'; });
   specsHtml += '</table>';
+
+  console.log('specsHtml created');
 
   // Features
   var featuresHtml = '';
@@ -730,7 +752,16 @@ function renderProduct(p) {
       '<div class="pv-tab-content" id="tab-reviews">'+reviewsHtml+'</div>' +
     '</div>';
 
+  console.log('About to set pv-main innerHTML');
   document.getElementById('pv-main').innerHTML = mainHtml;
+  console.log('renderProduct COMPLETED - innerHTML set');
+  } catch (e) {
+    console.error('Error in renderProduct:', e);
+    var mainEl = document.getElementById('pv-main');
+    if (mainEl) {
+      mainEl.innerHTML = '<div class="pv-not-found"><h2>Error loading product</h2><p>' + e.message + '</p></div>';
+    }
+  }
 }
 
 function setMainImg(src, thumb) {
