@@ -788,9 +788,11 @@ function renderResults() {
     console.log('Render product:', p.name, 'fromDB:', p.fromDB, 'has id:', !!p.id, 'images:', p.images ? p.images.length : 0, 'p.images:', JSON.stringify(p.images).substring(0, 100));
     // Include images array in URL if available - only for DB products (has fromDB flag)
     var pImgs = (p.fromDB && p.images && p.images.length > 0) ? '&imgs=' + encodeURIComponent(JSON.stringify(p.images)) : '';
-    // Use ID-based URL for DB products (has fromDB flag), name-based for static
-    var viewUrl = (p.fromDB && p.id) ? ('product.html?id='+encodeURIComponent(p.id)) : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category)+pImgs);
-    console.log('  -> viewUrl starts with:', viewUrl.substring(0, 50));
+    // Always include images in URL for DB products, plus use ID-based URL
+    var viewUrl = (p.fromDB && p.id) 
+      ? ('product.html?id='+encodeURIComponent(p.id) + pImgs) 
+      : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category)+pImgs);
+    console.log('  -> viewUrl:', viewUrl.substring(0, 80));
 
     return '<div class="product-card">' +
       '<div class="prod-img-wrap" style="cursor:pointer" onclick="window.location.href=\''+viewUrl+'\'">' +
@@ -861,7 +863,9 @@ function renderSimilar() {
   document.getElementById('similar-scroll').innerHTML = similar.map(function(p) {
     var disc = p.mrp > p.price ? Math.round((1-p.price/p.mrp)*100) : 0;
     var pImgs = (p.fromDB && p.images && p.images.length > 0) ? '&imgs=' + encodeURIComponent(JSON.stringify(p.images)) : '';
-    var viewUrl = (p.fromDB && p.id) ? ('product.html?id='+encodeURIComponent(p.id)) : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category)+pImgs);
+    var viewUrl = (p.fromDB && p.id) 
+      ? ('product.html?id='+encodeURIComponent(p.id) + pImgs) 
+      : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category)+pImgs);
     return '<div class="sim-card" onclick="window.location.href=\''+viewUrl+'\'">' +
       '<img class="sim-img" src="'+(p.img||'https://placehold.co/300x200?text=Product')+'" alt="'+p.name+'" onerror="this.src=\'https://placehold.co/300x200?text=Product\'"/>' +
       '<div class="sim-info">' +

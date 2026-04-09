@@ -466,7 +466,10 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
 
   // Try to load product - don't block on BC.ready
   var loadProduct = function() {
-    console.log('loadProduct called - pid:', pid, 'pName:', pName, 'pPrice:', pPrice, 'pImgs:', pImgs);
+    console.log('=== loadProduct called ===');
+    console.log('Full URL:', window.location.href);
+    console.log('URL params:', window.location.search);
+    console.log('pid:', pid, 'pName:', pName, 'pPrice:', pPrice, 'pImgs:', pImgs);
     
     if(pid) {
       // Load from database by ID
