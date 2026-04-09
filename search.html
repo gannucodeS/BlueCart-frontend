@@ -604,10 +604,11 @@ var initProducts = function() {
     // Merge DB products with static ones
     var dbMapped = (dbProds||[]).filter(function(p){return p.status==='active';}).map(function(p){
       var mapped = {id:p.id,name:p.name,brand:p.brand,category:p.category,price:p.price,mrp:p.mrp||p.price,img:p.imageUrl||'',images:p.images||[],badge:p.badge||'',stock:p.stock,fromDB:true};
-      console.log('Mapping DB product:', p.name, 'images:', p.images);
+      console.log('Mapping DB product:', p.name, 'images:', p.images, 'mapped.images:', mapped.images);
       return mapped;
     });
     console.log('Active DB products:', dbMapped.length);
+    console.log('DB mapped products with images > 0:', dbMapped.filter(function(p){return p.images && p.images.length > 0;}).length);
     console.log('First DB product images:', dbMapped[0] ? dbMapped[0].images : 'none');
     console.log('Static products:', STATIC_PRODUCTS.length);
     allProducts = STATIC_PRODUCTS.concat(dbMapped);
@@ -776,9 +777,11 @@ function renderResults() {
     var badgeHtml = (p.badge||disc>0) ? '<span class="prod-badge '+(disc>0?'badge-sale':badgeCls)+'">'+(disc>0?'-'+disc+'%':p.badge)+'</span>' : '';
     var pName = p.name.replace(/'/g,"\\'");
     var pImg  = (p.img||'').replace(/'/g,"\\'");
-    // Include images array in URL if available
-    var pImgs = p.images && p.images.length > 0 ? '&imgs=' + encodeURIComponent(JSON.stringify(p.images)) : '';
-    var viewUrl = p.id ? ('product.html?id='+encodeURIComponent(p.id)) : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category)+pImgs);
+    // Include images array in URL if available - only for DB products (has fromDB flag)
+    var pImgs = (p.fromDB && p.images && p.images.length > 0) ? '&imgs=' + encodeURIComponent(JSON.stringify(p.images)) : '';
+    // Use ID-based URL for DB products (has fromDB flag), name-based for static
+    var viewUrl = (p.fromDB && p.id) ? ('product.html?id='+encodeURIComponent(p.id)) : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category)+pImgs);
+    console.log('Rendering product:', p.name, 'fromDB:', p.fromDB, 'id:', p.id, 'viewUrl:', viewUrl.substring(0, 80));
 
     return '<div class="product-card">' +
       '<div class="prod-img-wrap" style="cursor:pointer" onclick="window.location.href=\''+viewUrl+'\'">' +
@@ -848,8 +851,8 @@ function renderSimilar() {
 
   document.getElementById('similar-scroll').innerHTML = similar.map(function(p) {
     var disc = p.mrp > p.price ? Math.round((1-p.price/p.mrp)*100) : 0;
-    var pImgs = p.images && p.images.length > 0 ? '&imgs=' + encodeURIComponent(JSON.stringify(p.images)) : '';
-    var viewUrl = p.id ? ('product.html?id='+encodeURIComponent(p.id)) : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category)+pImgs);
+    var pImgs = (p.fromDB && p.images && p.images.length > 0) ? '&imgs=' + encodeURIComponent(JSON.stringify(p.images)) : '';
+    var viewUrl = (p.fromDB && p.id) ? ('product.html?id='+encodeURIComponent(p.id)) : ('product.html?name='+encodeURIComponent(p.name)+'&price='+p.price+'&img='+encodeURIComponent(p.img||'')+'&cat='+encodeURIComponent(p.category)+pImgs);
     return '<div class="sim-card" onclick="window.location.href=\''+viewUrl+'\'">' +
       '<img class="sim-img" src="'+(p.img||'https://placehold.co/300x200?text=Product')+'" alt="'+p.name+'" onerror="this.src=\'https://placehold.co/300x200?text=Product\'"/>' +
       '<div class="sim-info">' +
