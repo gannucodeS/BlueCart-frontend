@@ -617,10 +617,13 @@ function saveProd() {
     }
   });
   
+  console.log('Main image (imageUrl):', img);
+  console.log('Additional images:', additionalImages);
   console.log('Saving product - imagesArray:', imagesArray);
   console.log('imagesArray length:', imagesArray.length);
+  console.log('imagesArray content:', JSON.stringify(imagesArray));
   
-  BC.saveProduct({
+  var saveData = {
     id:EDIT_ID||undefined, name:name, category:cat, brand:brand,
     sku:document.getElementById('p-sku').value.trim(),
     stock:parseInt(stock), mrp:parseFloat(mrp), price:parseFloat(price),
@@ -634,7 +637,10 @@ function saveProd() {
     weight:document.getElementById('p-wt').value.trim(),
     warranty:document.getElementById('p-war').value.trim(),
     imageUrl:img, images:imagesArray, status:document.getElementById('p-status').value, badge:document.getElementById('p-badge').value
-  }).then(function(res) {
+  };
+  console.log('Full saveData.images:', saveData.images);
+  
+  BC.saveProduct(saveData).then(function(res) {
     console.log('Product saved, response:', res);
     // Re-fetch the product to verify images are saved
     return BC.getProductById(EDIT_ID || res.id);
