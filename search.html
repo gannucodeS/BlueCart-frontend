@@ -241,6 +241,7 @@
 <!-- SEARCH HERO -->
 <div class="search-hero" style="display:flex;flex-direction:column;align-items:center;padding:40px 4%;background:linear-gradient(120deg,#0f2d4a,#1a4a6e);">
   <h2 id="query-display" style="font-family:'Syne',sans-serif;font-size:20px;color:rgba(255,255,255,.7);font-weight:700;margin-bottom:14px;">All Products</h2>
+  <span id="result-count" style="font-size:14px;color:rgba(255,255,255,.75);font-weight:700;margin-bottom:12px;"></span>
   <div class="sac-wrapper" style="width:100%;max-width:700px;position:relative;">
     <input type="text" id="bigSearch" class="sac-input" placeholder="Search products, brands and more..." style="height:52px;border-radius:12px;font-size:16px;box-shadow:0 4px 20px rgba(0,0,0,.3);" onkeydown="if(event.key==='Enter')runSearch(this.value)"/>
     <button class="sac-search-btn" style="height:52px;width:52px;border-radius:0 12px 12px 0;background:var(--teal);font-size:20px;" onclick="runSearch(document.getElementById('bigSearch').value)">&#128269;</button>
@@ -597,12 +598,17 @@ var initProducts = function() {
   var main = document.getElementById('query-display');
   if(main) main.textContent = 'Loading...';
   
+  console.log('Fetching products from database...');
   BC.getAllProducts().then(function(dbProds) {
+    console.log('DB products fetched:', dbProds ? dbProds.length : 0);
     // Merge DB products with static ones
     var dbMapped = (dbProds||[]).filter(function(p){return p.status==='active';}).map(function(p){
       return {id:p.id,name:p.name,brand:p.brand,category:p.category,price:p.price,mrp:p.mrp||p.price,img:p.imageUrl||'',badge:p.badge||'',stock:p.stock,fromDB:true};
     });
+    console.log('Active DB products:', dbMapped.length);
+    console.log('Static products:', STATIC_PRODUCTS.length);
     allProducts = STATIC_PRODUCTS.concat(dbMapped);
+    console.log('Total products:', allProducts.length);
 
     // Get query from URL
     var params = new URLSearchParams(window.location.search);
@@ -610,7 +616,7 @@ var initProducts = function() {
     var bigSearch = document.getElementById('bigSearch');
     if(bigSearch) bigSearch.value = currentQuery;
     var queryDisplay = document.getElementById('query-display');
-    if(queryDisplay) queryDisplay.textContent = currentQuery ? '\u201C'+currentQuery+'\u201D' : 'All Products';
+    if(queryDisplay) queryDisplay.textContent = currentQuery ? 'Search results for "'+currentQuery+'"' : 'All Products';
     document.title = currentQuery ? 'Search: '+currentQuery+' \u2014 BlueCart' : 'All Products \u2014 BlueCart';
 
     buildBrandFilters();
@@ -618,6 +624,7 @@ var initProducts = function() {
     renderPopularTags();
   }).catch(function(e){ 
     console.error('Failed to load products:', e);
+    console.log('Using static products only');
     // Use static products only if DB fails
     allProducts = STATIC_PRODUCTS;
     buildBrandFilters();

@@ -490,9 +490,13 @@ async function handleCredentialResponse(response) {
     
     showMsg('login-ok', 'Welcome! Redirecting...', 'ok');
     
-    // Redirect immediately 
+    // Redirect based on role
     setTimeout(function(){
-window.location.href = '/index';
+      if (res.user && res.user.role === 'admin') {
+        window.location.href = '/admin';
+      } else {
+        window.location.href = '/index';
+      }
     }, 500);
   }).catch(function(e) {
     console.error('Login error:', e);
