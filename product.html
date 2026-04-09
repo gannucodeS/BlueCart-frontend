@@ -453,8 +453,21 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
 // ── MAIN: LOAD AND RENDER PRODUCT ────────────────────────────────────────────
 // Start loading immediately without waiting for BC.ready (prevents hanging)
 (function() {
+  // Support both query params (?id=) and path params (/product/id/XXX)
+  var pathParts = window.location.pathname.split('/').filter(Boolean);
+  var pid = null;
+  
+  // Check for path format: /product/id/PRD-XXX
+  if (pathParts[0] === 'product' && pathParts[1] === 'id' && pathParts[2]) {
+    pid = pathParts[2];
+    console.log('Product ID from path:', pid);
+  } else {
+    // Check for query param format: ?id=PRD-XXX
+    var params = new URLSearchParams(window.location.search);
+    pid = params.get('id');
+  }
+  
   var params = new URLSearchParams(window.location.search);
-  var pid    = params.get('id');
   var pName  = params.get('name');
   var pImg   = params.get('img');
   var pPrice = params.get('price');
