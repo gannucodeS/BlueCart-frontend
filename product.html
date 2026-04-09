@@ -640,23 +640,19 @@ function renderProduct(p) {
   console.log('Is array:', Array.isArray(p.images));
   
   // Build images array - use p.images if available, otherwise fall back to imageUrl
-  var productImages = [];
-  console.log('Checking p.images:', typeof p.images, Array.isArray(p.images), p.images ? p.images.length : 0);
-  console.log('p.images value:', JSON.stringify(p.images));
-  
-  if (p.images && Array.isArray(p.images) && p.images.length > 0) {
-    productImages = p.images;
-    console.log('Using p.images array, length:', productImages.length);
-    console.log('First few image URLs:', productImages.slice(0, 3));
-  } else if (p.imageUrl) {
-    productImages = [p.imageUrl];
-    console.log('Using p.imageUrl as fallback');
+  var productImages = (Array.isArray(p.images) && p.images.length > 0) ? p.images.slice(0) : (p.imageUrl ? [p.imageUrl] : ['https://placehold.co/600x600?text=' + encodeURIComponent(p.name)]);
+  // Merge additional images from URL param (from search results) if present
+  if (typeof pImgs !== 'undefined' && pImgs) {
+    try {
+      var extraFromParam = JSON.parse(decodeURIComponent(pImgs));
+      if (Array.isArray(extraFromParam)) {
+        extraFromParam.forEach(function(u){ if (u && productImages.indexOf(u) === -1) productImages.push(u); });
+      }
+    } catch (e) {
+      // ignore parse errors
+    }
   }
-  if (productImages.length === 0) {
-    productImages = ['https://placehold.co/600x600?text=' + encodeURIComponent(p.name)];
-    console.log('Using placeholder');
-  }
-  
+
   console.log('Final productImages array:', productImages);
   console.log('Number of thumbnails to render:', productImages.length);
   
