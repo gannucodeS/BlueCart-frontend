@@ -99,12 +99,10 @@
       <img class="page-hero-img" src="https://i.postimg.cc/90CW7TC0/16-pro.png" alt="Phone"/>
     </div><div class="filter-bar"><span class="filter-label">Filter:</span><span class="filter-chip active">All</span><span class="filter-chip">Under ₹10K</span><span class="filter-chip">₹10K–₹25K</span><span class="filter-chip">₹25K–₹50K</span><span class="filter-chip">₹50K+</span><span class="filter-chip">5G Phones</span><span class="filter-chip">Camera Phones</span><span class="filter-chip">Gaming Phones</span><select class="filter-sort"><option>Sort: Featured</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Newest First</option><option>Best Rated</option></select></div><div class="section-header"><div class="section-title title-teal">All Smartphones</div><a href="#" class="see-all">Compare phones →</a></div>
 <div class="products-grid" id="products-section">
-  <div class="product-card fade-up" style="cursor:pointer" onclick="(function(e){if(!e.target.closest('.btn-cart,.btn-buy,.wishlist-btn,.add-to-cart')){window.location.href='product.html?name=iPhone 15 Pro Max 256GB&price=119900&img=https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=500&h=400&fit=crop&q=90&cat=Apple';}})(event)">
-    <div class="prod-img-wrap">
-      <span class="prod-badge badge-sale">-40%</span>
-      <button class="wishlist-btn">🤍</button>
-      <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=500&h=400&fit=crop&q=90" alt="iPhone 15 Pro Max 256GB"/>
-    </div>
+  <div class="loading" style="grid-column:1/-1;text-align:center;padding:60px;">
+    <div style="font-size:18px;color:#6b7a8d;">Loading Smartphones...</div>
+  </div>
+</div>
     <div class="prod-info">
       <span class="prod-category">Apple</span>
       <div class="prod-name">iPhone 15 Pro Max 256GB</div>
@@ -300,59 +298,100 @@
 <div class="toast" id="toast"></div>
 
 <script src="db.mongo.js"></script>
+<script src="shared.js"></script>
 <script>
-// Cart functions provided by shared.js
+var allProducts = [];
 
-// ── SLIDER ──
-(function() {
-  var sliderEl = document.getElementById('slider');
-  if (!sliderEl) return;
-  var slides = document.querySelectorAll('.slide');
-  var dots   = document.querySelectorAll('.dot');
-  var current = 0, autoTimer;
-  window.goSlide = function(n) {
-    current = (n + slides.length) % slides.length;
-    sliderEl.style.transform = 'translateX(-' + (current * 100) + '%)';
-    dots.forEach(function(d,i){ d.classList.toggle('active', i===current); });
-  };
-  window.changeSlide = function(dir) { goSlide(current + dir); resetAuto(); };
-  function resetAuto() {
-    clearInterval(autoTimer);
-    autoTimer = setInterval(function(){ goSlide(current + 1); }, 5000);
-  }
-  resetAuto();
-})();
-
-// ── WISHLIST ──
-document.querySelectorAll('.wishlist-btn').forEach(function(btn) {
-  btn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+function initCategoryProducts() {
+  var grid = document.getElementById('products-section');
+  grid.innerHTML = '<div class="loading" style="grid-column:1/-1;text-align:center;padding:60px;"><div style="font-size:18px;color:#6b7a8d;">Loading Smartphones...</div></div>';
+  
+  BC.getAllProducts().then(function(dbProds) {
+    var dbMapped = (dbProds || []).filter(function(p) {
+      return p.status === 'active' && p.category === 'Smartphones';
+    }).map(function(p) {
+      return {
+        id: p.id,
+        name: p.name,
+        brand: p.brand,
+        category: p.category,
+        price: p.price,
+        mrp: p.mrp || p.price,
+        img: p.imageUrl || '',
+        images: p.images || [],
+        badge: p.badge || '',
+        stock: p.stock,
+        rating: p.rating || '4.5',
+        reviews: p.reviews || '0'
+      };
+    });
+    
+    allProducts = dbMapped;
+    renderProducts(dbMapped);
+  }).catch(function(e) {
+    console.error('Failed to load products:', e);
+    grid.innerHTML = '<div class="no-results" style="grid-column:1/-1;text-align:center;padding:60px;"><h3>Unable to load products</h3><p>Please try again later.</p></div>';
   });
+}
+
+function renderProducts(products) {
+  var grid = document.getElementById('products-section');
+  if (!products || !products.length) {
+    grid.innerHTML = '<div class="no-results" style="grid-column:1/-1;text-align:center;padding:60px;"><h3>No Smartphones found</h3><p>Check back later for new products.</p></div>';
+    return;
+  }
+  
+  grid.innerHTML = products.map(function(p) {
+    var disc = p.mrp > p.price ? Math.round((1 - p.price/p.mrp) * 100) : 0;
+    var badgeHtml = '';
+    if (disc > 0) badgeHtml = '<span class="prod-badge badge-sale">-' + disc + '%</span>';
+    else if (p.badge === 'hot') badgeHtml = '<span class="prod-badge badge-hot">HOT</span>';
+    else if (p.badge === 'new') badgeHtml = '<span class="prod-badge badge-new">NEW</span>';
+    
+    var mainImg = (p.images && p.images.length > 0) ? p.images[0] : (p.img || 'https://placehold.co/400x300?text=Product');
+    var pName = p.name.replace(/'/g, "\\'");
+    var pImg = mainImg.replace(/'/g, "\\'");
+    var viewUrl = '/product?id=' + encodeURIComponent(p.id);
+    
+    return '<div class="product-card fade-up" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
+      '<div class="prod-img-wrap">' + badgeHtml +
+      '<button class="wishlist-btn" onclick="event.stopPropagation();this.textContent=this.textContent===\'🤍\'?\'❤️\':\'🤍\'">🤍</button>' +
+      '<img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
+      '</div>' +
+      '<div class="prod-info">' +
+      '<span class="prod-category">' + (p.brand || '') + '</span>' +
+      '<div class="prod-name">' + p.name + '</div>' +
+      '<div class="prod-rating"><span class="stars">★★★★★</span> ' + (p.rating || '4.5') + ' (' + (p.reviews || '0') + ' reviews)</div>' +
+      '<div class="prod-price">' +
+      '<span class="price-now">₹' + p.price.toLocaleString('en-IN') + '</span>' +
+      (p.mrp > p.price ? '<span class="price-old">₹' + p.mrp.toLocaleString('en-IN') + '</span>' : '') +
+      (disc > 0 ? '<span class="price-off">' + disc + '% off</span>' : '') +
+      '</div>' +
+      '<div class="add-to-cart">' +
+      '<button class="btn-cart" onclick="event.stopPropagation();addToCart(\'' + pName + '\',' + p.price + ')">Add to Cart</button>' +
+      '<button class="btn-buy" onclick="event.stopPropagation();buyNow(\'' + p.id + '\',\'' + pName + '\',\'' + pImg + '\',' + p.price + ')">Buy Now ⚡</button>' +
+      '</div>' +
+      '<a href="' + viewUrl + '" class="view-details-btn" onclick="event.stopPropagation()">View Details →</a>' +
+      '</div></div>';
+  }).join('');
+}
+
+function scrollToProducts() {
+  document.getElementById('products-section').scrollIntoView({behavior: 'smooth'});
+}
+
+var initTimeout = setTimeout(function() {
+  initCategoryProducts();
+}, 5000);
+
+BC.ready.then(function() {
+  clearTimeout(initTimeout);
+  initCategoryProducts();
+}).catch(function(e) {
+  clearTimeout(initTimeout);
+  initCategoryProducts();
 });
-
-// ── BUY NOW ──
-function buyNow(name, img, price) {
-  var p = new URLSearchParams();
-  p.set('name', name);
-  p.set('img', img);
-  p.set('price', price);
-  p.set('mode', 'buynow');
-  window.location.href = 'checkout.html?' + p.toString();
-}
-
-
-function checkoutCart() {
-  if (!cartItems.length) { showToast('Your cart is empty!'); return; }
-  var p = new URLSearchParams();
-  p.set('mode', 'cart');
-  p.set('items', JSON.stringify(cartItems));
-  window.location.href = 'checkout.html?' + p.toString();
-}
-
-
-
-
+</script>
 
 
 

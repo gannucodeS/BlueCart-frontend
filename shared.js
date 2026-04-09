@@ -90,11 +90,15 @@ function requireLogin(callback) {
     window.location.href = 'login.html';
   }
 }
-function buyNow(name, img, price) {
-  requireLogin(function() {
+function buyNow(id, name, img, price) {
+  if (!id) {
     var p = new URLSearchParams();
     p.set('name', name); p.set('img', img || ''); p.set('price', price); p.set('mode', 'buynow');
     window.location.href = 'checkout.html?' + p.toString();
+    return;
+  }
+  requireLogin(function() {
+    window.location.href = '/product?id=' + encodeURIComponent(id);
   });
 }
 function checkoutCart() {
@@ -337,7 +341,7 @@ function showSearchSuggestions() {
     html += '<div class="suggest-section"><div class="suggest-label">Products</div>';
     suggestionsData.products.forEach(function(p) {
       var img = p.imageUrl || 'https://via.placeholder.com/44x44?text=📦';
-      html += '<a class="suggest-item suggest-product" href="product.html?name=' + encodeURIComponent(p.name) + '&price=' + (p.price || 0) + '&img=' + encodeURIComponent(img) + '&cat=' + encodeURIComponent(p.category || '') + '">';
+      html += '<a class="suggest-item suggest-product" href="/product?id=' + encodeURIComponent(p.id) + '">';
       html += '<img src="' + img + '" alt=""/>';
       html += '<div class="suggest-prod-info"><span class="suggest-prod-name">' + p.name + '</span>';
       html += '<span class="suggest-prod-cat">' + (p.brand || p.category || '') + '</span></div>';
@@ -656,9 +660,13 @@ function initSharedNavbar() {
 
 // ── PRODUCT VIEW LINKING ──────────────────────────────────────────────────────
 function attachProductLinks() {
-  function goProduct(name, price, img, cat) {
-    window.location.href = 'product.html?name=' + encodeURIComponent(name) +
-      '&price=' + price + '&img=' + encodeURIComponent(img || '') + '&cat=' + encodeURIComponent(cat || 'Electronics');
+  function goProduct(name, price, img, cat, pid) {
+    if (pid) {
+      window.location.href = '/product?id=' + encodeURIComponent(pid);
+    } else {
+      window.location.href = '/product?name=' + encodeURIComponent(name) +
+        '&price=' + price + '&img=' + encodeURIComponent(img || '') + '&cat=' + encodeURIComponent(cat || 'Electronics');
+    }
   }
   function getImg(card) { var i = card.querySelector('img'); return i ? i.src : ''; }
   function getNum(el) { return el ? parseInt(el.textContent.replace(/[^0-9]/g,'')) || 0 : 0; }
@@ -673,7 +681,7 @@ function attachProductLinks() {
     var cat   = catTxt || 'Electronics';
     function go(e) {
       if (noBtn(e)) return; e.stopPropagation();
-      if (pid) window.location.href = 'product.html?id=' + encodeURIComponent(pid);
+      if (pid) window.location.href = '/product?id=' + encodeURIComponent(pid);
       else goProduct(name, price, img, cat);
     }
     var wrap = card.querySelector('.prod-img-wrap,.new-img-wrap,.explore-img-wrap');

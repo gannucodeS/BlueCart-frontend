@@ -589,7 +589,7 @@ var isListView   = false;
 // ── CART ─────────────────────────────────────────────────────────────────────
 // Cart functions are provided by shared.js - cart auto-loads from localStorage on page init
 
-function buyNow(name,img,price){window.location.href='product.html?name='+encodeURIComponent(name)+'&img='+encodeURIComponent(img||'')+'&price='+price+'&cat=Electronics';}
+function buyNow(id,name,img,price){window.location.href='/product?id='+encodeURIComponent(id);}
 // checkoutCart and goOrders are provided by shared.js
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
@@ -801,7 +801,7 @@ function renderResults() {
         '<div class="prod-price"><span class="price-now">₹'+p.price.toLocaleString('en-IN')+'</span>'+oldHtml+offHtml+'</div>' +
         '<div class="add-to-cart">' +
           '<button class="btn-cart" onclick="addToCart(\''+pName+'\','+p.price+')">Add to Cart</button>' +
-          '<button class="btn-buy"  onclick="buyNow(\''+pName+'\',\''+pImg+'\','+p.price+')">Buy Now</button>' +
+          '<button class="btn-buy"  onclick="buyNow(\''+p.id+'\',\''+pName+'\',\''+pImg+'\','+p.price+')">Buy Now</button>' +
         '</div>' +
       '</div>' +
     '</div>';
