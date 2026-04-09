@@ -616,6 +616,9 @@ function saveProd() {
     }
   });
   
+  console.log('Saving product - imagesArray:', imagesArray);
+  console.log('imagesArray length:', imagesArray.length);
+  
   BC.saveProduct({
     id:EDIT_ID||undefined, name:name, category:cat, brand:brand,
     sku:document.getElementById('p-sku').value.trim(),
@@ -681,7 +684,9 @@ function delProd(id) {
 function editProd(id) {
   console.log('Editing product:', id);
   BC.getProductById(id).then(function(p) {
-    console.log('Product fetched:', p);
+    console.log('Product fetched for edit:', p);
+    console.log('Product images array:', p.images);
+    console.log('Product imageUrl:', p.imageUrl);
     if (!p) { toast('Product not found'); return; }
     showPanel('add-product');
     document.getElementById('p-name').value=p.name; document.getElementById('p-cat').value=p.category;
@@ -691,9 +696,16 @@ function editProd(id) {
     document.getElementById('p-desc').value=p.description; document.getElementById('p-img').value=p.imageUrl;
     // Load additional images if available
     var additionalImgs = p.images || [];
+    console.log('Additional images for edit:', additionalImgs);
+    console.log('Additional images length:', additionalImgs.length);
+    console.log('p-imgs element:', document.getElementById('p-imgs'));
+    
     if (additionalImgs.length > 1) {
-      // Skip first image (main image), join rest
-      document.getElementById('p-imgs').value = additionalImgs.slice(1).join('\n');
+      // Skip first image (main image), join rest with newline
+      var restImages = additionalImgs.slice(1).join('\n');
+      console.log('Setting p-imgs value to:', JSON.stringify(restImages));
+      document.getElementById('p-imgs').value = restImages;
+      console.log('p-imgs value after set:', document.getElementById('p-imgs').value);
     } else {
       document.getElementById('p-imgs').value = '';
     }
