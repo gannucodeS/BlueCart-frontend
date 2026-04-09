@@ -453,14 +453,18 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
 // ── MAIN: LOAD AND RENDER PRODUCT ────────────────────────────────────────────
 // Start loading immediately without waiting for BC.ready (prevents hanging)
 (function() {
-  // Support both query params (?id=) and path params (/product/id/XXX)
+  // Support both query params (?id=) and path params (/p/PRD-XXX or /product/id/XXX)
   var pathParts = window.location.pathname.split('/').filter(Boolean);
   var pid = null;
   
-  // Check for path format: /product/id/PRD-XXX
-  if (pathParts[0] === 'product' && pathParts[1] === 'id' && pathParts[2]) {
+  // Check for path format: /p/PRD-XXX
+  if (pathParts[0] === 'p' && pathParts[1]) {
+    pid = pathParts[1];
+    console.log('Product ID from /p/ path:', pid);
+  } else if (pathParts[0] === 'product' && pathParts[1] === 'id' && pathParts[2]) {
+    // Legacy format: /product/id/PRD-XXX
     pid = pathParts[2];
-    console.log('Product ID from path:', pid);
+    console.log('Product ID from legacy path:', pid);
   } else {
     // Check for query param format: ?id=PRD-XXX
     var params = new URLSearchParams(window.location.search);

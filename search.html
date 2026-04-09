@@ -786,15 +786,15 @@ function renderResults() {
     var pImg  = (p.img||'').replace(/'/g,"\\'");
     // Debug: log each product's fromDB and images
     console.log('Render product:', p.name, 'fromDB:', p.fromDB, 'has id:', !!p.id, 'images:', p.images ? p.images.length : 0);
-    // Use path-based URL for DB products to avoid Vercel redirect issues
+    // Use p/ID format to avoid any Vercel conflicts with "product" path
     var pImgs = (p.images && p.images.length > 0) ? '?imgs=' + encodeURIComponent(JSON.stringify(p.images)) : '';
     var viewUrl = '';
     if (p.fromDB && p.id) {
-      // DB product - use path-based URL: product/id/PRD-XXX
-      viewUrl = 'product/id/' + encodeURIComponent(p.id) + pImgs;
-      console.log('  -> DB product, using path URL:', viewUrl);
+      // DB product - use p/PRD-XXX format
+      viewUrl = 'p/' + encodeURIComponent(p.id) + pImgs;
+      console.log('  -> DB product, using p/ URL:', viewUrl);
     } else {
-      // Static product - use name-based URL
+      // Static product - use product?name format
       viewUrl = 'product?name=' + encodeURIComponent(p.name) + '&price=' + p.price + '&img=' + encodeURIComponent(p.img || '') + '&cat=' + encodeURIComponent(p.category) + pImgs;
       console.log('  -> Static product, using name URL');
     }
@@ -871,7 +871,7 @@ function renderSimilar() {
     var pImgs = (p.images && p.images.length > 0) ? '?imgs=' + encodeURIComponent(JSON.stringify(p.images)) : '';
     var viewUrl = '';
     if (p.fromDB && p.id) {
-      viewUrl = 'product/id/' + encodeURIComponent(p.id) + pImgs;
+      viewUrl = 'p/' + encodeURIComponent(p.id) + pImgs;
     } else {
       viewUrl = 'product?name=' + encodeURIComponent(p.name) + '&price=' + p.price + '&img=' + encodeURIComponent(p.img || '') + '&cat=' + encodeURIComponent(p.category) + pImgs;
     }
