@@ -459,131 +459,70 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
   console.log('Pathname:', window.location.pathname);
   console.log('Search:', window.location.search);
   
-  // Support both query params (?id=) and path params (/p/PRD-XXX or /product/id/XXX)
-  var pathParts = window.location.pathname.split('/').filter(Boolean);
-  var pid = null;
-  
-  // Check for path format: /p/PRD-XXX
-  if (pathParts[0] === 'p' && pathParts[1]) {
-    pid = pathParts[1];
-    console.log('Product ID from /p/ path:', pid);
-  } else if (pathParts[0] === 'product' && pathParts[1] === 'id' && pathParts[2]) {
-    // Legacy format: /product/id/PRD-XXX
-    pid = pathParts[2];
-    console.log('Product ID from legacy path:', pid);
-  } else {
-    // Check for query param format: ?id=PRD-XXX
+  // Extract URL params immediately
   var params = new URLSearchParams(window.location.search);
-  pid = params.get('id');
-  
-  // Fallback: if no id, check for name param (legacy support)
+  var pid = params.get('id');
   var pName = params.get('name');
   var pImg = params.get('img');
   var pPrice = params.get('price');
   var pCat = params.get('cat');
-
-  // Show loading state
+  
+  console.log('URL params - id:', pid, 'name:', pName);
+  
+  // Get main container
   var main = document.getElementById('pv-main');
-
-  // DB-only architecture - require id param
-  var loadProduct = function() {
-    console.log('=== loadProduct called ===');
-    console.log('pid:', pid);
-    console.log('pName (fallback):', pName);
+  console.log('pv-main element:', main ? 'found' : 'NOT FOUND');
+  
+  // Render product directly from URL params (always works)
+  var renderFromParams = function() {
+    console.log('renderFromParams called, main:', main ? 'exists' : 'null');
+    console.log('pName:', pName, 'pid:', pid);
     
-    if(pid) {
-      // Load from database by ID only
-      console.log('Fetching product from DB with id:', pid);
-      BC.getProductById(pid).then(function(p) {
-        console.log('Product fetched:', p ? p.name : 'not found');
-        console.log('Images from DB:', p ? p.images : 'none');
-        if(!p) {
-          main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2><p>This product may have been removed.</p><a href="/search" class="btn-primary" style="display:inline-block;margin-top:16px;text-decoration:none;padding:12px 28px;border-radius:30px;background:#0ea5a0;color:white;font-weight:800;">Back to Search</a></div>';
-          return;
-        }
-        renderProduct(p);
-        loadRelated(p.category, p.id);
-      }).catch(function(e) {
-        console.error('Product load error:', e);
-        main.innerHTML = '<div class="pv-not-found"><h2>Could not load product</h2><p>Please try again later.</p><a href="/search" style="color:#0ea5a0;font-weight:700;">Go to Search</a></div>';
-      });
-    } else if (pName) {
-      // Fallback: legacy URL with name param - try to find product by name
-      console.log('Legacy URL detected, trying to find product by name:', pName);
-      BC.getAllProducts().then(function(products) {
-        console.log('Total products in DB:', products.length);
-        // Try exact match first, then partial match
-        var p = products.find(function(prod) { 
-          return prod.name.toLowerCase() === pName.toLowerCase(); 
+    if (!main) {
+      console.log('ERROR: pv-main not found');
+      document.body.innerHTML = '<div style="padding:50px;text-align:center;"><h2>Error: Page not loaded properly. Please refresh.</h2></div>';
+      return;
+    }
+    
+    if (pName) {
+      console.log('Rendering product from URL params:', pName);
+      var product = {
+        name: decodeURIComponent(pName),
+        price: parseInt(pPrice) || 0,
+        mrp: parseInt(pPrice) || 0,
+        category: pCat || 'Electronics',
+        imageUrl: pImg || '',
+        images: pImg ? [pImg] : [],
+        description: '',
+        features: [],
+        brand: '',
+        rating: '4.5',
+        reviews: '0'
+      };
+      renderProduct(product);
+    } else if (pid) {
+      // Try to load from DB using id
+      main.innerHTML = '<div style="text-align:center;padding:60px;">Loading from database...</div>';
+      if (typeof BC !== 'undefined' && BC.getProductById) {
+        BC.getProductById(pid).then(function(p) {
+          if (p) {
+            renderProduct(p);
+          } else {
+            main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2></div>';
+          }
+        }).catch(function(e) {
+          main.innerHTML = '<div class="pv-not-found"><h2>Could not load product</h2></div>';
         });
-        // If no exact match, try partial match
-        if (!p) {
-          p = products.find(function(prod) { 
-            return prod.name.toLowerCase().includes(pName.toLowerCase().split(' ')[0]); 
-          });
-        }
-        
-        if (p) {
-          console.log('Found product:', p.name);
-          renderProduct(p);
-          loadRelated(p.category, p.id);
-        } else {
-          console.log('Product not found in DB, showing fallback for:', pName);
-          // Fallback: render basic product from URL params
-          var fallbackProduct = {
-            name: pName,
-            price: parseInt(pPrice) || 0,
-            mrp: parseInt(pPrice) || 0,
-            category: pCat || 'Electronics',
-            imageUrl: pImg || '',
-            images: pImg ? [pImg] : [],
-            description: '',
-            features: [],
-            brand: '',
-            rating: '4.5',
-            reviews: '0'
-          };
-          renderProduct(fallbackProduct);
-          main.innerHTML += '<div style="background:#fff3cd;padding:10px;text-align:center;">⚠️ Showing preview mode - product data coming soon</div>';
-        }
-      }).catch(function(e) {
-        console.error('Product load error:', e);
-        // Show fallback even on error
-        var fallbackProduct = {
-          name: pName,
-          price: parseInt(pPrice) || 0,
-          mrp: parseInt(pPrice) || 0,
-          category: pCat || 'Electronics',
-          imageUrl: pImg || '',
-          images: pImg ? [pImg] : [],
-          description: '',
-          features: [],
-          brand: '',
-          rating: '4.5',
-          reviews: '0'
-        };
-        renderProduct(fallbackProduct);
-        main.innerHTML += '<div style="background:#fff3cd;padding:10px;text-align:center;">⚠️ Showing preview mode - database connection issue</div>';
-      });
+      } else {
+        main.innerHTML = '<div class="pv-not-found"><h2>Product not found</h2></div>';
+      }
     } else {
-      main.innerHTML = '<div class="pv-not-found"><h2>No product specified</h2><p>Please navigate from the search page.</p><a href="/search" style="color:#0ea5a0;font-weight:700;">Go to Search</a></div>';
+      main.innerHTML = '<div class="pv-not-found"><h2>No product specified</h2><p>Please navigate from the search page.</p></div>';
     }
   };
-
-  // Wait for BC.ready but with timeout - if it takes too long, load anyway
-  var timeout = setTimeout(function() {
-    console.log('BC.ready timeout, loading product anyway');
-    loadProduct();
-  }, 5000);
-
-  BC.ready.then(function() {
-    clearTimeout(timeout);
-    loadProduct();
-  }).catch(function(e) {
-    clearTimeout(timeout);
-    console.log('BC.ready failed, trying anyway:', e);
-    loadProduct();
-  });
+  
+  // Run immediately
+  renderFromParams();
 })();
 
 // Update navbar when ready (separate from product loading)
@@ -601,24 +540,27 @@ BC.ready.then(function() {
 });
 
 function renderProduct(p) {
-  var disc = p.mrp > p.price ? Math.round((1-p.price/p.mrp)*100) : 0;
-  var savings = p.mrp > p.price ? (p.mrp - p.price) : 0;
-  var catPage = CAT_PAGE[p.category] || 'electronics.html';
-  var catClass = CAT_CLASS[p.category] || '';
+  p = p || {};
+  var disc = (p.mrp || 0) > (p.price || 0) ? Math.round((1-(p.price||0)/(p.mrp||1))*100) : 0;
+  var savings = (p.mrp || 0) > (p.price || 0) ? ((p.mrp || 0) - (p.price || 0)) : 0;
+  var category = p.category || 'Electronics';
+  var catPage = CAT_PAGE[category] || 'electronics.html';
+  var catClass = CAT_CLASS[category] || '';
   var heroEl = document.getElementById('pv-hero');
   var crumbName = document.getElementById('pv-crumb-name');
   var catLink = document.getElementById('pv-cat-link');
 
-  // Update hero
-  heroEl.className = 'pv-hero ' + catClass;
-  if(crumbName) crumbName.textContent = p.name.length > 40 ? p.name.slice(0,40)+'...' : p.name;
-  if(catLink){ catLink.textContent = p.category; catLink.href = catPage; }
-  document.title = p.name + ' — BlueCart';
+  // Update hero - with null checks
+  if(heroEl) heroEl.className = 'pv-hero ' + catClass;
+  if(crumbName) crumbName.textContent = (p.name || 'Product').length > 40 ? (p.name || 'Product').slice(0,40)+'...' : (p.name || 'Product');
+  if(catLink){ catLink.textContent = category; catLink.href = catPage; }
+  document.title = (p.name || 'Product') + ' — BlueCart';
 
   // Stock status
+  var stock = p.stock !== undefined ? p.stock : 10;
   var stockHtml, stockClass;
-  if(p.stock <= 0){ stockHtml='&#10060; Out of Stock'; stockClass='pv-outstock'; }
-  else if(p.stock < 5){ stockHtml='&#9888; Only '+p.stock+' left'; stockClass='pv-lowstock'; }
+  if(stock <= 0){ stockHtml='&#10060; Out of Stock'; stockClass='pv-outstock'; }
+  else if(stock < 5){ stockHtml='&#9888; Only '+stock+' left'; stockClass='pv-lowstock'; }
   else { stockHtml='&#10003; In Stock'; stockClass='pv-instock'; }
 
   // Badge
@@ -683,19 +625,14 @@ function renderProduct(p) {
   console.log('p.images value:', JSON.stringify(p.images));
   console.log('Is array:', Array.isArray(p.images));
   
+  var pName = p.name || 'Product';
+  var pPrice = p.price || 0;
+  var pMrp = p.mrp || pPrice;
+  var pBrand = p.brand || '';
+  var pCategory = p.category || 'Electronics';
+  
   // Build images array - use p.images if available, otherwise fall back to imageUrl
-  var productImages = (Array.isArray(p.images) && p.images.length > 0) ? p.images.slice(0) : (p.imageUrl ? [p.imageUrl] : ['https://placehold.co/600x600?text=' + encodeURIComponent(p.name)]);
-  // Merge additional images from URL param (from search results) if present
-  if (typeof pImgs !== 'undefined' && pImgs) {
-    try {
-      var extraFromParam = JSON.parse(decodeURIComponent(pImgs));
-      if (Array.isArray(extraFromParam)) {
-        extraFromParam.forEach(function(u){ if (u && productImages.indexOf(u) === -1) productImages.push(u); });
-      }
-    } catch (e) {
-      // ignore parse errors
-    }
-  }
+  var productImages = (Array.isArray(p.images) && p.images.length > 0) ? p.images.slice(0) : (p.imageUrl ? [p.imageUrl] : ['https://placehold.co/600x600?text=' + encodeURIComponent(pName)]);
 
   console.log('Final productImages array:', productImages);
   console.log('Number of thumbnails to render:', productImages.length);
@@ -706,7 +643,7 @@ function renderProduct(p) {
     console.log('Creating thumb', idx, ':', img);
     return '<img class="pv-thumb' + activeClass + '" src="' + (img || 'https://placehold.co/200x200?text=Img' + (idx+1)) + '" onclick="setMainImg(this.src,this)" alt="image ' + (idx+1) + '"/>';
   }).join('');
-  
+
   console.log('Generated thumbsHtml length:', thumbsHtml.length);
   console.log('thumbsHtml sample:', thumbsHtml.substring(0, 200));
 
@@ -716,7 +653,7 @@ function renderProduct(p) {
         '<div class="pv-main-img-wrap">' +
           '<div class="pv-badge-wrap">'+badgeHtml+'</div>' +
           '<button class="pv-wish" id="pv-wish-btn" onclick="toggleWish()">&#129293;</button>' +
-          '<img class="pv-main-img" id="pv-main-img" src="'+mainImg+'" alt="'+p.name+'"/>' +
+          '<img class="pv-main-img" id="pv-main-img" src="'+mainImg+'" alt="'+pName+'"/>' +
         '</div>' +
         '<div class="pv-thumbs" id="pv-thumbs">' + thumbsHtml +
         '</div>' +
@@ -725,11 +662,11 @@ function renderProduct(p) {
       // RIGHT — Info
       '<div class="pv-info">' +
         '<div class="pv-brand-cat">' +
-          '<span class="pv-brand">'+p.brand+'</span>' +
-          '<span class="pv-category-tag">'+p.category+'</span>' +
+          '<span class="pv-brand">'+pBrand+'</span>' +
+          '<span class="pv-category-tag">'+pCategory+'</span>' +
           '<span class="pv-stock-badge '+stockClass+'">'+stockHtml+'</span>' +
         '</div>' +
-        '<h1 class="pv-name">'+p.name+'</h1>' +
+        '<h1 class="pv-name">'+pName+'</h1>' +
         '<div class="pv-rating-row">' +
           '<span class="pv-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' +
           '<span class="pv-rating-num">4.8</span>' +
@@ -738,8 +675,8 @@ function renderProduct(p) {
 
         '<div class="pv-price-block">' +
           '<div class="pv-price-row">' +
-            '<span class="pv-price-now">&#8377;'+p.price.toLocaleString('en-IN')+'</span>' +
-            (p.mrp>p.price?'<span class="pv-price-old">&#8377;'+p.mrp.toLocaleString('en-IN')+'</span><span class="pv-price-off">'+disc+'% off</span>':'') +
+            '<span class="pv-price-now">&#8377;'+pPrice.toLocaleString('en-IN')+'</span>' +
+            (pMrp>pPrice?'<span class="pv-price-old">&#8377;'+pMrp.toLocaleString('en-IN')+'</span><span class="pv-price-off">'+disc+'% off</span>':'') +
           '</div>' +
           (savings>0?'<div class="pv-savings">You save &#8377;'+savings.toLocaleString('en-IN')+'!</div>':'') +
           '<div class="pv-gst">Inclusive of all taxes (GST: '+(p.gst||'18%')+')</div>' +
@@ -754,7 +691,7 @@ function renderProduct(p) {
             '<input type="number" id="pv-qty-inp" class="pv-qty-num" value="1" min="1" max="10" oninput="currentQty=parseInt(this.value)||1"/>' +
             '<button class="pv-qty-btn" onclick="changeQty(1)">+</button>' +
           '</div>' +
-          (p.stock>0&&p.stock<5?'<span style="font-size:12.5px;color:#a16207;font-weight:700;">Only '+p.stock+' left!</span>':'') +
+          (stock>0&&stock<5?'<span style="font-size:12.5px;color:#a16207;font-weight:700;">Only '+stock+' left!</span>':'') +
         '</div>' +
 
         '<div class="pv-cta">' +
