@@ -182,7 +182,7 @@ function renderProducts(products) {
     var mainImg = (p.images && p.images.length > 0) ? p.images[0] : (p.img || 'https://placehold.co/400x300?text=Product');
     var pName = p.name.replace(/'/g, "\\'");
     var pImg = mainImg.replace(/'/g, "\\'");
-    var viewUrl = '//product?id=' + encodeURIComponent(p.id);
+    var viewUrl = '/product?id=' + encodeURIComponent(p.id);
     
     return '<div class="product-card fade-up" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
       '<div class="prod-img-wrap">' + badgeHtml +

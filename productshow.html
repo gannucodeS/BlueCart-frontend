@@ -794,7 +794,7 @@ function loadRelated(category, excludeId) {
         var disc=p.mrp>p.price?Math.round((1-p.price/p.mrp)*100):0;
         var pn = p.name.replace(/'/g,"\\'");
         var pi = (p.imageUrl||'').replace(/'/g,"\\'");
-        return '<div class="product-card" onclick="window.location.href=\'//product?id='+encodeURIComponent(p.id)+'\'" style="cursor:pointer">' +
+        return '<div class="product-card" onclick="window.location.href=\'/product?id='+encodeURIComponent(p.id)+'\'" style="cursor:pointer">' +
           '<div class="prod-img-wrap">' +
             (disc>0?'<span class="prod-badge badge-sale">-'+disc+'%</span>':'') +
             '<img src="'+(p.imageUrl||'')+'" alt="'+p.name+'" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
