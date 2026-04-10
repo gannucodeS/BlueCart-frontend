@@ -487,9 +487,9 @@ function renderProductCard(p) {
   var mainImg = (p.images && p.images.length > 0) ? p.images[0] : (p.img || 'https://placehold.co/400x300?text=Product');
   var pName = p.name.replace(/'/g, "\\'");
   var pImg = mainImg.replace(/'/g, "\\'");
-  var viewUrl = '/product.html?id=' + encodeURIComponent(p.id);
+  var viewUrl = '/product?id=' + encodeURIComponent(p.id);
   
-  return '<div class="product-card fade-up" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
+  return '<div class="product-card fade-up" style="cursor:pointer" onclick="goToProduct(\'' + p.id + '\')">' +
     '<div class="prod-img-wrap">' + badgeHtml +
     '<button class="wishlist-btn" onclick="event.stopPropagation();this.textContent=this.textContent===\'&#129293;\'?\'&#10084;&#65039;\':\'&#129293;\'">&#129293;</button>' +
     '<img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
@@ -554,9 +554,9 @@ function renderExploreProducts() {
       var mainImg = (p.images && p.images.length > 0) ? p.images[0] : (p.img || 'https://placehold.co/400x300?text=Product');
       var pName = p.name.replace(/'/g, "\\'");
       var pImg = mainImg.replace(/'/g, "\\'");
-      var viewUrl = '/product.html?id=' + encodeURIComponent(p.id);
+      var viewUrl = '/product?id=' + encodeURIComponent(p.id);
       
-      return '<div class="explore-card" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
+      return '<div class="explore-card" style="cursor:pointer" onclick="goToProduct(\'' + p.id + '\')">' +
         '<div class="explore-img-wrap">' +
         (disc > 0 ? '<span class="exp-badge sale">-' + disc + '%</span>' : (p.badge ? '<span class="exp-badge ' + badgeText + '">' + p.badge.toUpperCase() + '</span>' : '')) +
         '<img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +

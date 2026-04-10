@@ -91,15 +91,19 @@ function requireLogin(callback) {
   }
 }
 function buyNow(id, name, img, price) {
-  if (!id) {
+  if (id && id.startsWith('PRD-')) {
+    requireLogin(function() {
+      goToProduct(id);
+    });
+  } else if (!id) {
     var p = new URLSearchParams();
     p.set('name', name); p.set('img', img || ''); p.set('price', price); p.set('mode', 'buynow');
     window.location.href = 'checkout.html?' + p.toString();
-    return;
+  } else {
+    requireLogin(function() {
+      goToProduct(id);
+    });
   }
-  requireLogin(function() {
-    window.location.href = '/product.html?id=' + encodeURIComponent(id);
-  });
 }
 function checkoutCart() {
   var items = window.cartItems || [];
@@ -110,6 +114,162 @@ function checkoutCart() {
     window.location.href = 'checkout.html?' + p.toString();
   });
 }
+
+// ── PRODUCT NAVIGATION WITH CLEAN URLS (HISTORY API) ──────────────────────────
+function goToProduct(id) {
+  console.log('goToProduct called with id:', id);
+  if (!id) return;
+  var url = '/product?id=' + encodeURIComponent(id);
+  history.pushState({ productId: id }, '', url);
+  loadProductInline(id);
+}
+
+function loadProductInline(id) {
+  var main = document.getElementById('products-section');
+  var container = document.getElementById('category-products') || document.getElementById('pv-main') || main;
+  
+  // Create container if none exists - insert after navbar
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'inline-product-container';
+    var navbar = document.querySelector('.navbar-wrap');
+    if (navbar) {
+      navbar.parentNode.insertBefore(container, navbar.nextSibling);
+    } else {
+      document.body.insertBefore(container, document.body.firstChild);
+    }
+  }
+  
+  container.innerHTML = '<div style="text-align:center;padding:60px;"><div class="spin" style="width:40px;height:40px;border:3px solid #e5eaf0;border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;"></div><p>Loading product...</p></div>';
+  
+  BC.getProductById(id).then(function(p) {
+    if (!p) {
+      container.innerHTML = '<div style="text-align:center;padding:60px;"><h2>Product Not Found</h2><p>Product ID: ' + id + '</p><button onclick="history.back()" style="padding:10px 20px;background:var(--teal);color:white;border:none;border-radius:8px;cursor:pointer;">Go Back</button></div>';
+      return;
+    }
+    renderProductPage(p, container);
+  }).catch(function(e) {
+    container.innerHTML = '<div style="text-align:center;padding:60px;"><h2>Error Loading Product</h2><p>' + e.message + '</p></div>';
+  });
+}
+
+function renderProductPage(p, container) {
+  if (!container) return;
+  
+  var disc = (p.mrp || 0) > (p.price || 0) ? Math.round((1-(p.price||0)/(p.mrp||1))*100) : 0;
+  var productImages = (Array.isArray(p.images) && p.images.length > 0) ? p.images.slice() : (p.imageUrl ? [p.imageUrl] : ['https://placehold.co/600x600?text=' + encodeURIComponent(p.name || 'Product')]);
+  var mainImg = productImages[0];
+  var pName = p.name || 'Product';
+  var pPrice = p.price || 0;
+  var pMrp = p.mrp || pPrice;
+  var pBrand = p.brand || '';
+  var stock = p.stock !== undefined && p.stock !== null ? p.stock : 10;
+  
+  var html = '<div style="max-width:1200px;margin:0 auto;padding:28px 4%;">';
+  html += '<button onclick="history.back()" style="background:none;border:none;color:var(--teal);cursor:pointer;font-size:14px;margin-bottom:16px;">← Back to products</button>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;">';
+  html += '<div style="position:sticky;top:80px;">';
+  html += '<div style="border-radius:18px;overflow:hidden;background:white;box-shadow:0 8px 32px rgba(15,45,74,0.1);border:1.5px solid #e5eaf0;aspect-ratio:1;display:flex;align-items:center;justify-content:center;">';
+  html += '<img src="' + mainImg + '" alt="' + pName + '" style="width:100%;height:100%;object-fit:contain;padding:20px;" onerror="this.src=\'https://placehold.co/600x600?text=Product\'"/>';
+  html += '</div></div>';
+  html += '<div><div style="font-size:13px;font-weight:800;color:var(--teal);text-transform:uppercase;margin-bottom:8px;">' + pBrand + '</div>';
+  html += '<h1 style="font-family:Syne,sans-serif;font-size:28px;color:var(--navy);margin-bottom:12px;">' + pName + '</h1>';
+  html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><span style="color:#ffb703;">★★★★★</span><span style="font-size:14px;font-weight:800;color:var(--navy);">4.8</span></div>';
+  html += '<div style="background:var(--off);border-radius:14px;padding:18px 20px;margin-bottom:20px;border:1.5px solid #e5eaf0;">';
+  html += '<div style="display:flex;align-items:baseline;gap:12px;"><span style="font-family:Syne,sans-serif;font-size:36px;font-weight:800;color:var(--navy);">₹' + pPrice.toLocaleString('en-IN') + '</span>';
+  if (pMrp > pPrice) {
+    html += '<span style="font-size:18px;color:var(--muted);text-decoration:line-through;">₹' + pMrp.toLocaleString('en-IN') + '</span>';
+    html += '<span style="background:var(--coral);color:white;font-size:14px;font-weight:800;padding:4px 12px;border-radius:20px;">' + disc + '% off</span>';
+  }
+  html += '</div></div>';
+  
+  // Stock status display
+  var stockLabel = stock > 0 ? (stock < 5 ? 'Only ' + stock + ' left!' : 'In Stock') : 'Out of Stock';
+  var stockColor = stock > 0 ? '#16a34a' : '#dc2626';
+  html += '<div style="margin-bottom:16px;padding:8px 12px;background:' + (stock > 0 ? '#dcfce7' : '#fee2e2') + ';border-radius:8px;color:' + stockColor + ';font-weight:700;font-size:14px;">' + stockLabel + '</div>';
+  
+  html += '<div style="display:flex;gap:12px;margin-bottom:20px;">';
+  if (stock > 0) {
+    html += '<button onclick="addToCart(\'' + pName.replace(/'/g, "\\'") + '\',' + pPrice + ',1)" style="flex:1;padding:15px;background:white;border:2px solid var(--teal);color:var(--teal);border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">🛒 Add to Cart</button>';
+    html += '<button onclick="buyNow(\'' + pName.replace(/'/g, "\\'") + '\',\'\',' + pPrice + ')" style="flex:1;padding:15px;background:linear-gradient(90deg,var(--teal),#0891b2);color:white;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">⚡ Buy Now</button>';
+  } else {
+    html += '<button disabled style="flex:1;padding:15px;background:#e5eaf0;color:#6b7a8d;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:not-allowed;">Out of Stock</button>';
+  }
+  html += '</div>';
+  html += '<div style="background:var(--off);border-radius:14px;padding:18px;border:1px solid #e5eaf0;"><h3 style="margin:0 0 12px;font-size:16px;color:var(--navy);">Description</h3>';
+  html += '<p style="margin:0;color:#334155;line-height:1.6;">' + (p.description || 'Premium quality product from ' + pBrand + '.') + '</p></div>';
+  html += '</div></div></div>';
+  
+  container.innerHTML = html;
+}
+
+// Handle browser back/forward
+window.addEventListener('popstate', function(e) {
+  var params = new URLSearchParams(window.location.search);
+  var pid = params.get('id');
+  if (pid) {
+    loadProductInline(pid);
+  }
+});
+}
+
+function renderProductPage(p, container) {
+  if (!container) return;
+  console.log('renderProductPage called, p.stock:', p.stock, 'p:', p);
+  var disc = (p.mrp || 0) > (p.price || 0) ? Math.round((1-(p.price||0)/(p.mrp||1))*100) : 0;
+  var category = p.category || 'Electronics';
+  var productImages = (Array.isArray(p.images) && p.images.length > 0) ? p.images.slice() : (p.imageUrl ? [p.imageUrl] : ['https://placehold.co/600x600?text=' + encodeURIComponent(p.name || 'Product')]);
+  var mainImg = productImages[0];
+  var pName = p.name || 'Product';
+  var pPrice = p.price || 0;
+  var pMrp = p.mrp || pPrice;
+  var pBrand = p.brand || '';
+  var stock = p.stock !== undefined ? p.stock : 10;
+  console.log('stock variable:', stock);
+  var stockHtml = stock > 0 ? 'In Stock' : 'Out of Stock';
+  var stockClass = stock > 0 ? 'var(--teal)' : '#dc2626';
+  
+  var html = '<div style="max-width:1200px;margin:0 auto;padding:28px 4%;">';
+  html += '<button onclick="history.back()" style="background:none;border:none;color:var(--teal);cursor:pointer;font-size:14px;margin-bottom:16px;">← Back to products</button>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;">';
+  html += '<div style="position:sticky;top:80px;">';
+  html += '<div style="border-radius:18px;overflow:hidden;background:white;box-shadow:0 8px 32px rgba(15,45,74,0.1);border:1.5px solid #e5eaf0;aspect-ratio:1;display:flex;align-items:center;justify-content:center;">';
+  html += '<img src="' + mainImg + '" alt="' + pName + '" style="width:100%;height:100%;object-fit:contain;padding:20px;" onerror="this.src=\'https://placehold.co/600x600?text=Product\'"/>';
+  html += '</div></div>';
+  html += '<div><div style="font-size:13px;font-weight:800;color:var(--teal);text-transform:uppercase;margin-bottom:8px;">' + pBrand + '</div>';
+  html += '<h1 style="font-family:Syne,sans-serif;font-size:28px;color:var(--navy);margin-bottom:12px;">' + pName + '</h1>';
+  html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><span style="color:#ffb703;">★★★★★</span><span style="font-size:14px;font-weight:800;color:var(--navy);">4.8</span></div>';
+  html += '<div style="background:var(--off);border-radius:14px;padding:18px 20px;margin-bottom:20px;border:1.5px solid #e5eaf0;">';
+  html += '<div style="display:flex;align-items:baseline;gap:12px;"><span style="font-family:Syne,sans-serif;font-size:36px;font-weight:800;color:var(--navy);">₹' + pPrice.toLocaleString('en-IN') + '</span>';
+  if (pMrp > pPrice) {
+    html += '<span style="font-size:18px;color:var(--muted);text-decoration:line-through;">₹' + pMrp.toLocaleString('en-IN') + '</span>';
+    html += '<span style="background:var(--coral);color:white;font-size:14px;font-weight:800;padding:4px 12px;border-radius:20px;">' + disc + '% off</span>';
+  }
+  html += '</div></div>';
+  html += '<div style="display:flex;gap:12px;margin-bottom:20px;">';
+  if (stock > 0) {
+    html += '<button onclick="addToCart(\'' + pName.replace(/'/g, "\\'") + '\',' + pPrice + ',1)" style="flex:1;padding:15px;background:white;border:2px solid var(--teal);color:var(--teal);border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">🛒 Add to Cart</button>';
+    html += '<button onclick="buyNow(\'' + pName.replace(/'/g, "\\'") + '\',\'\',' + pPrice + ')" style="flex:1;padding:15px;background:linear-gradient(90deg,var(--teal),#0891b2);color:white;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">⚡ Buy Now</button>';
+  } else {
+    html += '<button disabled style="flex:1;padding:15px;background:#e5eaf0;color:#6b7a8d;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:not-allowed;">Out of Stock</button>';
+  }
+  html += '</div>';
+  html += '<div style="background:var(--off);border-radius:14px;padding:18px;border:1px solid #e5eaf0;"><h3 style="margin:0 0 12px;font-size:16px;color:var(--navy);">Description</h3>';
+  html += '<p style="margin:0;color:#334155;line-height:1.6;">' + (p.description || 'Premium quality product from ' + pBrand + '.') + '</p></div>';
+  html += '</div></div></div>';
+  
+  container.innerHTML = html;
+}
+
+// Handle browser back/forward
+window.addEventListener('popstate', function(e) {
+  var params = new URLSearchParams(window.location.search);
+  var pid = params.get('id');
+  if (pid) {
+    var container = document.getElementById('category-products') || document.getElementById('pv-main');
+    if (container) loadProductInline(pid);
+  }
+});
 
 // ── SEARCH ────────────────────────────────────────────────────────────────────
 function doSearchNav() {
@@ -662,8 +822,7 @@ function initSharedNavbar() {
 function attachProductLinks() {
   function goProduct(name, price, img, cat, pid) {
     if (pid && pid.startsWith('PRD-')) {
-      // Proper product ID - use it directly
-      window.location.href = '/product.html?id=' + encodeURIComponent(pid);
+      goToProduct(pid);
     } else if (name) {
       // Fallback: pass name as query param
       var params = new URLSearchParams();
@@ -688,7 +847,7 @@ function attachProductLinks() {
     function go(e) {
       if (noBtn(e)) return; e.stopPropagation();
       if (pid && pid.startsWith('PRD-')) {
-        window.location.href = '/product.html?id=' + encodeURIComponent(pid);
+        goToProduct(pid);
       } else {
         // Fallback: pass all params
         var params = new URLSearchParams();

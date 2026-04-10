@@ -642,8 +642,9 @@ function saveProd() {
   
   BC.saveProduct(saveData).then(function(res) {
     console.log('Product saved, response:', res);
+    console.log('Saved product ID:', res ? res.id : 'no id in response');
     // Re-fetch the product to verify images are saved
-    return BC.getProductById(EDIT_ID || res.id);
+    return BC.getProductById(EDIT_ID || (res && res.id) || res.id);
   }).then(function(p) {
     console.log('Re-fetched product after save:', p);
     console.log('Images after save:', p ? p.images : 'no product');
@@ -674,7 +675,10 @@ function renderProds() {
   var s=(document.getElementById('ps-search').value||'').toLowerCase();
   var cf=document.getElementById('ps-cat').value;
   var sf=document.getElementById('ps-status').value;
+  console.log('renderProds called - fetching products...');
   BC.getAllProducts().then(function(all) {
+    console.log('Products fetched:', all ? all.length : 0);
+    console.log('Sample product:', all && all[0] ? all[0] : 'none');
     var prods=all.filter(function(p){
       return (!s||p.name.toLowerCase().indexOf(s)!==-1||p.brand.toLowerCase().indexOf(s)!==-1)&&(!cf||p.category===cf)&&(!sf||p.status===sf);
     });
