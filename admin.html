@@ -861,7 +861,7 @@ function refreshDash() {
 }
 
 // TOAST
-function goOrders() { BC.clearSession().then(function(){ window.location.href="login.html"; }); }
+function goOrders() { BC.clearSession().then(function(){ window.location.href="/login"; }); }
 function toast(msg) {
   var t=document.getElementById('toast-el'); t.textContent=msg; t.classList.add('show');
   setTimeout(function(){ t.classList.remove('show'); }, 3000);

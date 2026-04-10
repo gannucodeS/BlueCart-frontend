@@ -15,12 +15,12 @@
 <!-- NAVBAR WRAP -->
 <div class="navbar-wrap">
 <nav class="navbar">
-  <a href="index.html" class="logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
+  <a href="/index" class="logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
   <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
   <div style="flex:1;"></div>
   <div class="nav-right">
     <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
-    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
     <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
           <!-- Hamburger button -->
       <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
@@ -45,47 +45,47 @@
     <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
   </div>
   <div class="hm-drawer-body">
-    <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <a href="/index" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Categories</div>
-    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
-    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
-    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
-    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
-    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
-    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
-    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
-    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <a href="/electronics"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
+    <a href="/smartphones"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
+    <a href="/laptops"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
+    <a href="/audio"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
+    <a href="/cameras"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
+    <a href="/gaming"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
+    <a href="/accessories"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
+    <a href="/smarthome"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Offers</div>
-    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
-    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <a href="/deals"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
+    <a href="/new-arrivals"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Account</div>
-    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
-    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
-    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
-    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+    <a href="/orders"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
+    <a href="/account"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
+    <a href="/customer-service" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
+    <a href="/login"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
   </div>
 </div>
 
 <!-- NAV STRIP (desktop only) -->
 <div class="nav-strip"><div class="nav-strip-inner">
-  <div class="nav-item"><a href="index.html">&#9776; All</a></div>
-  <div class="nav-item"><a href="deals.html">Today's Deals</a></div>
-  <div class="nav-item"><a href="electronics.html">Electronics</a></div>
-  <div class="nav-item"><a href="smartphones.html">Smartphones</a></div>
-  <div class="nav-item"><a href="laptops.html">Laptops</a></div>
-  <div class="nav-item"><a href="audio.html">Audio</a></div>
-  <div class="nav-item"><a href="cameras.html">Cameras</a></div>
-  <div class="nav-item"><a href="gaming.html">Gaming</a></div>
-  <div class="nav-item"><a href="accessories.html">Accessories</a></div>
-  <div class="nav-item"><a href="smarthome.html">Smart Home</a></div>
-  <div class="nav-item"><a href="new-arrivals.html">New Arrivals</a></div>
-  <div class="nav-item"><a href="customer-service.html">Customer Service</a></div>
+  <div class="nav-item"><a href="/index">&#9776; All</a></div>
+  <div class="nav-item"><a href="/deals">Today's Deals</a></div>
+  <div class="nav-item"><a href="/electronics">Electronics</a></div>
+  <div class="nav-item"><a href="/smartphones">Smartphones</a></div>
+  <div class="nav-item"><a href="/laptops">Laptops</a></div>
+  <div class="nav-item"><a href="/audio">Audio</a></div>
+  <div class="nav-item"><a href="/cameras">Cameras</a></div>
+  <div class="nav-item"><a href="/gaming">Gaming</a></div>
+  <div class="nav-item"><a href="/accessories">Accessories</a></div>
+  <div class="nav-item"><a href="/smarthome">Smart Home</a></div>
+  <div class="nav-item"><a href="/new-arrivals">New Arrivals</a></div>
+  <div class="nav-item"><a href="/customer-service">Customer Service</a></div>
 </div></div>
 
-<div class="breadcrumb"><a href="index.html">Home</a> <span>›</span> Gaming</div>
+<div class="breadcrumb"><a href="/index">Home</a> <span>›</span> Gaming</div>
     <div class="page-hero game-hero">
       <div class="hero-decor hd1"></div><div class="hero-decor hd2"></div>
       <div class="page-hero-content">
