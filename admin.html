@@ -647,7 +647,12 @@ function saveProd() {
   }).then(function(p) {
     console.log('Re-fetched product after save:', p);
     console.log('Images after save:', p ? p.images : 'no product');
-    toast(EDIT_ID ? 'Product updated!' : 'Product listed successfully!');
+    var msg = EDIT_ID ? 'Product updated!' : 'Product listed successfully!';
+    // Add view link for new products
+    if (!EDIT_ID && p && p.id) {
+      msg += ' <a href="/product?id=' + encodeURIComponent(p.id) + '" target="_blank" style="color:var(--teal);font-weight:bold;">View Product →</a>';
+    }
+    toast(msg);
     EDIT_ID = null; document.getElementById('save-btn').textContent='List Product';
     resetForm(); refreshDash();
   }).catch(function(err) {
