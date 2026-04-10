@@ -122,7 +122,7 @@ function goToProduct(id) {
     console.error('No product ID');
     return;
   }
-  window.location.href = '/product.html?id=' + encodeURIComponent(id);
+  window.location.href = '/product?id=' + encodeURIComponent(id);
 }
 
 // Make it globally available

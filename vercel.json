@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/product", "destination": "/product.html" },
-    { "source": "/product/:path*", "destination": "/product.html" }
+    { "source": "/product", "destination": "/productshow.html" },
+    { "source": "/product/:path*", "destination": "/productshow.html" }
   ]
 }
