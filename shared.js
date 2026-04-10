@@ -115,13 +115,24 @@ function checkoutCart() {
   });
 }
 
-// ── PRODUCT NAVIGATION WITH CLEAN URLS (HISTORY API) ──────────────────────────
+// ── PRODUCT NAVIGATION WITH CLEAN URLS ────────────────────────────────────────
 function goToProduct(id) {
-  console.log('goToProduct called with id:', id);
-  if (!id) return;
-  var url = '/product?id=' + encodeURIComponent(id);
-  history.pushState({ productId: id }, '', url);
-  loadProductInline(id);
+  try {
+    console.log('goToProduct called with id:', id, typeof id);
+    if (!id) {
+      alert('No product ID provided');
+      return;
+    }
+    if (typeof id !== 'string') {
+      id = String(id);
+    }
+    // Use direct navigation to product.html - Vercel rewrites /product to product.html
+    // This keeps URL clean: /product?id=XXX shows in address bar
+    window.location.href = '/product?id=' + encodeURIComponent(id);
+  } catch(e) {
+    console.error('Error in goToProduct:', e);
+    alert('Error: ' + e.message);
+  }
 }
 
 function loadProductInline(id) {
