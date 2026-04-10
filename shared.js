@@ -661,10 +661,17 @@ function initSharedNavbar() {
 // ── PRODUCT VIEW LINKING ──────────────────────────────────────────────────────
 function attachProductLinks() {
   function goProduct(name, price, img, cat, pid) {
-    if (pid) {
+    if (pid && pid.startsWith('PRD-')) {
+      // Proper product ID - use it directly
       window.location.href = '/product?id=' + encodeURIComponent(pid);
     } else if (name) {
-      window.location.href = '/product?id=' + encodeURIComponent(name);
+      // Fallback: pass name as query param
+      var params = new URLSearchParams();
+      params.set('name', name);
+      if (price) params.set('price', price);
+      if (img) params.set('img', img);
+      if (cat) params.set('cat', cat);
+      window.location.href = '/product?' + params.toString();
     }
   }
   function getImg(card) { var i = card.querySelector('img'); return i ? i.src : ''; }
@@ -680,8 +687,17 @@ function attachProductLinks() {
     var cat   = catTxt || 'Electronics';
     function go(e) {
       if (noBtn(e)) return; e.stopPropagation();
-      if (pid) window.location.href = '/product?id=' + encodeURIComponent(pid);
-      else goProduct(name, price, img, cat);
+      if (pid && pid.startsWith('PRD-')) {
+        window.location.href = '/product?id=' + encodeURIComponent(pid);
+      } else {
+        // Fallback: pass all params
+        var params = new URLSearchParams();
+        params.set('name', name);
+        if (price) params.set('price', price);
+        if (img) params.set('img', encodeURIComponent(img));
+        if (cat) params.set('cat', cat);
+        window.location.href = '/product?' + params.toString();
+      }
     }
     var wrap = card.querySelector('.prod-img-wrap,.new-img-wrap,.explore-img-wrap');
     var dimg = card.querySelector('.deal-img');

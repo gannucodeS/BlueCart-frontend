@@ -465,11 +465,7 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
   var pPrice = params.get('price');
   var pCat = params.get('cat');
   
-  // If id param contains spaces, treat it as legacy product name (not a proper ID)
-  if (pid && pid.includes(' ')) {
-    pName = pid;
-    pid = null;
-  }
+  console.log('URL params - pid:', pid, 'pName:', pName, 'pImg:', pImg ? 'exists' : 'null', 'pPrice:', pPrice);
   
   // Get main container
   var main = document.getElementById('pv-main');
@@ -478,21 +474,26 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
   var renderFromParams = function() {
     if (!main) return;
     
-    // Priority 1: Try loading from DB using product ID (e.g., PRD-SMART-001)
-    if (pid) {
+    // Check if id looks like a proper ID (e.g., PRD-SMART-001) vs product name
+    var isProperId = pid && !pid.includes(' ') && pid.startsWith('PRD-');
+    
+    console.log('isProperId:', isProperId, 'pid:', pid);
+    
+    // Priority 1: Try loading from DB using proper product ID
+    if (isProperId) {
+      console.log('Loading from DB with ID:', pid);
       main.innerHTML = '<div style="text-align:center;padding:60px;">Loading product from database...</div>';
       
       if (typeof BC !== 'undefined' && BC.getProductById) {
         BC.getProductById(pid).then(function(p) {
           if (p) {
+            console.log('Product loaded from DB:', p.name);
             renderProduct(p);
             loadRelated(p.category, p.id);
           } else {
-            // Product not found in DB - show error
             main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2><p>Product ID: ' + pid + '</p><a href="/search" class="btn-primary">Go to Search</a></div>';
           }
         }).catch(function(e) {
-          // DB error - fallback to URL params
           console.error('DB load error:', e);
           loadFromUrlParams();
         });
@@ -500,8 +501,9 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
         loadFromUrlParams();
       }
     } 
-    // Priority 2: Fallback to URL params (legacy format: name, price, img, cat)
-    else if (pName) {
+    // Priority 2: Fallback to URL params (legacy format or product name as id)
+    else if (pid || pName) {
+      console.log('Using fallback - pid:', pid, 'pName:', pName);
       loadFromUrlParams();
     }
     // No product specified
@@ -514,13 +516,21 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
   var loadFromUrlParams = function() {
     main.innerHTML = '<div style="text-align:center;padding:40px;">Loading product...</div>';
     
+    // Use whichever value is available - pid (if it's a name) or pName
+    var nameValue = pName || pid || '';
+    var imgValue = pImg || '';
+    var priceValue = parseInt(pPrice) || 0;
+    var catValue = pCat || 'Electronics';
+    
+    console.log('Fallback - name:', nameValue, 'img:', imgValue ? 'exists' : 'null', 'price:', priceValue);
+    
     var product = {
-      name: decodeURIComponent(pName || ''),
-      price: parseInt(pPrice) || 0,
-      mrp: parseInt(pPrice) || 0,
-      category: pCat || 'Electronics',
-      imageUrl: pImg || '',
-      images: pImg ? [pImg] : [],
+      name: decodeURIComponent(nameValue),
+      price: priceValue,
+      mrp: priceValue,
+      category: catValue,
+      imageUrl: imgValue,
+      images: imgValue ? [imgValue] : [],
       description: '',
       features: [],
       brand: '',
