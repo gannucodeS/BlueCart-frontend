@@ -98,7 +98,7 @@ function buyNow(id, name, img, price) {
     return;
   }
   requireLogin(function() {
-    window.location.href = '/product?id=' + encodeURIComponent(id);
+    window.location.href = '/product.html?id=' + encodeURIComponent(id);
   });
 }
 function checkoutCart() {
@@ -663,7 +663,7 @@ function attachProductLinks() {
   function goProduct(name, price, img, cat, pid) {
     if (pid && pid.startsWith('PRD-')) {
       // Proper product ID - use it directly
-      window.location.href = '/product?id=' + encodeURIComponent(pid);
+      window.location.href = '/product.html?id=' + encodeURIComponent(pid);
     } else if (name) {
       // Fallback: pass name as query param
       var params = new URLSearchParams();
@@ -688,7 +688,7 @@ function attachProductLinks() {
     function go(e) {
       if (noBtn(e)) return; e.stopPropagation();
       if (pid && pid.startsWith('PRD-')) {
-        window.location.href = '/product?id=' + encodeURIComponent(pid);
+        window.location.href = '/product.html?id=' + encodeURIComponent(pid);
       } else {
         // Fallback: pass all params
         var params = new URLSearchParams();
@@ -696,7 +696,7 @@ function attachProductLinks() {
         if (price) params.set('price', price);
         if (img) params.set('img', encodeURIComponent(img));
         if (cat) params.set('cat', cat);
-        window.location.href = '/product?' + params.toString();
+      window.location.href = '/product.html?' + params.toString();
       }
     }
     var wrap = card.querySelector('.prod-img-wrap,.new-img-wrap,.explore-img-wrap');
