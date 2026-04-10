@@ -457,9 +457,7 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
   console.log('=== Page Load Debug ===');
   console.log('Full URL:', window.location.href);
   console.log('Pathname:', window.location.pathname);
-  console.log('Search:', window.location.search);
-  
-  // Extract URL params immediately
+  // Extract URL params
   var params = new URLSearchParams(window.location.search);
   var pid = params.get('id');
   var pName = params.get('name');
@@ -467,70 +465,70 @@ function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';
   var pPrice = params.get('price');
   var pCat = params.get('cat');
   
-  console.log('URL params - id:', pid, 'name:', pName);
+  // If id param contains spaces, treat it as legacy product name (not a proper ID)
+  if (pid && pid.includes(' ')) {
+    pName = pid;
+    pid = null;
+  }
   
   // Get main container
   var main = document.getElementById('pv-main');
-  console.log('pv-main element:', main ? 'found' : 'NOT FOUND');
   
-  // Render product directly from URL params (always works)
+  // Render product - first try DB by ID, then fallback to URL params
   var renderFromParams = function() {
-    console.log('renderFromParams called, main:', main ? 'exists' : 'null');
-    console.log('pName:', pName, 'pid:', pid);
+    if (!main) return;
     
-    if (!main) {
-      console.log('ERROR: pv-main not found');
-      document.body.innerHTML = '<div style="padding:50px;text-align:center;"><h2>Error: Page not loaded properly. Please refresh.</h2></div>';
-      return;
-    }
-    
-    if (pName) {
-      console.log('Rendering product from URL params:', pName);
-      console.log('pImg:', pImg, 'pPrice:', pPrice, 'pCat:', pCat);
+    // Priority 1: Try loading from DB using product ID (e.g., PRD-SMART-001)
+    if (pid) {
+      main.innerHTML = '<div style="text-align:center;padding:60px;">Loading product from database...</div>';
       
-      // If main still has loading, clear it
-      main.innerHTML = '<div style="text-align:center;padding:40px;">Building product page...</div>';
-      
-      try {
-        var product = {
-          name: decodeURIComponent(pName),
-          price: parseInt(pPrice) || 0,
-          mrp: parseInt(pPrice) || 0,
-          category: pCat || 'Electronics',
-          imageUrl: pImg || '',
-          images: pImg ? [pImg] : [],
-          description: '',
-          features: [],
-          brand: '',
-          rating: '4.5',
-          reviews: '0'
-        };
-        console.log('Calling renderProduct with:', product.name);
-        renderProduct(product);
-        console.log('renderProduct completed for:', product.name);
-      } catch (e) {
-        console.error('Error in renderProduct:', e);
-        main.innerHTML = '<div class="pv-not-found"><h2>Error loading product</h2><p>' + e.message + '</p></div>';
-      }
-    } else if (pid) {
-      // Try to load from DB using id
-      main.innerHTML = '<div style="text-align:center;padding:60px;">Loading from database...</div>';
       if (typeof BC !== 'undefined' && BC.getProductById) {
         BC.getProductById(pid).then(function(p) {
           if (p) {
             renderProduct(p);
+            loadRelated(p.category, p.id);
           } else {
-            main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2></div>';
+            // Product not found in DB - show error
+            main.innerHTML = '<div class="pv-not-found"><h2>Product Not Found</h2><p>Product ID: ' + pid + '</p><a href="/search" class="btn-primary">Go to Search</a></div>';
           }
         }).catch(function(e) {
-          main.innerHTML = '<div class="pv-not-found"><h2>Could not load product</h2></div>';
+          // DB error - fallback to URL params
+          console.error('DB load error:', e);
+          loadFromUrlParams();
         });
       } else {
-        main.innerHTML = '<div class="pv-not-found"><h2>Product not found</h2></div>';
+        loadFromUrlParams();
       }
-    } else {
-      main.innerHTML = '<div class="pv-not-found"><h2>No product specified</h2><p>Please navigate from the search page.</p></div>';
+    } 
+    // Priority 2: Fallback to URL params (legacy format: name, price, img, cat)
+    else if (pName) {
+      loadFromUrlParams();
     }
+    // No product specified
+    else {
+      main.innerHTML = '<div class="pv-not-found"><h2>No product specified</h2><p>Please navigate from the search page.</p><a href="/search">Go to Search</a></div>';
+    }
+  };
+  
+  // Helper function to load from URL params (fallback)
+  var loadFromUrlParams = function() {
+    main.innerHTML = '<div style="text-align:center;padding:40px;">Loading product...</div>';
+    
+    var product = {
+      name: decodeURIComponent(pName || ''),
+      price: parseInt(pPrice) || 0,
+      mrp: parseInt(pPrice) || 0,
+      category: pCat || 'Electronics',
+      imageUrl: pImg || '',
+      images: pImg ? [pImg] : [],
+      description: '',
+      features: [],
+      brand: '',
+      rating: '4.5',
+      reviews: '0'
+    };
+    
+    renderProduct(product);
   };
   
   // Run immediately
