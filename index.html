@@ -596,28 +596,18 @@ var sliderEl;
 
 function initSlider() {
   sliderEl = document.getElementById('slider');
-  console.log('Slider init, element:', sliderEl);
   if (sliderEl) {
-    var slides = sliderEl.querySelectorAll('.slide');
-    console.log('Found slides:', slides.length);
     slideInterval = setInterval(function() { 
-      console.log('Auto-sliding to:', (currentSlide + 1) % slides.length);
       changeSlide(1); 
     }, 3000);
   }
 }
 
 function changeSlide(dir) {
-  console.log('changeSlide called, dir:', dir);
-  if (!sliderEl) {
-    console.log('No slider element');
-    return;
-  }
+  if (!sliderEl) return;
   var slides = sliderEl.querySelectorAll('.slide');
-  console.log('changeSlide, slides:', slides.length);
   if (slides.length <= 1) return;
   currentSlide = (currentSlide + dir + slides.length) % slides.length;
-  console.log('Moving to slide:', currentSlide);
   sliderEl.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
   updateDots();
   resetTimer();

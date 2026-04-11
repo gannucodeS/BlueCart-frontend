@@ -16,7 +16,6 @@
 
   function authHeaders() {
     var token = localStorage.getItem(SESSION_KEY);
-    console.log('[authHeaders] Token:', token ? 'YES - ' + token.substring(0, 20) + '...' : 'NO');
     if (!token) return {};
     return { Authorization: 'Bearer ' + token };
   }
@@ -128,21 +127,17 @@
 
     publicAPI.getSession = function () {
       var token = localStorage.getItem(SESSION_KEY);
-      console.log('[getSession] Token from localStorage:', token ? 'YES' : 'NO');
       if (!token) return Promise.resolve(null);
       return apiJson('/auth/session', { method: 'GET', headers: authHeaders() })
         .then(function (sess) {
-          console.log('[getSession] Session API response:', sess);
           if (!sess) return null;
           if (sess.expiry < Date.now()) {
-            console.log('[getSession] Session expired');
             localStorage.removeItem(SESSION_KEY);
             return null;
           }
           return sess;
         })
-        .catch(function (e) {
-          console.error('[getSession] Session API error:', e);
+        .catch(function () {
           localStorage.removeItem(SESSION_KEY);
           return null;
         });

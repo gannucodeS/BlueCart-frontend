@@ -817,19 +817,11 @@ function initSharedNavbar() {
   if (searchEl) searchEl.addEventListener('keydown', function(e) { if (e.key === 'Enter') doSearchNav(); });
 
   // Session-aware navbar
-  console.log('[Shared] initSharedNavbar: Checking session...');
   if (typeof BC !== 'undefined') {
-    console.log('[Shared] BC is defined, getting session...');
     BC.ready.then(function() { 
-      console.log('[Shared] BC.ready resolved, calling getSession...');
       return BC.getSession(); 
     }).then(function(sess) {
-      console.log('[Shared] Session result:', sess);
-      if (!sess) {
-        console.log('[Shared] No session found');
-        return;
-      }
-      console.log('[Shared] Session found, updating navbar');
+      if (!sess) return;
       var greet = document.getElementById('account-greeting');
       var label = document.getElementById('account-label');
       var link  = document.getElementById('account-link');
@@ -837,7 +829,7 @@ function initSharedNavbar() {
       if (label) label.textContent = 'My Account';
       if (link)  link.href = sess.role === 'admin' ? '/admin' : '/account';
     }).catch(function(e) {
-      console.error('[Shared] Session check error:', e);
+      console.error('Session check error:', e);
     });
   }
 }
