@@ -275,19 +275,12 @@
   <div class="dotd-header-bar">
     <div class="dotd-title">&#128293; Deal of the Day <span>Limited Time</span></div>
     <div class="countdown"><div class="countdown-label">Ends in:</div><div class="cd-boxes"><div class="cd-box"><b id="cd-h">05</b><span>Hrs</span></div><div class="cd-sep">:</div><div class="cd-box"><b id="cd-m">42</b><span>Min</span></div><div class="cd-sep">:</div><div class="cd-box"><b id="cd-s">18</b><span>Sec</span></div></div></div>
-    <a href="/deals" class="see-all-btn">See all deals &#8594;</a>
+    <a href="/deals" class="see-all-btn" onclick="event.preventDefault();document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">See all deals &#8594;</a>
   </div>
   <div class="dotd-body">
     <div class="scroll-wrap">
       <button class="scroll-arrow left" onclick="scrollRow('dotd',-1)">&#8249;</button>
       <div class="h-scroll" id="dotd">
-        <div class="deal-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-SMART-005'"><img class="deal-img" src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop&q=90" alt="iPhone"/><div class="deal-info"><div class="deal-cat">Smartphones</div><div class="deal-name">iPhone 15 Pro 256GB</div><div class="deal-off">-55% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;1,34,900</span><span class="deal-price-old">&#8377;2,99,900</span></div><div class="deal-stock"><div class="deal-stock-label"><span>62% sold</span><span>Fast selling</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:62%"></div></div></div><button class="deal-btn" onclick="event.stopPropagation();buyNow('iPhone 15 Pro 256GB','https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop',134900)">Buy Now</button></div></div>
-        <div class="deal-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-LAPTOP-002'"><img class="deal-img" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop&q=90" alt="MacBook"/><div class="deal-info"><div class="deal-cat">Laptops</div><div class="deal-name">MacBook Air M3 15"</div><div class="deal-off">-38% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;99,900</span><span class="deal-price-old">&#8377;1,59,900</span></div><div class="deal-stock"><div class="deal-stock-label"><span>78% sold</span><span>Only 8 left</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:78%"></div></div></div><button class="deal-btn" onclick="event.stopPropagation();buyNow('MacBook Air M3','https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop',99900)">Buy Now</button></div></div>
-        <div class="deal-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-AUDIO-001'"><img class="deal-img" src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&h=300&fit=crop&q=90" alt="Headphones"/><div class="deal-info"><div class="deal-cat">Audio</div><div class="deal-name">Sony WH-1000XM5</div><div class="deal-off">-60% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;14,990</span><span class="deal-price-old">&#8377;37,990</span></div><div class="deal-stock"><div class="deal-stock-label"><span>89% sold</span><span>Almost gone!</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:89%"></div></div></div><button class="deal-btn" onclick="event.stopPropagation();buyNow('Sony WH-1000XM5','https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=200&h=200&fit=crop',14990)">Buy Now</button></div></div>
-        <div class="deal-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-MON-001'"><img class="deal-img" src="https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=400&h=300&fit=crop&q=90" alt="Monitor"/><div class="deal-info"><div class="deal-cat">Monitors</div><div class="deal-name">Samsung 27" 4K OLED</div><div class="deal-off">-40% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;28,990</span><span class="deal-price-old">&#8377;47,990</span></div><div class="deal-stock"><div class="deal-stock-label"><span>45% sold</span><span>72 left</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:45%"></div></div></div><button class="deal-btn" onclick="event.stopPropagation();buyNow('Samsung 27 4K OLED','https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=200&h=200&fit=crop',28990)">Buy Now</button></div></div>
-        <div class="deal-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-WEAR-001'"><img class="deal-img" src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=300&fit=crop&q=90" alt="Watch"/><div class="deal-info"><div class="deal-cat">Wearables</div><div class="deal-name">Fitbit Charge 6 GPS</div><div class="deal-off">-28% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;12,990</span><span class="deal-price-old">&#8377;17,990</span></div><div class="deal-stock"><div class="deal-stock-label"><span>55% sold</span><span>36 left</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:55%"></div></div></div><button class="deal-btn" onclick="event.stopPropagation();buyNow('Fitbit Charge 6 GPS','https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=200&h=200&fit=crop',12990)">Buy Now</button></div></div>
-        <div class="deal-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-GAME-002'"><img class="deal-img" src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop&q=90" alt="PS5"/><div class="deal-info"><div class="deal-cat">Gaming</div><div class="deal-name">PS5 DualSense Controller</div><div class="deal-off">-35% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;5,990</span><span class="deal-price-old">&#8377;9,190</span></div><div class="deal-stock"><div class="deal-stock-label"><span>71% sold</span><span>14 left</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:71%"></div></div></div><button class="deal-btn" onclick="event.stopPropagation();buyNow('PS5 DualSense Controller','https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=200&h=200&fit=crop',5990)">Buy Now</button></div></div>
-        <div class="deal-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-TABL-001'"><img class="deal-img" src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop&q=90" alt="iPad"/><div class="deal-info"><div class="deal-cat">Tablets</div><div class="deal-name">iPad Pro 12.9" M2</div><div class="deal-off">-50% OFF</div><div class="deal-price-row"><span class="deal-price-now">&#8377;89,900</span><span class="deal-price-old">&#8377;1,79,900</span></div><div class="deal-stock"><div class="deal-stock-label"><span>83% sold</span><span>Only 4 left!</span></div><div class="deal-bar"><div class="deal-bar-fill" style="width:83%"></div></div></div><button class="deal-btn" onclick="event.stopPropagation();buyNow('iPad Pro M2','https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=200&h=200&fit=crop',89900)">Buy Now</button></div></div>
       </div>
       <button class="scroll-arrow right" onclick="scrollRow('dotd',1)">&#8250;</button>
     </div>
@@ -300,18 +293,11 @@
 <div class="sec-wrap">
   <div class="sec-header">
     <div class="sec-title">&#10024; New Arrivals</div>
-    <a href="/new-arrivals" class="see-all-btn" style="color:var(--teal);font-weight:700">View all new &#8594;</a>
+    <a href="/new-arrivals" class="see-all-btn" style="color:var(--teal);font-weight:700" onclick="event.preventDefault();document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">View all new &#8594;</a>
   </div>
   <div class="scroll-wrap">
     <button class="scroll-arrow left" onclick="scrollRow('newarr',-1)">&#8249;</button>
     <div class="h-scroll" id="newarr">
-      <div class="new-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-SMART-007'"><span class="new-badge">Just In</span><button class="new-wishlist" onclick="event.stopPropagation()">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop&q=90" alt="iPhone 16"/></div><div class="new-info"><div class="new-cat">Apple</div><div class="new-name">iPhone 16 Pro Max 256GB</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9 (1.2k)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;1,19,900</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="event.stopPropagation();buyNow('iPhone 16 Pro Max','https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop',119900)">Buy Now &#9889;</button></div></div>
-      <div class="new-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-LAPTOP-003'"><span class="new-badge hot">Hot</span><button class="new-wishlist" onclick="event.stopPropagation()">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=400&h=300&fit=crop&q=90" alt="Samsung Book4"/></div><div class="new-info"><div class="new-cat">Samsung</div><div class="new-name">Galaxy Book4 Ultra 16"</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.8 (340)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;1,94,990</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="event.stopPropagation();buyNow('Galaxy Book4 Ultra','https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?w=200&h=200&fit=crop',194990)">Buy Now &#9889;</button></div></div>
-      <div class="new-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-AUDIO-003'"><span class="new-badge trend">Trending</span><button class="new-wishlist" onclick="event.stopPropagation()">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=400&h=300&fit=crop&q=90" alt="Sony XM6"/></div><div class="new-info"><div class="new-cat">Audio</div><div class="new-name">Sony WH-1000XM6 ANC</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9 (450)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;31,990</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="event.stopPropagation();buyNow('Sony WH-1000XM6 ANC','https://images.unsplash.com/photo-1606400082777-ef05f3c5cde2?w=200&h=200&fit=crop',31990)">Buy Now &#9889;</button></div></div>
-      <div class="new-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-WEAR-002'"><span class="new-badge">Just In</span><button class="new-wishlist" onclick="event.stopPropagation()">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=300&fit=crop&q=90" alt="Apple Watch Ultra"/></div><div class="new-info"><div class="new-cat">Wearables</div><div class="new-name">Apple Watch Ultra 3 GPS</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9 (680)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;89,900</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="event.stopPropagation();buyNow('Apple Watch Ultra 3','https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=200&h=200&fit=crop',89900)">Buy Now &#9889;</button></div></div>
-      <div class="new-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-LAPTOP-004'"><span class="new-badge hot">Hot</span><button class="new-wishlist" onclick="event.stopPropagation()">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop&q=90" alt="MacBook Air M4"/></div><div class="new-info"><div class="new-cat">Apple</div><div class="new-name">MacBook Air M4 13"</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>5.0 (210)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;1,09,900</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="event.stopPropagation();buyNow('MacBook Air M4','https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop',109900)">Buy Now &#9889;</button></div></div>
-      <div class="new-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-SMART-008'"><span class="new-badge">Just In</span><button class="new-wishlist" onclick="event.stopPropagation()">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=400&h=300&fit=crop&q=90" alt="Galaxy S25"/></div><div class="new-info"><div class="new-cat">Samsung</div><div class="new-name">Galaxy S25 Ultra 512GB</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.8 (890)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;1,29,999</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="event.stopPropagation();buyNow('Galaxy S25 Ultra','https://images.unsplash.com/photo-1610945264803-c22b62d2a7b3?w=200&h=200&fit=crop',129999)">Buy Now &#9889;</button></div></div>
-      <div class="new-card" style="cursor:pointer" onclick="window.location.href='/product?id=PRD-SMART-009'"><span class="new-badge hot">Hot</span><button class="new-wishlist" onclick="event.stopPropagation()">&#129293;</button><div class="new-img-wrap"><img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=300&fit=crop&q=90" alt="ROG Phone"/></div><div class="new-info"><div class="new-cat">Asus</div><div class="new-name">ROG Phone 8 Pro 512GB</div><div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9 (670)</span></div><div class="new-price-row"><span class="new-price-now">&#8377;89,999</span><span class="new-price-off">New</span></div><button class="new-add-btn" onclick="event.stopPropagation();buyNow('Asus ROG Phone 8 Pro','https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=200&h=200&fit=crop',89999)">Buy Now &#9889;</button></div></div>
     </div>
     <button class="scroll-arrow right" onclick="scrollRow('newarr',1)">&#8250;</button>
   </div>
@@ -352,7 +338,7 @@
 <div class="sec-wrap">
   <div class="sec-header">
     <div class="sec-title amber">&#128717; Explore More</div>
-    <a href="/electronics" class="see-all-btn" style="color:var(--teal);font-weight:700">View all products &#8594;</a>
+    <a href="/electronics" class="see-all-btn" style="color:var(--teal);font-weight:700" onclick="event.preventDefault();document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">View all products &#8594;</a>
   </div>
   <div class="explore-grid" id="explore-grid">
     <div class="explore-card"><div class="explore-img-wrap"><span class="exp-badge sale">-40%</span><img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop&q=90" alt="Samsung S24"/></div><div class="explore-info"><div class="explore-cat">Smartphones</div><div class="explore-name">Samsung Galaxy S24 Ultra</div><div class="explore-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <em>4.8 (2.1k)</em></div><div class="explore-price-row"><span class="exp-now">&#8377;74,999</span><span class="exp-old">&#8377;1,24,999</span><span class="exp-off">40% off</span></div><div class="explore-btns"><button class="exp-cart" onclick="addToCart('Samsung Galaxy S24',74999)">Add to Cart</button><button class="exp-buy" onclick="buyNow('Samsung Galaxy S24','https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=200&h=200&fit=crop',74999)">&#9889;</button></div></div></div>
@@ -472,6 +458,7 @@ function initHomeProducts() {
     renderFeaturedProducts();
     renderDealProducts();
     renderExploreProducts();
+    renderNewArrivals();
   }).catch(function(e) {
     console.error('Failed to load products:', e);
   });
@@ -541,6 +528,33 @@ function renderDealProducts() {
   }
 }
 
+function renderNewArrivals() {
+  var el = document.getElementById('newarr');
+  if (el && allProducts.length) {
+    var newProds = allProducts.slice(0, 7);
+    el.innerHTML = newProds.map(function(p) {
+      var mainImg = (p.images && p.images.length > 0) ? p.images[0] : (p.img || 'https://placehold.co/400x300?text=Product');
+      var pName = p.name.replace(/'/g, "\\'");
+      var pImg = mainImg.replace(/'/g, "\\'");
+      var viewUrl = '/product?id=' + encodeURIComponent(p.id);
+      var badgeClass = p.badge || 'new';
+      var badgeText = 'Just In';
+      if (badgeClass === 'hot') badgeText = 'Hot';
+      else if (badgeClass === 'trend') badgeText = 'Trending';
+      return '<div class="new-card" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
+        '<span class="new-badge">' + badgeText + '</span>' +
+        '<button class="new-wishlist" onclick="event.stopPropagation()">&#129293;</button>' +
+        '<div class="new-img-wrap"><img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/></div>' +
+        '<div class="new-info"><div class="new-cat">' + (p.brand || '') + '</div>' +
+        '<div class="new-name">' + p.name + '</div>' +
+        '<div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9</span></div>' +
+        '<div class="new-price-row"><span class="new-price-now">&#8377;' + p.price.toLocaleString('en-IN') + '</span>' +
+        '<span class="new-price-off">New</span></div>' +
+        '<button class="new-add-btn" onclick="event.stopPropagation();buyNow(\'' + p.id + '\',\'' + pName + '\',\'' + pImg + '\',' + p.price + ')">Buy Now &#9889;</button></div></div>';
+    }).join('');
+  }
+}
+
 function renderExploreProducts() {
   var el = document.getElementById('explore-grid');
   if (el && allProducts.length) {
@@ -577,6 +591,43 @@ function renderExploreProducts() {
 }
 
 BC.ready.then(initHomeProducts).catch(initHomeProducts);
+
+var currentSlide = 0;
+var slideInterval;
+
+function changeSlide(dir) {
+  var slides = document.querySelectorAll('.slide');
+  if (!slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = (currentSlide + dir + slides.length) % slides.length;
+  slides[currentSlide].classList.add('active');
+  updateDots();
+  resetTimer();
+}
+
+function goSlide(index) {
+  var slides = document.querySelectorAll('.slide');
+  if (!slides.length) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = index;
+  slides[currentSlide].classList.add('active');
+  updateDots();
+  resetTimer();
+}
+
+function updateDots() {
+  var dots = document.querySelectorAll('.slider-dots .dot');
+  dots.forEach(function(d, i) {
+    d.classList.toggle('active', i === currentSlide);
+  });
+}
+
+function resetTimer() {
+  clearInterval(slideInterval);
+  slideInterval = setInterval(function() { changeSlide(1); }, 5000);
+}
+
+slideInterval = setInterval(function() { changeSlide(1); }, 5000);
 </script>
 </body>
 </html>
