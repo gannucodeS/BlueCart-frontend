@@ -492,12 +492,36 @@ function showToast(msg) {
 function loadOrderData() {
   var params = new URLSearchParams(window.location.search);
   var mode = params.get('mode');
+  var productId = params.get('id');
 
   if (mode === 'buynow') {
-    var name = decodeURIComponent(params.get('name') || 'Product');
-    var img = decodeURIComponent(params.get('img') || '');
-    var price = parseFloat(params.get('price')) || 0;
-    orderItems = [{ name: name, price: price, qty: 1, imageUrl: img }];
+    if (productId && productId.startsWith('PRD-')) {
+      BC.getProductById(productId).then(function(p) {
+        if (p) {
+          orderItems = [{
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            mrp: p.mrp || p.price,
+            qty: 1,
+            imageUrl: p.imageUrl || (p.images && p.images[0]) || ''
+          }];
+          renderSummary();
+        } else {
+          showToast('Product not found');
+          window.location.href = '/search';
+        }
+      }).catch(function(e) {
+        console.error('Error fetching product:', e);
+        showToast('Error loading product');
+      });
+      return;
+    } else {
+      var name = decodeURIComponent(params.get('name') || 'Product');
+      var img = decodeURIComponent(params.get('img') || '');
+      var price = parseFloat(params.get('price')) || 0;
+      orderItems = [{ name: name, price: price, qty: 1, imageUrl: img }];
+    }
   } else if (mode === 'cart') {
     try { orderItems = JSON.parse(decodeURIComponent(params.get('items') || '[]')); }
     catch (e) { orderItems = []; }

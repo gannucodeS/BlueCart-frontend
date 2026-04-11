@@ -97,9 +97,9 @@ function buyNow(id, name, img, price) {
     if (id && id.startsWith('PRD-')) {
       p.set('id', id);
     } else {
-      p.set('name', name);
+      p.set('name', name || 'Product');
       if (img) p.set('img', img);
-      p.set('price', price);
+      if (price) p.set('price', price);
     }
     window.location.href = '/checkout?' + p.toString();
   });
@@ -854,6 +854,18 @@ function attachProductLinks() {
 
   function link(card, nameEl, priceEl, catTxt, pid) {
     if (!nameEl || card.dataset.pvLinked) return;
+    
+    // Skip if card already has onclick with proper product?id format
+    var existingOnclick = card.getAttribute('onclick');
+    if (existingOnclick) {
+      // Decode the onclick to check for /product?id= pattern
+      try { existingOnclick = decodeURIComponent(existingOnclick); } catch(e) {}
+      if (existingOnclick.includes('/product?id=')) {
+        card.dataset.pvLinked = '1';
+        return;
+      }
+    }
+    
     card.dataset.pvLinked = '1';
     var name = nameEl.textContent.trim();
     var price = getNum(priceEl);
