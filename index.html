@@ -622,6 +622,12 @@ BC.ready.then(function() {
   initHomeProducts();
   initSlider();
 });
+
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted || performance.getEntriesByType('navigation')[0].type === 'back_forward') {
+    initHomeProducts();
+  }
+});
 </script>
 </body>
 </html>
