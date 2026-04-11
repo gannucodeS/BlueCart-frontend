@@ -530,13 +530,19 @@ function doLogin() {
   }
   
   BC.ready.then(function() {
+    console.log('BC ready, calling login...');
     return loginFn(loginData);
   }).then(function(res) {
+    console.log('Login response:', res);
     if (!res.ok) {
       showMsg('login-err', res.error);
       setBtnNormal('login-btn', 'Sign In');
       return;
     }
+    
+    // Debug: Check if token was saved
+    var savedToken = localStorage.getItem('bc_token');
+    console.log('Token saved in localStorage:', savedToken ? 'YES' : 'NO');
     
     showMsg('login-ok', 'Welcome back, ' + res.user.name.split(' ')[0] + '! Redirecting...', 'ok');
     setTimeout(function() {
@@ -549,6 +555,7 @@ window.location.href = '/admin';
       window.location.href = rd;
     }, 800);
   }).catch(function(e) {
+    console.error('Login error:', e);
     showMsg('login-err', 'Something went wrong. Please try again.');
     setBtnNormal('login-btn', 'Sign In');
   });
