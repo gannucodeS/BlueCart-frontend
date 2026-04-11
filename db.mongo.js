@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  var API_BASE = 'https://bluecart-backend-5syj.onrender.com/api';
+  var API_BASE = 'https://bluecart.onrender.com/api';
   
   var SESSION_KEY = 'bc_token';
   
