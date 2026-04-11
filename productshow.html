@@ -643,11 +643,15 @@ function renderProduct(p) {
     '</div>';
   }).join('');
 
-  var pNameJs = p.name.replace(/'/g, "\\'");
+  var pNameJs = p.name ? p.name.replace(/'/g, "\\'") : '';
   var pImgJs  = (p.imageUrl||'').replace(/'/g, "\\'");
 
   // Debug: log what we received from backend
   console.log('=== renderProduct called ===');
+  console.log('Product id:', p.id);
+  console.log('Product name:', p.name);
+  console.log('Product price:', p.price);
+  console.log('Product stock:', p.stock);
   console.log('Full product object keys:', Object.keys(p));
   console.log('Product images data:', p.images, 'imageUrl:', p.imageUrl);
   console.log('p.images type:', typeof p.images);
@@ -725,8 +729,8 @@ function renderProduct(p) {
 
         '<div class="pv-cta">' +
           (p.stock>0
-            ? '<button class="pv-btn-cart" onclick="addToCart(\''+pNameJs+'\','+(p.price||0)+',currentQty)">&#128722; Add to Cart</button>' +
-              '<button class="pv-btn-buy"  onclick="buyNow(\''+(p.id||'')+'\',\''+pNameJs+'\',\''+pImgJs+'\','+(p.price||0)+')">&#9889; Buy Now</button>'
+            ? '<button class="pv-btn-cart" onclick="console.log(\'Add to cart clicked:\', \''+pNameJs+'\', '+(p.price||0)+'); addToCart(\''+pNameJs+'\','+(p.price||0)+',currentQty)">&#128722; Add to Cart</button>' +
+              '<button class="pv-btn-buy"  onclick="console.log(\'Buy now clicked:\', \''+(p.id||'')+'\', \''+pNameJs+'\', '+(p.price||0)+'); buyNow(\''+(p.id||'')+'\',\''+pNameJs+'\',\''+pImgJs+'\','+(p.price||0)+')">&#9889; Buy Now</button>'
             : '<button class="pv-btn-cart pv-btn-disabled">&#128722; Add to Cart</button>' +
               '<button class="pv-btn-buy pv-btn-disabled">Out of Stock</button>'
           ) +
@@ -802,8 +806,8 @@ function loadRelated(category, excludeId) {
             '<span class="prod-category">'+p.category+'</span>' +
             '<div class="prod-name">'+p.name+'</div>' +
             '<div class="prod-price"><span class="price-now">&#8377;'+p.price.toLocaleString('en-IN')+'</span></div>' +
-            '<div class="add-to-cart"><button class="btn-cart" onclick="event.stopPropagation();addToCart(\''+pn+'\','+(p.price||0)+',1)">Add to Cart</button>' +
-            '<button class="btn-buy" onclick="event.stopPropagation();buyNow(\''+(p.id||'')+'\',\''+pn+'\',\''+pi+'\','+(p.price||0)+')">Buy Now</button></div>' +
+            '<div class="add-to-cart"><button class="btn-cart" onclick="event.stopPropagation();try{addToCart(\''+pn+'\','+(p.price||0)+',1)}catch(e){console.error(\'addToCart error:\',e)}">Add to Cart</button>' +
+            '<button class="btn-buy" onclick="event.stopPropagation();try{buyNow(\''+(p.id||'')+'\',\''+pn+'\',\''+pi+'\','+(p.price||0)+')}catch(e){console.error(\'buyNow error:\',e)}">Buy Now</button></div>' +
           '</div>' +
         '</div>';
       }).join('') +
