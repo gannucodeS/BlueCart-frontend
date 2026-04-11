@@ -725,8 +725,8 @@ function renderProduct(p) {
 
         '<div class="pv-cta">' +
           (p.stock>0
-            ? '<button class="pv-btn-cart" onclick="addToCart(\''+pNameJs+'\','+p.price+',currentQty)">&#128722; Add to Cart</button>' +
-              '<button class="pv-btn-buy"  onclick="buyNow(\''+p.id+'\',\''+pNameJs+'\',\''+pImgJs+'\','+p.price+')">&#9889; Buy Now</button>'
+            ? '<button class="pv-btn-cart" onclick="addToCart(\''+pNameJs+'\','+(p.price||0)+',currentQty)">&#128722; Add to Cart</button>' +
+              '<button class="pv-btn-buy"  onclick="buyNow(\''+(p.id||'')+'\',\''+pNameJs+'\',\''+pImgJs+'\','+(p.price||0)+')">&#9889; Buy Now</button>'
             : '<button class="pv-btn-cart pv-btn-disabled">&#128722; Add to Cart</button>' +
               '<button class="pv-btn-buy pv-btn-disabled">Out of Stock</button>'
           ) +
@@ -802,8 +802,8 @@ function loadRelated(category, excludeId) {
             '<span class="prod-category">'+p.category+'</span>' +
             '<div class="prod-name">'+p.name+'</div>' +
             '<div class="prod-price"><span class="price-now">&#8377;'+p.price.toLocaleString('en-IN')+'</span></div>' +
-            '<div class="add-to-cart"><button class="btn-cart" onclick="event.stopPropagation();addToCart(\''+pn+'\','+p.price+',1)">Add to Cart</button>' +
-            '<button class="btn-buy" onclick="event.stopPropagation();buyNow(\''+p.id+'\',\''+pn+'\',\''+pi+'\','+p.price+')">Buy Now</button></div>' +
+            '<div class="add-to-cart"><button class="btn-cart" onclick="event.stopPropagation();addToCart(\''+pn+'\','+(p.price||0)+',1)">Add to Cart</button>' +
+            '<button class="btn-buy" onclick="event.stopPropagation();buyNow(\''+(p.id||'')+'\',\''+pn+'\',\''+pi+'\','+(p.price||0)+')">Buy Now</button></div>' +
           '</div>' +
         '</div>';
       }).join('') +

@@ -151,7 +151,7 @@
         <div class="co-card-title"><span class="step-num">1</span> Delivery Information</div>
         <div class="form-row">
           <div class="fg"><label>Full Name *</label><input type="text" id="co-name" placeholder="Arjun Sharma" oninput="validateField(this,'name')"/><div class="fg-error" id="co-name-error"></div></div>
-          <div class="fg"><label>Phone Number *</label><input type="tel" id="co-phone" placeholder="+91 98765 43210" maxlength="14" oninput="formatPhone(this);validateField(this,'phone')"/><div class="fg-error" id="co-phone-error"></div><div class="fg-success" id="co-phone-success"></div></div>
+          <div class="fg"><label>Phone Number *</label><input type="tel" id="co-phone" placeholder="9876543210" maxlength="10" oninput="handlePhoneInput(this);validateField(this,'phone')" onblur="handlePhoneBlur(this)"/><div class="fg-error" id="co-phone-error"></div><div class="fg-success" id="co-phone-success"></div></div>
         </div>
         <div class="fg"><label>Email Address *</label><input type="email" id="co-email" placeholder="you@email.com" oninput="validateField(this,'email')"/><div class="fg-error" id="co-email-error"></div><div class="fg-success" id="co-email-success"></div></div>
         <div class="fg"><label>Delivery Address *</label><textarea id="co-addr" rows="3" placeholder="House No., Street, Area, Landmark..." oninput="validateField(this,'required')"></textarea><div class="fg-error" id="co-addr-error"></div></div>
@@ -279,6 +279,42 @@ function formatPhone(inp) {
   } else {
     inp.value = '';
   }
+}
+
+var phoneTimeout = null;
+
+function handlePhoneInput(inp) {
+  clearTimeout(phoneTimeout);
+  var digits = inp.value.replace(/\D/g, '');
+  
+  if (digits.length < 10) {
+    phoneTimeout = setTimeout(function() {
+      var d = inp.value.replace(/\D/g, '');
+      if (d.length === 10) {
+        inp.value = '+91 ' + d;
+        validateField(inp, 'phone');
+      }
+    }, 600);
+  } else if (digits.length === 10) {
+    inp.value = '+91 ' + digits;
+    validateField(inp, 'phone');
+  } else if (digits.length > 10) {
+    inp.value = digits.substring(0, 10);
+  }
+}
+
+function handlePhoneBlur(inp) {
+  clearTimeout(phoneTimeout);
+  var digits = inp.value.replace(/\D/g, '');
+  
+  if (digits.length > 0) {
+    if (digits.length === 10) {
+      inp.value = '+91 ' + digits;
+    } else if (digits.length < 10) {
+      inp.value = digits;
+    }
+  }
+  validateField(inp, 'phone');
 }
 
 function validateField(inp, type) {
