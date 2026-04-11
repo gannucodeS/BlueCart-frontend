@@ -544,6 +544,12 @@ function doLogin() {
     var savedToken = localStorage.getItem('bc_token');
     console.log('Token saved in localStorage:', savedToken ? 'YES' : 'NO');
     
+    // Test the session API immediately
+    console.log('Testing session API...');
+    BC.getSession().then(function(sess) {
+      console.log('Immediate session test result:', sess);
+    });
+    
     showMsg('login-ok', 'Welcome back, ' + res.user.name.split(' ')[0] + '! Redirecting...', 'ok');
     setTimeout(function() {
       if (res.user.role === 'admin') {

@@ -154,8 +154,16 @@ function loadProductInline(id) {
     renderProductPage(p, container);
   }).catch(function(e) {
     container.innerHTML = '<div style="text-align:center;padding:60px;"><h2>Error Loading Product</h2><p>' + e.message + '</p></div>';
-  });
-}
+});
+
+// Handle browser back/forward
+window.addEventListener('popstate', function(e) {
+  var params = new URLSearchParams(window.location.search);
+  var pid = params.get('id');
+  if (pid) {
+    loadProductInline(pid);
+  }
+});
 
 function renderProductPage(p, container) {
   if (!container) return;
