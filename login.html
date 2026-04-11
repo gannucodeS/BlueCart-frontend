@@ -544,7 +544,7 @@ function doLogin() {
 window.location.href = '/admin';
         return;
       }
-      var rd = sessionStorage.getItem('bc_redirect') || 'index.html';
+      var rd = sessionStorage.getItem('bc_redirect') || '/index';
       sessionStorage.removeItem('bc_redirect');
       window.location.href = rd;
     }, 800);

@@ -77,17 +77,17 @@ function requireLogin(callback) {
     }).then(function(sess) {
       if (!sess) {
         sessionStorage.setItem('bc_redirect', window.location.href);
-        window.location.href = 'login.html';
+        window.location.href = '/login';
         return false;
       }
       if (callback) callback();
       return true;
     }).catch(function() {
       sessionStorage.setItem('bc_redirect', window.location.href);
-      window.location.href = 'login.html';
+      window.location.href = '/login';
     });
   } else {
-    window.location.href = 'login.html';
+    window.location.href = '/login';
   }
 }
 function buyNow(id, name, img, price) {
@@ -98,7 +98,7 @@ function buyNow(id, name, img, price) {
   } else if (!id) {
     var p = new URLSearchParams();
     p.set('name', name); p.set('img', img || ''); p.set('price', price); p.set('mode', 'buynow');
-    window.location.href = 'checkout.html?' + p.toString();
+    window.location.href = '/checkout?' + p.toString();
   } else {
     requireLogin(function() {
       goToProduct(id);
@@ -111,7 +111,7 @@ function checkoutCart() {
   requireLogin(function() {
     var p = new URLSearchParams();
     p.set('mode', 'cart'); p.set('items', JSON.stringify(items));
-    window.location.href = 'checkout.html?' + p.toString();
+    window.location.href = '/checkout?' + p.toString();
   });
 }
 
@@ -279,7 +279,7 @@ window.addEventListener('popstate', function(e) {
 function doSearchNav() {
   var inp = document.getElementById('searchInput') || document.getElementById('navSearch');
   var q   = inp ? inp.value.trim() : '';
-  if (q) window.location.href = 'search.html?q=' + encodeURIComponent(q);
+  if (q) window.location.href = '/search?q=' + encodeURIComponent(q);
 }
 
 // ── LIVE SEARCH SUGGESTIONS ─────────────────────────────────────────────────
@@ -363,7 +363,7 @@ function initSearchSuggestions() {
         li.addEventListener('click', function() {
           inp.value = item;
           dropdown.style.display = 'none';
-          window.location.href = 'search.html?q=' + encodeURIComponent(item);
+          window.location.href = '/search?q=' + encodeURIComponent(item);
         });
         
         ul.appendChild(li);
@@ -416,7 +416,7 @@ function initSearchSuggestions() {
         if (activeIndex >= 0 && items[activeIndex]) {
           items[activeIndex].click();
         } else if (inp.value.trim()) {
-          window.location.href = 'search.html?q=' + encodeURIComponent(inp.value.trim());
+          window.location.href = '/search?q=' + encodeURIComponent(inp.value.trim());
         }
       } else if (e.key === 'Escape') {
         hideDropdown();
@@ -480,7 +480,7 @@ function showSearchSuggestions() {
     html += '<div class="suggest-section"><div class="suggest-label">Categories</div>';
     suggestionsData.categories.forEach(function(cat) {
       var icon = getCategoryIcon(cat);
-      html += '<a class="suggest-item suggest-item-cat" href="search.html?q=' + encodeURIComponent(cat) + '">';
+      html += '<a class="suggest-item suggest-item-cat" href="/search?q=' + encodeURIComponent(cat) + '">';
       html += '<span class="suggest-icon">' + icon + '</span>';
       html += '<span>' + cat + '</span>';
       html += '</a>';
@@ -492,7 +492,7 @@ function showSearchSuggestions() {
   if (suggestionsData.brands && suggestionsData.brands.length) {
     html += '<div class="suggest-section"><div class="suggest-label">Brands</div>';
     suggestionsData.brands.forEach(function(brand) {
-      html += '<a class="suggest-item suggest-item-brand" href="search.html?q=' + encodeURIComponent(brand) + '">';
+      html += '<a class="suggest-item suggest-item-brand" href="/search?q=' + encodeURIComponent(brand) + '">';
       html += '<span class="suggest-icon">★</span>';
       html += '<span>' + brand + '</span>';
       html += '</a>';
@@ -518,9 +518,9 @@ function showSearchSuggestions() {
   // Trending searches (when no results or minimal)
   if (!html) {
     html += '<div class="suggest-section"><div class="suggest-label">Trending</div>';
-    html += '<a class="suggest-item" href="search.html?q=iPhone"><span class="suggest-icon">📱</span><span>iPhone 15 Pro</span></a>';
-    html += '<a class="suggest-item" href="search.html?q=MacBook"><span class="suggest-icon">💻</span><span>MacBook Air</span></a>';
-    html += '<a class="suggest-item" href="search.html?q=Headphones"><span class="suggest-icon">🎧</span><span>Wireless Headphones</span></a>';
+    html += '<a class="suggest-item" href="/search?q=iPhone"><span class="suggest-icon">📱</span><span>iPhone 15 Pro</span></a>';
+    html += '<a class="suggest-item" href="/search?q=MacBook"><span class="suggest-icon">💻</span><span>MacBook Air</span></a>';
+    html += '<a class="suggest-item" href="/search?q=Headphones"><span class="suggest-icon">🎧</span><span>Wireless Headphones</span></a>';
     html += '</div>';
   }
   
@@ -699,8 +699,8 @@ function scrollToProducts() {
 // ── ORDERS REDIRECT ───────────────────────────────────────────────────────────
 function goOrders() {
   BC.ready.then(function() { return BC.getSession(); }).then(function(sess) {
-    if (!sess) { sessionStorage.setItem('bc_redirect', 'orders.html'); window.location.href = 'login.html'; }
-    else window.location.href = 'orders.html';
+    if (!sess) { sessionStorage.setItem('bc_redirect', '/orders'); window.location.href = '/login'; }
+    else window.location.href = '/orders';
   });
 }
 
@@ -817,7 +817,7 @@ function initSharedNavbar() {
       var link  = document.getElementById('account-link');
       if (greet) greet.textContent = 'Hello, ' + sess.name.split(' ')[0];
       if (label) label.textContent = 'My Account';
-      if (link)  link.href = sess.role === 'admin' ? 'admin.html' : 'account.html';
+      if (link)  link.href = sess.role === 'admin' ? '/admin' : '/account';
     }).catch(function() {});
   }
 }
@@ -859,7 +859,7 @@ function attachProductLinks() {
         if (price) params.set('price', price);
         if (img) params.set('img', encodeURIComponent(img));
         if (cat) params.set('cat', cat);
-      window.location.href = '/product.html?' + params.toString();
+      window.location.href = '/product?' + params.toString();
       }
     }
     var wrap = card.querySelector('.prod-img-wrap,.new-img-wrap,.explore-img-wrap');
