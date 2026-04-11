@@ -589,7 +589,7 @@ var isListView   = false;
 // ── CART ─────────────────────────────────────────────────────────────────────
 // Cart functions are provided by shared.js - cart auto-loads from localStorage on page init
 
-function buyNow(id,name,img,price){if(id&&id.startsWith('PRD-')){window.location.href='/product?id='+encodeURIComponent(id);}else{var p=new URLSearchParams();p.set('name',name);p.set('img',img||'');p.set('price',price);p.set('mode','buynow');window.location.href='checkout.html?'+p.toString();}}
+function buyNow(id,name,img,price){if(id&&id.startsWith('PRD-')){window.location.href='/product?id='+encodeURIComponent(id);}else{var p=new URLSearchParams();p.set('name',name);p.set('img',img||'');p.set('price',price);p.set('mode','buynow');window.location.href='/checkout?'+p.toString();}}
 // checkoutCart and goOrders are provided by shared.js
 
 // ── INIT ─────────────────────────────────────────────────────────────────────

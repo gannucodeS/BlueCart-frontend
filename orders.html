@@ -394,7 +394,7 @@ function reorder(orderId) {
   var first = order.items[0];
   var p = new URLSearchParams();
   p.set('mode','buynow'); p.set('name',first.name); p.set('img',first.imageUrl||''); p.set('price',first.price);
-  window.location.href = 'checkout.html?' + p.toString();
+  window.location.href = '/checkout?' + p.toString();
 }
 
 function goOrders() { window.location.href="/orders"; }

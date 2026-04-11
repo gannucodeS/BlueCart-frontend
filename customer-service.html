@@ -182,7 +182,7 @@
 function buyNow(name, img, price) {
   var p = new URLSearchParams();
   p.set('name', name); p.set('img', img); p.set('price', price); p.set('mode', 'buynow');
-  window.location.href = 'checkout.html?' + p.toString();
+  window.location.href = '/checkout?' + p.toString();
 }
 
 // ── CART CHECKOUT ──
@@ -191,7 +191,7 @@ function checkoutCart() {
   var p = new URLSearchParams();
   p.set('mode', 'cart');
   p.set('items', JSON.stringify(cartItems));
-  window.location.href = 'checkout.html?' + p.toString();
+  window.location.href = '/checkout?' + p.toString();
 }
 
 

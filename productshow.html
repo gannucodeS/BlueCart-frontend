@@ -350,8 +350,8 @@ function requireLogin(callback) {
     window.location.href = 'login.html';
   });
 }
-function buyNow(name,img,price){requireLogin(function(){var p=new URLSearchParams();p.set('name',name);p.set('img',img||'');p.set('price',price);p.set('mode','buynow');window.location.href='checkout.html?'+p.toString();});}
-function checkoutCart(){if(!window.cartItems.length){showToast('Your cart is empty!');return;}requireLogin(function(){var p=new URLSearchParams();p.set('mode','cart');p.set('items',JSON.stringify(window.cartItems));window.location.href='checkout.html?'+p.toString();});}
+function buyNow(name,img,price){requireLogin(function(){var p=new URLSearchParams();p.set('name',name);p.set('img',img||'');p.set('price',price);p.set('mode','buynow');window.location.href='/checkout?'+p.toString();});}
+function checkoutCart(){if(!window.cartItems.length){showToast('Your cart is empty!');return;}requireLogin(function(){var p=new URLSearchParams();p.set('mode','cart');p.set('items',JSON.stringify(window.cartItems));window.location.href='/checkout?'+p.toString();});}
 function switchTab(id,btn){
   document.querySelectorAll('.pv-tab-content').forEach(function(t){t.classList.remove('active');});
   document.querySelectorAll('.pv-tab').forEach(function(b){b.classList.remove('active');});
