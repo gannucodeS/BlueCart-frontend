@@ -189,7 +189,7 @@ function renderProducts(products) {
     var pImg = mainImg.replace(/'/g, "\\'");
     var viewUrl = '/product?id=' + encodeURIComponent(p.id);
     
-    return '<div class="product-card fade-up" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
+    return '<div class="product-card fade-up" data-dbid="' + p.id + '" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
       '<div class="prod-img-wrap">' + badgeHtml +
       '<button class="wishlist-btn" onclick="event.stopPropagation();this.textContent=this.textContent===\'🤍\'?\'❤️\':\'🤍\'">🤍</button>' +
       '<img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +

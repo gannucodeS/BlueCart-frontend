@@ -788,7 +788,7 @@ function renderResults() {
     // All products now from DB - use id-based URL with /product path
     var viewUrl = '/product?id=' + encodeURIComponent(p.id);
 
-    return '<div class="product-card">' +
+    return '<div class="product-card" data-dbid="' + p.id + '">' +
       '<div class="prod-img-wrap" style="cursor:pointer" onclick="window.location.href=\''+viewUrl+'\'">' +
       badgeHtml +
       '<button class="wishlist-btn" onclick="event.stopPropagation();this.textContent=this.textContent===\'&#129293;\'?\'&#10084;&#65039;\':\'&#129293;\'">&#129293;</button>' +

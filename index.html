@@ -456,7 +456,7 @@ function renderProductCard(p) {
   var pImg = mainImg.replace(/'/g, "\\'");
   var viewUrl = '/product?id=' + encodeURIComponent(p.id);
   
-  return '<div class="product-card fade-up" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
+  return '<div class="product-card fade-up" data-dbid="' + p.id + '" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
     '<div class="prod-img-wrap">' + badgeHtml +
     '<button class="wishlist-btn" onclick="event.stopPropagation();this.textContent=this.textContent===\'&#129293;\'?\'&#10084;&#65039;\':\'&#129293;\'">&#129293;</button>' +
     '<img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
@@ -494,7 +494,7 @@ function renderDealProducts() {
       var stock = Math.floor(Math.random() * 50) + 20;
       var sold = Math.floor(Math.random() * 60) + 20;
       var viewUrl = '/product?id=' + encodeURIComponent(p.id);
-      return '<div class="deal-card" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
+      return '<div class="deal-card" data-dbid="' + p.id + '" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
         '<img class="deal-img" src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
         '<div class="deal-info"><div class="deal-cat">' + (p.category || '') + '</div>' +
         '<div class="deal-name">' + p.name + '</div>' +
@@ -521,7 +521,7 @@ function renderNewArrivals() {
       var badgeText = 'Just In';
       if (badgeClass === 'hot') badgeText = 'Hot';
       else if (badgeClass === 'trend') badgeText = 'Trending';
-      return '<div class="new-card" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
+      return '<div class="new-card" data-dbid="' + p.id + '" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
         '<span class="new-badge">' + badgeText + '</span>' +
         '<button class="new-wishlist" onclick="event.stopPropagation()">&#129293;</button>' +
         '<div class="new-img-wrap"><img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/></div>' +
@@ -551,7 +551,7 @@ function renderExploreProducts() {
       var pImg = mainImg.replace(/'/g, "\\'");
       var viewUrl = '/product?id=' + encodeURIComponent(p.id);
       
-      return '<div class="explore-card" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
+      return '<div class="explore-card" data-dbid="' + p.id + '" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
         '<div class="explore-img-wrap">' +
         (disc > 0 ? '<span class="exp-badge sale">-' + disc + '%</span>' : (p.badge ? '<span class="exp-badge ' + badgeText + '">' + p.badge.toUpperCase() + '</span>' : '')) +
         '<img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
