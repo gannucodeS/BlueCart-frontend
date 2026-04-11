@@ -91,19 +91,18 @@ function requireLogin(callback) {
   }
 }
 function buyNow(id, name, img, price) {
-  if (id && id.startsWith('PRD-')) {
-    requireLogin(function() {
-      goToProduct(id);
-    });
-  } else if (!id) {
+  requireLogin(function() {
     var p = new URLSearchParams();
-    p.set('name', name); p.set('img', img || ''); p.set('price', price); p.set('mode', 'buynow');
+    p.set('mode', 'buynow');
+    if (id && id.startsWith('PRD-')) {
+      p.set('id', id);
+    } else {
+      p.set('name', name);
+      if (img) p.set('img', img);
+      p.set('price', price);
+    }
     window.location.href = '/checkout?' + p.toString();
-  } else {
-    requireLogin(function() {
-      goToProduct(id);
-    });
-  }
+  });
 }
 function checkoutCart() {
   var items = window.cartItems || [];
