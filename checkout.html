@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="shared.css"/>
   <script src="db.mongo.js"></script>
+  <script src="shared.js"></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     :root{--navy:#0f2d4a;--teal:#0ea5a0;--teal-dark:#0c8f8b;--teal-light:#ccf2f1;--coral:#ff5f5f;--amber:#ffb703;--lime:#56cf76;--off:#f4f7fb;--muted:#6b7a8d;}
@@ -140,8 +141,22 @@
       <span></span><span></span><span></span>
     </button>
     <a href="/index" class="logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
-    <a href="/cart" class="cart-btn" title="Cart">&#128722; <span id="cart-count">0</span></a>
+    <a href="#" class="cart-btn" title="Cart" onclick="toggleCart();return false;">&#128722; <span id="cart-count">0</span></a>
   </div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div id="cart">
+  <div class="cart-header"><h3>&#128722; Your Cart</h3><button class="cart-close" onclick="toggleCart()">&#10005;</button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cart-total">&#8377;0</span></div>
+    <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout &#8594;</button>
+  </div>
+  <div class="cart-clear-wrap" style="padding:0 16px 16px;display:none;" id="cart-clear-wrap">
+    <button class="cart-clear-btn" onclick="clearCart()" style="width:100%;padding:10px;background:#fee2e2;border:1.5px solid #fecaca;border-radius:8px;color:#dc2626;font-weight:700;font-size:14px;cursor:pointer;">&#128465; Remove All</button>
+  </div>
+</div>
 
 <div id="login-required" class="login-required">
   <div class="login-required-icon">&#128274;</div>
@@ -824,6 +839,7 @@ BC.ready.then(function() {
   document.getElementById('login-required').classList.remove('show');
   document.getElementById('checkout-wrap').style.display = 'block';
   loadOrderData();
+  renderCart();
   
   var g = document.getElementById('account-greeting');
   var lk = document.getElementById('account-link');
