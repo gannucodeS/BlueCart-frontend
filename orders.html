@@ -115,7 +115,7 @@
   <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
   <div style="flex:1;"></div>
   <div class="nav-right">
-    <div class="nav-icon-btn wishlist-trigger" onmouseenter="showWishlistDropdown()" onclick="toggleWishlistDropdown()" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge" id="wishlist-count">0</span></div>
+    <div class="nav-icon-btn wishlist-trigger" onmouseenter="showWishlistDropdown()" onclick="requireLogin(function(){toggleWishlistDropdown()})" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge" id="wishlist-count">0</span></div>
     <div id="wishlist-dropdown" class="wishlist-dropdown"></div>
     <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
     <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>

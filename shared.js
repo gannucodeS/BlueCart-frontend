@@ -81,11 +81,13 @@ function toggleWishlistDropdown() {
 }
 
 function showWishlistDropdown() {
-  var dropdown = document.getElementById('wishlist-dropdown');
-  if (dropdown) {
-    renderWishlistDropdown();
-    dropdown.classList.add('show');
-  }
+  requireLogin(function() {
+    var dropdown = document.getElementById('wishlist-dropdown');
+    if (dropdown) {
+      renderWishlistDropdown();
+      dropdown.classList.add('show');
+    }
+  });
 }
 
 function hideWishlistDropdown() {
@@ -175,30 +177,32 @@ function updateWishlistCount() {
 }
 
 function handleWishlistToggle(btn) {
-  var id = btn.getAttribute('data-id') || '';
-  var name = btn.getAttribute('data-name') || '';
-  var price = parseFloat(btn.getAttribute('data-price')) || 0;
-  var img = btn.getAttribute('data-img') || '';
-  
-  var exists = window.wishlistItems.some(function(item) {
-    return item.id === id || item.name === name;
-  });
-  
-  if (exists) {
-    var idx = window.wishlistItems.findIndex(function(item) {
+  requireLogin(function() {
+    var id = btn.getAttribute('data-id') || '';
+    var name = btn.getAttribute('data-name') || '';
+    var price = parseFloat(btn.getAttribute('data-price')) || 0;
+    var img = btn.getAttribute('data-img') || '';
+    
+    var exists = window.wishlistItems.some(function(item) {
       return item.id === id || item.name === name;
     });
-    if (idx !== -1) {
-      window.wishlistItems.splice(idx, 1);
-      btn.innerHTML = '&#129293;';
-      showToast('Removed from wishlist');
+    
+    if (exists) {
+      var idx = window.wishlistItems.findIndex(function(item) {
+        return item.id === id || item.name === name;
+      });
+      if (idx !== -1) {
+        window.wishlistItems.splice(idx, 1);
+        btn.innerHTML = '&#129293;';
+        showToast('Removed from wishlist');
+      }
+    } else {
+      addToWishlist({ id: id, name: name, price: price, imageUrl: img });
+      btn.innerHTML = '&#10084;&#65039;';
     }
-  } else {
-    addToWishlist({ id: id, name: name, price: price, imageUrl: img });
-    btn.innerHTML = '&#10084;&#65039;';
-  }
-  saveWishlist();
-  updateWishlistCount();
+    saveWishlist();
+    updateWishlistCount();
+  });
 }
 function renderCart() {
   window.cartItems = window.cartItems || [];
@@ -1110,6 +1114,17 @@ document.addEventListener('keydown', function(e) {
     initSharedNavbar();
     attachProductLinks();
     initWishlist();
+    // Setup wishlist dropdown auto-close on mouseleave
+    setTimeout(function() {
+      var wishlistTrigger = document.querySelector('.wishlist-trigger');
+      if (wishlistTrigger) {
+        wishlistTrigger.addEventListener('mouseleave', function() {
+          setTimeout(function() {
+            hideWishlistDropdown();
+          }, 300);
+        });
+      }
+    }, 1000);
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', run);
