@@ -800,8 +800,8 @@ function renderResults() {
         '<div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8</div>' +
         '<div class="prod-price"><span class="price-now">₹'+p.price.toLocaleString('en-IN')+'</span>'+oldHtml+offHtml+'</div>' +
         '<div class="add-to-cart">' +
-          '<button class="btn-cart" onclick="addToCart(\''+pName+'\','+p.price+',1,\''+pImg+'\')">Add to Cart</button>' +
-          '<button class="btn-buy"  onclick="buyNow(\''+p.id+'\',\''+pName+'\',\''+pImg+'\','+p.price+')">Buy Now</button>' +
+          '<button class="btn-cart" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+pImg+'" onclick="handleAddToCart(this)">Add to Cart</button>' +
+          '<button class="btn-buy" data-id="'+p.id+'" data-name="'+pName+'" data-img="'+pImg+'" data-price="'+p.price+'" onclick="handleBuyNow(this)">Buy Now</button>' +
         '</div>' +
       '</div>' +
     '</div>';

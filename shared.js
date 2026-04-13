@@ -37,6 +37,20 @@ function addToCart(name, price, qty, imageUrl) {
   renderCart();
   showToast('Added: ' + name);
 }
+function handleAddToCart(btn) {
+  var name = btn.getAttribute('data-name') || '';
+  var price = parseFloat(btn.getAttribute('data-price')) || 0;
+  var img = btn.getAttribute('data-img') || '';
+  var qty = window.currentQty || 1;
+  addToCart(name, price, qty, img);
+}
+function handleBuyNow(btn) {
+  var id = btn.getAttribute('data-id') || '';
+  var name = btn.getAttribute('data-name') || '';
+  var img = btn.getAttribute('data-img') || '';
+  var price = parseFloat(btn.getAttribute('data-price')) || 0;
+  buyNow(id, name, img, price);
+}
 function removeFromCart(i) { 
   window.cartItems = window.cartItems || [];
   window.cartItems.splice(i, 1); 
@@ -211,8 +225,8 @@ function renderProductPage(p, container) {
   
   html += '<div style="display:flex;gap:12px;margin-bottom:20px;">';
   if (stock > 0) {
-    html += '<button onclick="addToCart(\'' + pName.replace(/'/g, "\\'") + '\',' + pPrice + ',1)" style="flex:1;padding:15px;background:white;border:2px solid var(--teal);color:var(--teal);border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">🛒 Add to Cart</button>';
-    html += '<button onclick="buyNow(\'' + pName.replace(/'/g, "\\'") + '\',\'\',' + pPrice + ')" style="flex:1;padding:15px;background:linear-gradient(90deg,var(--teal),#0891b2);color:white;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">⚡ Buy Now</button>';
+    html += '<button data-name="' + pName.replace(/"/g, '&quot;') + '" data-price="' + pPrice + '" data-img="" onclick="handleAddToCart(this)" style="flex:1;padding:15px;background:white;border:2px solid var(--teal);color:var(--teal);border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">&#128722; Add to Cart</button>';
+    html += '<button data-name="' + pName.replace(/"/g, '&quot;') + '" data-id="" data-img="" data-price="' + pPrice + '" onclick="handleBuyNow(this)" style="flex:1;padding:15px;background:linear-gradient(90deg,var(--teal),#0891b2);color:white;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">&#9889; Buy Now</button>';
   } else {
     html += '<button disabled style="flex:1;padding:15px;background:#e5eaf0;color:#6b7a8d;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:not-allowed;">Out of Stock</button>';
   }
@@ -269,8 +283,8 @@ function renderProductPage(p, container) {
   html += '</div></div>';
   html += '<div style="display:flex;gap:12px;margin-bottom:20px;">';
   if (stock > 0) {
-    html += '<button onclick="addToCart(\'' + pName.replace(/'/g, "\\'") + '\',' + pPrice + ',1)" style="flex:1;padding:15px;background:white;border:2px solid var(--teal);color:var(--teal);border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">🛒 Add to Cart</button>';
-    html += '<button onclick="buyNow(\'' + pName.replace(/'/g, "\\'") + '\',\'\',' + pPrice + ')" style="flex:1;padding:15px;background:linear-gradient(90deg,var(--teal),#0891b2);color:white;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">⚡ Buy Now</button>';
+    html += '<button data-name="' + pName.replace(/"/g, '&quot;') + '" data-price="' + pPrice + '" data-img="" onclick="handleAddToCart(this)" style="flex:1;padding:15px;background:white;border:2px solid var(--teal);color:var(--teal);border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">&#128722; Add to Cart</button>';
+    html += '<button data-name="' + pName.replace(/"/g, '&quot;') + '" data-id="" data-img="" data-price="' + pPrice + '" onclick="handleBuyNow(this)" style="flex:1;padding:15px;background:linear-gradient(90deg,var(--teal),#0891b2);color:white;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;">&#9889; Buy Now</button>';
   } else {
     html += '<button disabled style="flex:1;padding:15px;background:#e5eaf0;color:#6b7a8d;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:not-allowed;">Out of Stock</button>';
   }

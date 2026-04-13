@@ -196,8 +196,8 @@ function renderProducts(products) {
       (disc > 0 ? '<span class="price-off">' + disc + '% off</span>' : '') +
       '</div>' +
       '<div class="add-to-cart">' +
-      '<button class="btn-cart" onclick="event.stopPropagation();addToCart(\'' + pName + '\',' + p.price + ',1,\'' + pImg + '\')">Add to Cart</button>' +
-      '<button class="btn-buy" onclick="event.stopPropagation();buyNow(\'' + p.id + '\',\'' + pName + '\',\'' + pImg + '\',' + p.price + ')">Buy Now ⚡</button>' +
+      '<button class="btn-cart" data-name="' + pName + '" data-price="' + p.price + '" data-img="' + pImg + '" onclick="event.stopPropagation();handleAddToCart(this)">Add to Cart</button>' +
+      '<button class="btn-buy" data-id="' + p.id + '" data-name="' + pName + '" data-img="' + pImg + '" data-price="' + p.price + '" onclick="event.stopPropagation();handleBuyNow(this)">Buy Now ⚡</button>' +
       '</div>' +
       '<a href="' + viewUrl + '" class="view-details-btn" onclick="event.stopPropagation()">View Details →</a>' +
       '</div></div>';
