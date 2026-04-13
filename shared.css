@@ -1113,6 +1113,7 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
 .cart-close:hover { background:rgba(255,255,255,0.3); }
 #cart-items { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; }
 .cart-item { background:var(--off); border-radius:10px; padding:14px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.cart-item-img { width:50px; height:50px; object-fit:cover; border-radius:8px; flex-shrink:0; }
 .cart-item-name  { font-size:14px; font-weight:700; color:var(--navy); }
 .cart-item-price { font-size:13px; color:var(--teal); font-weight:800; }
 .remove-btn { background:#fee2e2; border:none; color:var(--coral); border-radius:6px; padding:5px 10px; cursor:pointer; font-size:13px; font-weight:700; transition:background var(--trans); white-space:nowrap; }

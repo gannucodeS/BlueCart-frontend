@@ -29,10 +29,10 @@ function toggleCart() {
   if (c) c.classList.toggle('active', cartOpen);
   if (o) o.classList.toggle('open', cartOpen);
 }
-function addToCart(name, price, qty) {
+function addToCart(name, price, qty, imageUrl) {
   window.cartItems = window.cartItems || [];
   qty = qty || 1;
-  for (var i = 0; i < qty; i++) window.cartItems.push({ name: name, price: price });
+  for (var i = 0; i < qty; i++) window.cartItems.push({ name: name, price: price, imageUrl: imageUrl || '' });
   saveCart();
   renderCart();
   showToast('Added: ' + name);
@@ -43,13 +43,22 @@ function removeFromCart(i) {
   saveCart(); 
   renderCart(); 
 }
+function clearCart() {
+  window.cartItems = [];
+  saveCart();
+  renderCart();
+  showToast('Cart cleared');
+}
+window.clearCart = clearCart;
 function renderCart() {
   window.cartItems = window.cartItems || [];
   saveCart(); // Save cart whenever rendered
   var list  = document.getElementById('cart-items');
   var total = document.getElementById('cart-total');
   var count = document.getElementById('cart-count');
+  var clearWrap = document.getElementById('cart-clear-wrap');
   if (count) count.textContent = window.cartItems.length;
+  if (clearWrap) clearWrap.style.display = window.cartItems.length > 0 ? 'block' : 'none';
   if (!list) return;
   if (!window.cartItems.length) {
     list.innerHTML = '<div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div>';
@@ -57,7 +66,8 @@ function renderCart() {
     return;
   }
   list.innerHTML = window.cartItems.map(function(item, i) {
-    return '<li class="cart-item"><div><div class="cart-item-name">' + item.name +
+    var imgHtml = item.imageUrl ? '<img src="' + item.imageUrl + '" class="cart-item-img" onerror="this.style.display=\'none\'"/>' : '';
+    return '<li class="cart-item">' + imgHtml + '<div><div class="cart-item-name">' + item.name +
       '</div><div class="cart-item-price">₹' + item.price.toLocaleString('en-IN') +
       '</div></div><button class="remove-btn" onclick="removeFromCart(' + i + ')">Remove</button></li>';
   }).join('');
@@ -960,3 +970,10 @@ document.addEventListener('keydown', function(e) {
   setTimeout(function() { attachProductLinks(); initWishlist(); }, 800);
   setTimeout(function() { attachProductLinks(); initWishlist(); }, 2500);
 })();
+
+function scrollRow(id, dir) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var scrollAmount = 220;
+  el.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
+}

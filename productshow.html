@@ -331,7 +331,7 @@
 <script>
 // ── CART ─────────────────────────────────────────────────────────────────────
 // Cart functions are now provided by shared.js
-var currentQty = 1;
+window.currentQty = 1;
 
 function showToast(msg){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
 function requireLogin(callback) {
@@ -721,7 +721,7 @@ function renderProduct(p) {
           '<span class="pv-qty-label">Quantity:</span>' +
           '<div class="pv-qty-ctrl">' +
             '<button class="pv-qty-btn" onclick="changeQty(-1)">&#8722;</button>' +
-            '<input type="number" id="pv-qty-inp" class="pv-qty-num" value="1" min="1" max="10" oninput="currentQty=parseInt(this.value)||1"/>' +
+            '<input type="number" id="pv-qty-inp" class="pv-qty-num" value="1" min="1" max="10" oninput="window.currentQty=parseInt(this.value)||1"/>' +
             '<button class="pv-qty-btn" onclick="changeQty(1)">+</button>' +
           '</div>' +
           (stock>0&&stock<5?'<span style="font-size:12.5px;color:#a16207;font-weight:700;">Only '+stock+' left!</span>':'') +
@@ -729,8 +729,8 @@ function renderProduct(p) {
 
         '<div class="pv-cta">' +
           (p.stock>0
-            ? '<button class="pv-btn-cart" onclick="console.log(\'Add to cart clicked:\', \''+pNameJs+'\', '+(p.price||0)+'); addToCart(\''+pNameJs+'\','+(p.price||0)+',currentQty)">&#128722; Add to Cart</button>' +
-              '<button class="pv-btn-buy"  onclick="console.log(\'Buy now clicked:\', \''+(p.id||'')+'\', \''+pNameJs+'\', '+(p.price||0)+'); buyNow(\''+(p.id||'')+'\',\''+pNameJs+'\',\''+pImgJs+'\','+(p.price||0)+')">&#9889; Buy Now</button>'
+            ? '<button class="pv-btn-cart" onclick="addToCart(\''+pNameJs+'\','+(p.price||0)+',window.currentQty,\''+pImgJs+'\')">&#128722; Add to Cart</button>' +
+              '<button class="pv-btn-buy"  onclick="buyNow(\''+(p.id||'')+'\',\''+pNameJs+'\',\''+pImgJs+'\','+(p.price||0)+')">&#9889; Buy Now</button>'
             : '<button class="pv-btn-cart pv-btn-disabled">&#128722; Add to Cart</button>' +
               '<button class="pv-btn-buy pv-btn-disabled">Out of Stock</button>'
           ) +
@@ -806,8 +806,8 @@ function loadRelated(category, excludeId) {
             '<span class="prod-category">'+p.category+'</span>' +
             '<div class="prod-name">'+p.name+'</div>' +
             '<div class="prod-price"><span class="price-now">&#8377;'+p.price.toLocaleString('en-IN')+'</span></div>' +
-            '<div class="add-to-cart"><button class="btn-cart" onclick="event.stopPropagation();try{addToCart(\''+pn+'\','+(p.price||0)+',1)}catch(e){console.error(\'addToCart error:\',e)}">Add to Cart</button>' +
-            '<button class="btn-buy" onclick="event.stopPropagation();try{buyNow(\''+(p.id||'')+'\',\''+pn+'\',\''+pi+'\','+(p.price||0)+')}catch(e){console.error(\'buyNow error:\',e)}">Buy Now</button></div>' +
+            '<div class="add-to-cart"><button class="btn-cart" onclick="event.stopPropagation();addToCart(\''+pn+'\','+(p.price||0)+',1,\''+pi+'\')">Add to Cart</button>' +
+            '<button class="btn-buy" onclick="event.stopPropagation();buyNow(\''+(p.id||'')+'\',\''+pn+'\',\''+pi+'\','+(p.price||0)+')">Buy Now</button></div>' +
           '</div>' +
         '</div>';
       }).join('') +
