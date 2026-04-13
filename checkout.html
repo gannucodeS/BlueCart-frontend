@@ -612,11 +612,11 @@ async function loadBankDetails() {
 }
 
 function renderSummary() {
-  var subtotal = orderItems.reduce(function(a, b) { return a + b.price * (b.qty || 1); }, 0);
-  var mrpTotal = orderItems.reduce(function(a, b) { return a + (b.mrp || b.price) * (b.qty || 1); }, 0);
-  var savings = mrpTotal > subtotal ? mrpTotal - subtotal : 0;
-  var shipping = subtotal >= 999 ? 0 : (currentPayMethod === 'cod' && subtotal < 999 ? 49 + 40 : 49);
-  orderTotal = subtotal + shipping;
+  var subtotal = orderItems.reduce(function(a, b) { return a + (b.mrp || b.price) * (b.qty || 1); }, 0);
+  var mrpTotal = orderItems.reduce(function(a, b) { return a + b.price * (b.qty || 1); }, 0);
+  var savings = subtotal > mrpTotal ? subtotal - mrpTotal : 0;
+  var shipping = mrpTotal >= 999 ? 0 : (currentPayMethod === 'cod' && mrpTotal < 999 ? 49 + 40 : 49);
+  orderTotal = mrpTotal + shipping;
 
   var itemsHtml = orderItems.map(function(item) {
     return '<div class="os-item">' +
