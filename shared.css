@@ -1126,6 +1126,28 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
 .empty-cart .icon { font-size:56px; margin-bottom:12px; }
 
 /* ═══════════════════════════════════════════════════════════
+   18B. WISHLIST DROPDOWN
+═══════════════════════════════════════════════════════════ */
+.wishlist-dropdown { position:absolute; top:100%; right:0; width:360px; max-height:400px; overflow-y:auto; background:white; border-radius:12px; box-shadow:0 8px 32px rgba(15,45,74,0.2); z-index:600; display:none; }
+.wishlist-dropdown.show { display:block; }
+.wishlist-empty { padding:30px 20px; text-align:center; color:var(--muted); }
+.wishlist-item { display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid #e5eaf0; }
+.wishlist-item:last-child { border-bottom:none; }
+.wishlist-item-img { width:50px; height:50px; object-fit:cover; border-radius:8px; flex-shrink:0; }
+.wishlist-item-info { flex:1; min-width:0; }
+.wishlist-item-name { font-size:13px; font-weight:700; color:var(--navy); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.wishlist-item-price { font-size:13px; color:var(--teal); font-weight:800; margin-top:2px; }
+.wishlist-item-actions { display:flex; gap:6px; flex-shrink:0; }
+.wishlist-btn-action { padding:5px 10px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; border:none; transition:all .2s; }
+.wishlist-btn-action.buy { background:var(--teal); color:white; }
+.wishlist-btn-action.buy:hover { background:var(--teal-dark); }
+.wishlist-btn-action.cart { background:white; color:var(--teal); border:1.5px solid var(--teal); }
+.wishlist-btn-action.cart:hover { background:var(--teal-light); }
+.wishlist-btn-remove { background:none; border:none; color:var(--muted); font-size:14px; cursor:pointer; padding:4px; }
+.wishlist-btn-remove:hover { color:var(--coral); }
+.nav-icon-btn.wishlist-trigger { position:relative; }
+
+/* ═══════════════════════════════════════════════════════════
    19. CUSTOMER SERVICE — SERVICE CARDS
 ═══════════════════════════════════════════════════════════ */
 .service-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; padding:24px 4%; }

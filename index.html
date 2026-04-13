@@ -43,6 +43,8 @@
     .deal-bar-fill{height:100%;background:linear-gradient(90deg,var(--coral),var(--amber));border-radius:3px;}
     .deal-btn{width:100%;margin-top:8px;padding:8px;border-radius:8px;border:none;background:var(--teal);color:white;font-size:12.5px;font-weight:800;cursor:pointer;transition:all .2s;}
     .deal-btn:hover{background:var(--teal-dark);}
+    .deal-btn-cart{width:100%;margin-top:4px;padding:8px;border-radius:8px;border:1.5px solid var(--teal);background:white;color:var(--teal);font-size:12.5px;font-weight:800;cursor:pointer;transition:all .2s;}
+    .deal-btn-cart:hover{background:var(--teal-light);}
     .sec-header{display:flex;justify-content:space-between;align-items:center;padding:20px 0 12px;}
     .sec-title{font-family:'Syne',sans-serif;font-size:20px;color:var(--navy);}
     .sec-title.amber{color:var(--amber);}
@@ -64,6 +66,8 @@
     .new-price-off{font-size:11px;font-weight:800;background:var(--teal-light);color:var(--teal-dark);padding:2px 8px;border-radius:20px;}
     .new-add-btn{width:100%;padding:8px;border-radius:8px;border:none;background:var(--teal);color:white;font-size:12.5px;font-weight:800;cursor:pointer;transition:all .2s;}
     .new-add-btn:hover{background:var(--teal-dark);}
+    .new-add-btn-cart{width:100%;margin-top:4px;padding:8px;border-radius:8px;border:1.5px solid var(--teal);background:white;color:var(--teal);font-size:12.5px;font-weight:800;cursor:pointer;transition:all .2s;}
+    .new-add-btn-cart:hover{background:var(--teal-light);}
     .explore-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-top:4px;}
     .explore-card{background:white;border-radius:12px;overflow:hidden;border:1.5px solid #e5eaf0;transition:all .25s;}
     .explore-card:hover{transform:translateY(-5px);box-shadow:0 10px 28px rgba(15,45,74,0.13);border-color:var(--teal);}
@@ -103,7 +107,10 @@
   <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
   <div style="flex:1;"></div>
   <div class="nav-right">
-    <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
+    <div class="nav-icon-btn wishlist-trigger" onmouseenter="showWishlistDropdown()" onclick="toggleWishlistDropdown()" title="Wishlist">
+      <span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge" id="wishlist-count">0</span>
+    </div>
+    <div id="wishlist-dropdown" class="wishlist-dropdown"></div>
     <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
     <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
           <!-- Hamburger button -->
@@ -461,7 +468,7 @@ function renderProductCard(p) {
   
   return '<div class="product-card fade-up" data-dbid="' + p.id + '" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
     '<div class="prod-img-wrap">' + badgeHtml +
-    '<button class="wishlist-btn" onclick="event.stopPropagation();this.textContent=this.textContent===\'&#129293;\'?\'&#10084;&#65039;\':\'&#129293;\'">&#129293;</button>' +
+    '<button class="wishlist-btn" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+mainImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">&#129293;</button>' +
     '<img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
     '</div>' +
     '<div class="prod-info">' +
@@ -506,7 +513,8 @@ function renderDealProducts() {
         (p.mrp > p.price ? '<span class="deal-price-old">&#8377;' + p.mrp.toLocaleString('en-IN') + '</span>' : '') + '</div>' +
         '<div class="deal-stock"><div class="deal-stock-label"><span>' + sold + '% sold</span><span>' + stock + ' left</span></div>' +
         '<div class="deal-bar"><div class="deal-bar-fill" style="width:' + sold + '%"></div></div></div>' +
-        '<button class="deal-btn" onclick="event.stopPropagation();buyNow(\'' + p.id + '\',\'' + pName + '\',\'' + pImg + '\',' + p.price + ')">Buy Now</button></div></div>';
+        '<button class="deal-btn" onclick="event.stopPropagation();buyNow(\'' + p.id + '\',\'' + pName + '\',\'' + pImg + '\',' + p.price + ')">Buy Now</button>' +
+        '<button class="deal-btn-cart" onclick="event.stopPropagation();addToCart(\'' + pName + '\',' + p.price + ',1,\'' + pImg + '\')">Add to Cart</button></div></div>';
     }).join('');
   }
 }
@@ -533,7 +541,8 @@ function renderNewArrivals() {
         '<div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9</span></div>' +
         '<div class="new-price-row"><span class="new-price-now">&#8377;' + p.price.toLocaleString('en-IN') + '</span>' +
         '<span class="new-price-off">New</span></div>' +
-        '<button class="new-add-btn" onclick="event.stopPropagation();buyNow(\'' + p.id + '\',\'' + pName + '\',\'' + pImg + '\',' + p.price + ')">Buy Now &#9889;</button></div></div>';
+        '<button class="new-add-btn" onclick="event.stopPropagation();buyNow(\'' + p.id + '\',\'' + pName + '\',\'' + pImg + '\',' + p.price + ')">Buy Now &#9889;</button>' +
+        '<button class="new-add-btn-cart" onclick="event.stopPropagation();addToCart(\'' + pName + '\',' + p.price + ',1,\'' + pImg + '\')">Add to Cart</button></div></div>';
     }).join('');
   }
 }
