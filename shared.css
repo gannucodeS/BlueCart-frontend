@@ -1130,7 +1130,7 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
 /* ═══════════════════════════════════════════════════════════
    18B. WISHLIST DROPDOWN
 ═══════════════════════════════════════════════════════════ */
-.wishlist-dropdown { position:absolute; top:100%; right:0; width:360px; max-height:400px; overflow-y:auto; background:white; border-radius:12px; box-shadow:0 8px 32px rgba(15,45,74,0.2); z-index:600; display:none; }
+.wishlist-dropdown { position:absolute; top:100%; left:0; width:360px; max-height:400px; overflow-y:auto; background:white; border-radius:12px; box-shadow:0 8px 32px rgba(15,45,74,0.2); z-index:700; display:none; }
 .wishlist-dropdown.show { display:block; }
 .wishlist-empty { padding:30px 20px; text-align:center; color:var(--muted); }
 .wishlist-signin { padding:30px 20px; text-align:center; }

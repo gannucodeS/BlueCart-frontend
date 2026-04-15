@@ -1162,14 +1162,41 @@ document.addEventListener('keydown', function(e) {
     initSharedNavbar();
     attachProductLinks();
     initWishlist();
-    // Setup wishlist dropdown auto-close on mouseleave
+    // Setup wishlist dropdown hover - show on mouse enter, hide on mouse leave
     setTimeout(function() {
       var wishlistTrigger = document.querySelector('.wishlist-trigger');
+      var wishlistDropdown = document.getElementById('wishlist-dropdown');
+      var hideTimeout;
+      
+      function clearHideTimeout() {
+        clearTimeout(hideTimeout);
+      }
+      
+      function startHideTimeout() {
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(function() {
+          hideWishlistDropdown();
+        }, 500);
+      }
+      
+      // On trigger mouse enter - show dropdown and cancel hide timeout
       if (wishlistTrigger) {
+        wishlistTrigger.addEventListener('mouseenter', function() {
+          clearHideTimeout();
+          showWishlistDropdown();
+        });
         wishlistTrigger.addEventListener('mouseleave', function() {
-          setTimeout(function() {
-            hideWishlistDropdown();
-          }, 300);
+          startHideTimeout();
+        });
+      }
+      
+      // On dropdown mouse enter - cancel hide timeout
+      if (wishlistDropdown) {
+        wishlistDropdown.addEventListener('mouseenter', function() {
+          clearHideTimeout();
+        });
+        wishlistDropdown.addEventListener('mouseleave', function() {
+          startHideTimeout();
         });
       }
     }, 1000);
