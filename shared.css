@@ -104,6 +104,7 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
   display: flex;
   align-items: center;
   position: relative;
+  z-index: 1;
 }
 
 /* ── Logo ── */
@@ -1130,7 +1131,7 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
 /* ═══════════════════════════════════════════════════════════
    18B. WISHLIST DROPDOWN
 ═══════════════════════════════════════════════════════════ */
-.wishlist-dropdown { position:absolute; top:100%; left:0; width:360px; max-height:400px; overflow-y:auto; background:white; border-radius:12px; box-shadow:0 8px 32px rgba(15,45,74,0.2); z-index:700; display:none; }
+.wishlist-dropdown { position:fixed; top:100px; left:auto; right:20px; width:360px; max-height:400px; overflow-y:auto; background:white; border-radius:12px; box-shadow:0 8px 32px rgba(15,45,74,0.2); z-index:10001; display:none; }
 .wishlist-dropdown.show { display:block; }
 .wishlist-empty { padding:30px 20px; text-align:center; color:var(--muted); }
 .wishlist-signin { padding:30px 20px; text-align:center; }
@@ -1151,7 +1152,7 @@ button, select, input, textarea { font-family:'Nunito',sans-serif; }
 .wishlist-btn-action.cart:hover { background:var(--teal-light); }
 .wishlist-btn-remove { background:none; border:none; color:var(--muted); font-size:14px; cursor:pointer; padding:4px; }
 .wishlist-btn-remove:hover { color:var(--coral); }
-.nav-icon-btn.wishlist-trigger { position:relative; }
+.nav-icon-btn.wishlist-trigger { position:relative; z-index:10000; }
 
 /* ═══════════════════════════════════════════════════════════
    19. CUSTOMER SERVICE — SERVICE CARDS
