@@ -81,13 +81,11 @@ function toggleWishlistDropdown() {
 }
 
 function showWishlistDropdown() {
-  requireLogin(function() {
-    var dropdown = document.getElementById('wishlist-dropdown');
-    if (dropdown) {
-      renderWishlistDropdown();
-      dropdown.classList.add('show');
-    }
-  });
+  var dropdown = document.getElementById('wishlist-dropdown');
+  if (dropdown) {
+    renderWishlistDropdown();
+    dropdown.classList.add('show');
+  }
 }
 
 function hideWishlistDropdown() {
