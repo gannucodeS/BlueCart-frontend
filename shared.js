@@ -206,7 +206,24 @@ function removeFromWishlist(index) {
 
 function updateWishlistCount() {
   var countEl = document.getElementById('wishlist-count');
-  if (countEl) countEl.textContent = window.wishlistItems.length;
+  if (!countEl) return;
+  
+  // Check login status - show count only if logged in
+  if (typeof BC !== 'undefined') {
+    BC.ready.then(function() {
+      return BC.getSession();
+    }).then(function(sess) {
+      if (sess) {
+        countEl.textContent = window.wishlistItems.length;
+      } else {
+        countEl.textContent = '0';
+      }
+    }).catch(function() {
+      countEl.textContent = '0';
+    });
+  } else {
+    countEl.textContent = window.wishlistItems.length;
+  }
 }
 
 function handleWishlistToggle(btn) {
