@@ -19,6 +19,9 @@
     .acc-badge{background:rgba(255,255,255,0.15);border-radius:20px;padding:5px 14px;font-size:12.5px;font-weight:700;color:white;border:1px solid rgba(255,255,255,0.2);}
     .acc-badge.gold{background:rgba(255,183,3,0.25);border-color:var(--amber);color:var(--amber);}
 
+    .acc-hero-logout{position:absolute;top:16px;right:20px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;}
+    .acc-hero-logout:hover{background:rgba(255,255,255,0.25);border-color:#fca5a5;color:#fca5a5;}
+
     .acc-layout{display:grid;grid-template-columns:240px 1fr;gap:24px;padding:28px 4% 60px;max-width:1100px;margin:0 auto;}
     .acc-sidebar{display:flex;flex-direction:column;gap:6px;}
     .acc-nav-btn{display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:10px;border:none;background:white;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;text-align:left;width:100%;box-shadow:0 1px 4px rgba(15,45,74,0.06);}
@@ -187,7 +190,7 @@
 </div></div>
 
 <!-- HERO -->
-<div class="acc-hero">
+<div class="acc-hero" style="position:relative;">
   <div class="acc-avatar-wrap">
     <div class="acc-avatar" id="hero-avatar">A</div>
     <button class="acc-avatar-edit" title="Change avatar">✏️</button>
@@ -201,6 +204,7 @@
       <span class="acc-badge" id="hero-orders-badge">0 Orders</span>
     </div>
   </div>
+  <button class="acc-hero-logout" onclick="doLogout()">🚪 Sign Out</button>
 </div>
 
 <!-- LAYOUT -->
@@ -213,7 +217,6 @@
     <button class="acc-nav-btn" onclick="showTab('addresses',this)"><span class="ic">📍</span><span>Addresses</span></button>
     <button class="acc-nav-btn" onclick="showTab('preferences',this)"><span class="ic">⚙️</span><span>Preferences</span></button>
     <button class="acc-nav-btn" onclick="window.location.href='orders.html'"><span class="ic">📦</span><span>My Orders</span></button>
-    <button class="acc-nav-btn acc-logout" onclick="doLogout()"><span class="ic">🚪</span><span>Sign Out</span></button>
   </div>
 
   <!-- MAIN PANELS -->
