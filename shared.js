@@ -100,14 +100,47 @@ function hideWishlistDropdown() {
 function renderWishlistDropdown() {
   var dropdown = document.getElementById('wishlist-dropdown');
   var countEl = document.getElementById('wishlist-count');
-  if (countEl) countEl.textContent = window.wishlistItems.length;
   if (!dropdown) return;
   
-  if (!window.wishlistItems.length) {
-    dropdown.innerHTML = '<div class="wishlist-empty">Your wishlist is empty</div>';
-    return;
+  // Check login status first
+  if (typeof BC !== 'undefined') {
+    BC.ready.then(function() {
+      return BC.getSession();
+    }).then(function(sess) {
+      if (!sess) {
+        // Not logged in - show sign in option
+        if (countEl) countEl.textContent = '0';
+        dropdown.innerHTML = '<div class="wishlist-signin">' +
+          '<p>Sign in to save your favorite products</p>' +
+          '<a href="/login" class="wishlist-signin-btn">Sign In</a>' +
+        '</div>';
+        return;
+      }
+      
+      // Logged in - show wishlist items
+      if (countEl) countEl.textContent = window.wishlistItems.length;
+      
+      if (!window.wishlistItems.length) {
+        dropdown.innerHTML = '<div class="wishlist-empty">Your wishlist is empty</div>';
+        return;
+      }
+      
+      renderWishlistItems(dropdown);
+    }).catch(function() {
+      if (countEl) countEl.textContent = '0';
+      dropdown.innerHTML = '<div class="wishlist-empty">Your wishlist is empty</div>';
+    });
+  } else {
+    if (countEl) countEl.textContent = window.wishlistItems.length;
+    if (!window.wishlistItems.length) {
+      dropdown.innerHTML = '<div class="wishlist-empty">Your wishlist is empty</div>';
+      return;
+    }
+    renderWishlistItems(dropdown);
   }
-  
+}
+
+function renderWishlistItems(dropdown) {
   dropdown.innerHTML = window.wishlistItems.map(function(item, i) {
     var img = item.imageUrl || 'https://placehold.co/60x60?text=W';
     return '<div class="wishlist-item">' +
