@@ -191,7 +191,7 @@ function renderProducts(products) {
     
     return '<div class="product-card fade-up" data-dbid="' + p.id + '" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
       '<div class="prod-img-wrap">' + badgeHtml +
-      '<button class="wishlist-btn" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+pImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">heart</button>' +
+      '<button class="wishlist-btn" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+pImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">' + Icons.heart + '</button>' +
       '<img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
       '</div>' +
       '<div class="prod-info">' +

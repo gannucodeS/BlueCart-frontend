@@ -633,7 +633,7 @@ function renderProduct(p) {
   var reviewsHtml = '<div class="pv-review-summary">' +
     '<div>' +
       '<div class="pv-big-rating">4.8</div>' +
-      '<div class="pv-stars" style="color:#ffb703;font-size:20px;">starstarstarstarstar</div>' +
+      '<div class="pv-stars" style="color:#ffb703;font-size:20px;">(Icons.star + Icons.star + Icons.star + Icons.star + Icons.star)</div>' +
       '<div style="font-size:13px;color:#6b7a8d;margin-top:4px;">Based on '+Math.floor(Math.random()*5000+500)+' reviews</div>' +
     '</div>' +
     '<div class="pv-rating-detail">' +
@@ -691,7 +691,7 @@ function renderProduct(p) {
       '<div class="pv-gallery">' +
         '<div class="pv-main-img-wrap">' +
           '<div class="pv-badge-wrap">'+badgeHtml+'</div>' +
-          '<button class="pv-wish" id="pv-wish-btn" onclick="toggleWish()">heart</button>' +
+          '<button class="pv-wish" id="pv-wish-btn" onclick="toggleWish()">' + Icons.heart + '</button>' +
           '<img class="pv-main-img" id="pv-main-img" src="'+mainImg+'" alt="'+pName+'"/>' +
         '</div>' +
         '<div class="pv-thumbs" id="pv-thumbs">' + thumbsHtml +
@@ -707,7 +707,7 @@ function renderProduct(p) {
         '</div>' +
         '<h1 class="pv-name">'+pName+'</h1>' +
         '<div class="pv-rating-row">' +
-          '<span class="pv-stars">starstarstarstarstar</span>' +
+          '<span class="pv-stars">(Icons.star + Icons.star + Icons.star + Icons.star + Icons.star)</span>' +
           '<span class="pv-rating-num">4.8</span>' +
           '<a class="pv-reviews" onclick="switchTab(\'reviews\',document.querySelector(\'.pv-tab[data-tab=reviews]\'))">See all reviews</a>' +
         '</div>' +
@@ -736,7 +736,7 @@ function renderProduct(p) {
         '<div class="pv-cta">' +
           (p.stock>0
             ? '<button class="pv-btn-cart" data-name="'+pNameJs+'" data-price="'+(p.price||0)+'" data-img="'+pImgJs+'" onclick="handleAddToCart(this)">cart Add to Cart</button>' +
-              '<button class="pv-btn-buy"  data-id="'+(p.id||'')+'" data-name="'+pNameJs+'" data-img="'+pImgJs+'" data-price="'+(p.price||0)+'" onclick="handleBuyNow(this)">bolt Buy Now</button>'
+              '<button class="pv-btn-buy"  data-id="'+(p.id||'')+'" data-name="'+pNameJs+'" data-img="'+pImgJs+'" data-price="'+(p.price||0)+'" onclick="handleBuyNow(this)"><span data-icon="bolt"></span> Buy Now</button>'
             : '<button class="pv-btn-cart pv-btn-disabled">cart Add to Cart</button>' +
               '<button class="pv-btn-buy pv-btn-disabled">Out of Stock</button>'
           ) +
