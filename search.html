@@ -180,10 +180,10 @@
   <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">location Bhilwara</b></div>
   <div style="flex:1;"></div>
   <div class="nav-right">
-    <div class="nav-icon-btn wishlist-trigger" onmouseenter="showWishlistDropdown()" onclick="requireLogin(function(){toggleWishlistDropdown()})" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge" id="wishlist-count">0</span></div>
+    <div class="nav-icon-btn wishlist-trigger" onmouseenter="showWishlistDropdown()" onclick="requireLogin(function(){toggleWishlistDropdown()})" title="Wishlist"><span class="hm-icon" data-icon="heart"></span><span class="nav-icon-label">Wishlist</span><span class="nav-badge" id="wishlist-count">0</span></div>
     <div id="wishlist-dropdown" class="wishlist-dropdown"></div>
-    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>user</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
-    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>cart</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span class="hm-icon" data-icon="user"></span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span class="hm-icon" data-icon="cart"></span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
     <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -245,7 +245,7 @@
   <span id="result-count" style="font-size:14px;color:rgba(255,255,255,.75);font-weight:700;margin-bottom:12px;"></span>
   <div class="sac-wrapper" style="width:100%;max-width:700px;position:relative;">
     <input type="text" id="bigSearch" class="sac-input" placeholder="Search products, brands and more..." style="height:52px;border-radius:12px;font-size:16px;box-shadow:0 4px 20px rgba(0,0,0,.3);" onkeydown="if(event.key==='Enter')runSearch(this.value)"/>
-    <button class="sac-search-btn" style="height:52px;width:52px;border-radius:0 12px 12px 0;background:var(--teal);font-size:20px;" onclick="runSearch(document.getElementById('bigSearch').value)">search</button>
+    <button class="sac-search-btn" style="height:52px;width:52px;border-radius:0 12px 12px 0;background:var(--teal);font-size:20px;" onclick="runSearch(document.getElementById('bigSearch').value)"><span class="hm-icon" data-icon="search"></span></button>
     <div id="bigSearch-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1.5px solid #d0e0ed;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.12);overflow:hidden;z-index:999999;max-height:340px;overflow-y:auto;margin-top:6px;">
       <ul style="list-style:none;padding:6px 0;margin:0;max-height:300px;overflow-y:auto;"></ul>
       <div style="padding:6px 16px 7px;font-size:11.5px;color:#a0b0c0;border-top:1px solid #f0f4f8;display:flex;gap:14px;">
