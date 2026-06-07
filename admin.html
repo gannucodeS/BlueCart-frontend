@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -323,10 +323,10 @@
     <a href="/index"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
   </div>
   <div class="admin-header-right">
-    <a href="/index" class="ah-link"><span>&#127968;</span> <span>Home</span></a>
-    <a href="/search" class="ah-link"><span>&#128269;</span> <span>Search</span></a>
-    <a href="/orders" class="ah-link"><span>&#128722;</span> <span>Orders</span></a>
-    <a href="/login" class="ah-link ah-logout" onclick="doLogout(); return false;"><span>&#128682;</span> <span>Logout</span></a>
+    <a href="/index" class="ah-link"><span>home</span> <span>Home</span></a>
+    <a href="/search" class="ah-link"><span>search</span> <span>Search</span></a>
+    <a href="/orders" class="ah-link"><span>cart</span> <span>Orders</span></a>
+    <a href="/login" class="ah-link ah-logout" onclick="doLogout(); return false;"><span>logOut</span> <span>Logout</span></a>
     <div class="ah-user">
       <div class="ah-avatar" id="ah-av">A</div>
       <span id="ah-name">Admin</span>
@@ -340,17 +340,17 @@
   </div>
   <nav class="sb-nav">
     <div class="sb-lbl">Main</div>
-    <button class="sb-btn active" onclick="showPanel('dashboard')"><span class="sb-icon">&#128202;</span><span>Dashboard</span></button>
+    <button class="sb-btn active" onclick="showPanel('dashboard')"><span class="sb-icon" data-icon="chart"></span><span>Dashboard</span></button>
     <div class="sb-lbl">Catalogue</div>
-    <button class="sb-btn" onclick="showPanel('add-product')"><span class="sb-icon">&#10133;</span><span>Add Product</span></button>
-    <button class="sb-btn" onclick="showPanel('products')"><span class="sb-icon">&#128230;</span><span>All Products</span></button>
+    <button class="sb-btn" onclick="showPanel('add-product')"><span class="sb-icon" data-icon="plus"></span><span>Add Product</span></button>
+    <button class="sb-btn" onclick="showPanel('products')"><span class="sb-icon" data-icon="package"></span><span>All Products</span></button>
     <div class="sb-lbl">Sales</div>
-    <button class="sb-btn" onclick="showPanel('orders')"><span class="sb-icon">&#128722;</span><span>Order Library</span></button>
-    <button class="sb-btn" onclick="showPanel('customers')"><span class="sb-icon">&#128101;</span><span>Customers</span></button>
+    <button class="sb-btn" onclick="showPanel('orders')"><span class="sb-icon" data-icon="cart"></span><span>Order Library</span></button>
+    <button class="sb-btn" onclick="showPanel('customers')"><span class="sb-icon" data-icon="users"></span><span>Customers</span></button>
     <div class="sb-lbl">Settings</div>
-    <button class="sb-btn" onclick="showPanel('settings')"><span class="sb-icon">&#9881;</span><span>Settings</span></button>
-    <a href="/index" class="sb-btn"><span class="sb-icon">&#127968;</span><span>View Store</span></a>
-    <button class="sb-btn" onclick="doLogout()" style="color:#ff6b6b;"><span class="sb-icon">&#128682;</span><span>Sign Out</span></button>
+    <button class="sb-btn" onclick="showPanel('settings')"><span class="sb-icon" data-icon="cog"></span><span>Settings</span></button>
+    <a href="/index" class="sb-btn"><span class="sb-icon" data-icon="home"></span><span>View Store</span></a>
+    <button class="sb-btn" onclick="doLogout()" style="color:#ff6b6b;"><span class="sb-icon" data-icon="logOut"></span><span>Sign Out</span></button>
   </nav>
   <div class="sb-bottom">
     <div class="sb-user">
@@ -368,9 +368,9 @@
     <!-- DASHBOARD -->
     <div class="panel active" id="panel-dashboard">
       <div class="stats-grid">
-        <div class="stat-card"><span class="stat-ico">&#128230;</span><div class="stat-num" id="s-prod">0</div><div class="stat-lbl">Products</div></div>
-        <div class="stat-card"><span class="stat-ico">&#128722;</span><div class="stat-num" id="s-ord">0</div><div class="stat-lbl">Orders</div></div>
-        <div class="stat-card"><span class="stat-ico">&#128101;</span><div class="stat-num" id="s-cust">0</div><div class="stat-lbl">Customers</div></div>
+        <div class="stat-card"><span class="stat-ico" data-icon="package"></span><div class="stat-num" id="s-prod">0</div><div class="stat-lbl">Products</div></div>
+        <div class="stat-card"><span class="stat-ico" data-icon="cart"></span><div class="stat-num" id="s-ord">0</div><div class="stat-lbl">Orders</div></div>
+        <div class="stat-card"><span class="stat-ico" data-icon="users"></span><div class="stat-num" id="s-cust">0</div><div class="stat-lbl">Customers</div></div>
         <div class="stat-card"><span class="stat-ico">&#8377;</span><div class="stat-num" id="s-rev">&#8377;0</div><div class="stat-lbl">Revenue</div></div>
       </div>
       <div class="dashboard-grid">
@@ -380,7 +380,7 @@
         </div>
         <div class="card">
           <div class="card-hdr"><div class="card-ttl">Recent Orders</div><button class="ab ab-view" onclick="showPanel('orders')">View All</button></div>
-          <div id="recent-ords"><div class="empty"><div class="ico">&#128722;</div><p>No orders yet</p></div></div>
+          <div id="recent-ords"><div class="empty"><div class="ico">cart</div><p>No orders yet</p></div></div>
         </div>
       </div>
     </div>
@@ -438,7 +438,7 @@
           </div>
         </div>
         <div class="form-actions">
-          <button class="btn-sub" id="save-btn" onclick="saveProd()">&#128230; List Product</button>
+          <button class="btn-sub" id="save-btn" onclick="saveProd()">package List Product</button>
           <button class="btn-rst" onclick="resetForm()">&#8634; Reset</button>
         </div>
       </div>
@@ -457,7 +457,7 @@
           <table><thead><tr><th>#</th><th>Image</th><th>Name</th><th>Category</th><th>Brand</th><th>Price</th><th>Stock</th><th>Status</th><th>Badge</th><th>Actions</th></tr></thead>
           <tbody id="prod-tbody"></tbody></table>
         </div>
-        <div id="prod-empty" class="empty" style="display:none"><div class="ico">&#128230;</div><p>No products yet. <a href="#" onclick="showPanel('add-product')" style="color:var(--teal)">Add your first</a></p></div>
+        <div id="prod-empty" class="empty" style="display:none"><div class="ico">package</div><p>No products yet. <a href="#" onclick="showPanel('add-product')" style="color:var(--teal)">Add your first</a></p></div>
       </div>
     </div>
 
@@ -473,7 +473,7 @@
           <table><thead><tr><th>Order ID</th><th>Customer</th><th>Email</th><th>Phone</th><th>Address</th><th>Pin</th><th>Items &amp; Price</th><th>Total</th><th>Date</th><th>Delivery Status</th><th>Payment</th><th>Update Status</th></tr></thead>
           <tbody id="ord-tbody"></tbody></table>
         </div>
-        <div id="ord-empty" class="empty" style="display:none"><div class="ico">&#128722;</div><p>No orders yet.</p></div>
+        <div id="ord-empty" class="empty" style="display:none"><div class="ico">cart</div><p>No orders yet.</p></div>
       </div>
     </div>
 
@@ -486,7 +486,7 @@
           <table><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Orders</th><th>Spent</th><th>Actions</th></tr></thead>
           <tbody id="cust-tbody"></tbody></table>
         </div>
-        <div id="cust-empty" class="empty" style="display:none"><div class="ico">&#128101;</div><p>No customers yet.</p></div>
+        <div id="cust-empty" class="empty" style="display:none"><div class="ico">users</div><p>No customers yet.</p></div>
       </div>
     </div>
 
@@ -766,8 +766,8 @@ function renderOrds() {
       var items=(o.items||[]).map(function(it){ return it.name+'<br><small style="color:var(--muted)">&#8377;'+it.price.toLocaleString('en-IN')+' x'+(it.qty||1)+'</small>'; }).join('<hr style="margin:3px 0;border-color:#f0f4f8">');
       var opts=STATUSES.map(function(st){ return '<option value="'+st+'"'+(o.deliveryStatus===st?' selected':'')+'>'+st+'</option>'; }).join('');
       var otpBtn = (o.deliveryStatus === 'Out for Delivery' && !o.deliveryVerified) 
-        ? '<button class="ab" style="background:#fef9c3;color:#92400e;margin-top:4px;" onclick="openOtpModal(\''+o.id+'\',\''+o.userName.replace(/'/g,"\\'")+'\',\''+o.userPhone+'\')">&#128242; OTP</button>' 
-        : (o.deliveryVerified ? '<small style="color:var(--lime);font-size:10.5px">&#9989; Verified</small>' : '');
+        ? '<button class="ab" style="background:#fef9c3;color:#92400e;margin-top:4px;" onclick="openOtpModal(\''+o.id+'\',\''+o.userName.replace(/'/g,"\\'")+'\',\''+o.userPhone+'\')">phone OTP</button>' 
+        : (o.deliveryVerified ? '<small style="color:var(--lime);font-size:10.5px">check Verified</small>' : '');
       return '<tr>'+
         '<td><strong style="color:var(--teal);font-size:12px">'+o.id+'</strong><br><small style="color:var(--muted)">'+dt+'</small></td>'+
         '<td><strong>'+o.userName+'</strong></td>'+
@@ -846,12 +846,12 @@ function refreshDash() {
   BC.getAllOrders().then(function(all) {
     var recent=all.sort(function(a,b){ return new Date(b.placedAt)-new Date(a.placedAt); }).slice(0,6);
     var el=document.getElementById('recent-ords');
-    if (!recent.length) { el.innerHTML='<div class="empty"><div class="ico">&#128722;</div><p>No orders yet</p></div>'; return; }
+    if (!recent.length) { el.innerHTML='<div class="empty"><div class="ico">cart</div><p>No orders yet</p></div>'; return; }
     el.innerHTML=recent.map(function(o){
       var sc=SBADGE[o.deliveryStatus]||'b-pending';
       var dt=new Date(o.placedAt).toLocaleDateString('en-IN');
       return '<div class="act-item">'+
-        '<div class="act-av" style="background:#dbeafe">&#128722;</div>'+
+        '<div class="act-av" style="background:#dbeafe">cart</div>'+
         '<div class="act-text" style="flex:1"><p>'+o.userName+' &mdash; <strong style="color:var(--teal)">&#8377;'+o.total.toLocaleString('en-IN')+'</strong></p>'+
         '<span>'+dt+' &nbsp;<span class="badge '+sc+'" style="font-size:11px">'+o.deliveryStatus+'</span></span></div>'+
         '<button class="ab ab-view" onclick="showPanel(\'orders\')" style="font-size:11px">View</button>'+
@@ -872,8 +872,8 @@ function toast(msg) {
 <div id="loc-overlay" style="display:none;position:fixed;inset:0;background:rgba(15,45,74,0.45);z-index:500;backdrop-filter:blur(3px)" onclick="closeLocationPanel()"></div>
 <div id="loc-panel" style="display:none;position:fixed;top:0;left:0;width:100%;max-width:400px;height:100vh;background:white;z-index:600;box-shadow:8px 0 40px rgba(15,45,74,0.2);overflow-y:auto;font-family:Nunito,sans-serif;">
   <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
-    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">&#128205; Set Delivery Location</div>
-    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">&#10005;</button>
+    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">location Set Delivery Location</div>
+    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">close</button>
   </div>
   <div style="padding:18px;">
     <div style="margin-bottom:18px;">
@@ -896,7 +896,7 @@ function toast(msg) {
       <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
       <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
     </div>
-    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">&#128205; Set Location</button>
+    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">location Set Location</button>
     <div style="margin-top:20px;">
       <div style="font-size:11px;font-weight:800;color:#6b7a8d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Popular Cities</div>
       <div style="display:flex;flex-wrap:wrap;gap:7px;">
@@ -921,13 +921,13 @@ function toast(msg) {
 <div id="otp-modal" style="display:none;position:fixed;inset:0;background:rgba(15,45,74,0.5);z-index:1000;align-items:center;justify-content:center;">
   <div style="background:white;border-radius:16px;padding:28px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-      <h3 style="font-family:Syne,sans-serif;font-size:18px;color:#0f2d4a;margin:0;">&#128242; Delivery OTP</h3>
-      <button onclick="closeOtpModal()" style="background:#f4f7fb;border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;">&#10005;</button>
+      <h3 style="font-family:Syne,sans-serif;font-size:18px;color:#0f2d4a;margin:0;">phone Delivery OTP</h3>
+      <button onclick="closeOtpModal()" style="background:#f4f7fb;border:none;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;">close</button>
     </div>
     <div id="otp-order-info" style="margin-bottom:16px;padding:12px;background:#f4f7fb;border-radius:10px;font-size:13px;color:#6b7a8d;"></div>
     <div id="otp-action-panel" style="margin-bottom:16px;">
       <button id="otp-send-btn" onclick="sendDeliveryOtp()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">
-        &#128232; Send OTP to Customer
+        mail Send OTP to Customer
       </button>
       <div id="otp-send-result" style="margin-top:10px;font-size:13px;text-align:center;"></div>
     </div>
@@ -996,7 +996,7 @@ function openOtpModal(orderId, customerName, customerPhone) {
   verifyPanel.style.display = 'none';
   actionPanel.style.display = 'block';
   sendBtn.disabled = false;
-  sendBtn.innerHTML = '&#128232; Send OTP to Customer';
+  sendBtn.innerHTML = 'mail Send OTP to Customer';
   
   modal.style.display = 'flex';
 }
@@ -1020,7 +1020,7 @@ async function sendDeliveryOtp() {
   try {
     var res = await BC.generateDeliveryOtp(currentOtpOrderId);
     if (res.ok) {
-      sendResult.innerHTML = '<span style="color:#16a34a;">&#9989; ' + res.message + '</span>';
+      sendResult.innerHTML = '<span style="color:#16a34a;">check ' + res.message + '</span>';
       verifyPanel.style.display = 'block';
       document.getElementById('otp-input').value = '';
       document.getElementById('otp-verify-result').innerHTML = '';
@@ -1030,12 +1030,12 @@ async function sendDeliveryOtp() {
     } else {
       sendResult.innerHTML = '<span style="color:#dc2626;">' + (res.error || 'Failed to send OTP') + '</span>';
       sendBtn.disabled = false;
-      sendBtn.innerHTML = '&#128232; Retry Send OTP';
+      sendBtn.innerHTML = 'mail Retry Send OTP';
     }
   } catch (e) {
     sendResult.innerHTML = '<span style="color:#dc2626;">Error: Please try again</span>';
     sendBtn.disabled = false;
-    sendBtn.innerHTML = '&#128232; Retry Send OTP';
+    sendBtn.innerHTML = 'mail Retry Send OTP';
   }
 }
 
@@ -1052,7 +1052,7 @@ async function verifyDeliveryOtp() {
   try {
     var res = await BC.verifyDeliveryOtp(currentOtpOrderId, otp);
     if (res.ok) {
-      verifyResult.innerHTML = '<span style="color:#16a34a;font-weight:700;">&#9989; Delivery Verified!</span>';
+      verifyResult.innerHTML = '<span style="color:#16a34a;font-weight:700;">check Delivery Verified!</span>';
       toast('Delivery confirmed for order ' + currentOtpOrderId);
       setTimeout(function() {
         closeOtpModal();

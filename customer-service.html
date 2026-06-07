@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -35,17 +35,17 @@
 </head>
 <body>
 <!-- TOPBAR -->
-<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<div class="topbar"><span>package Free shipping over <b>&#8377;999</b></span><span>phone Support: <b>1800-000-BLUE</b></span><span>lock <b>Secure</b> &amp; Trusted</span></div>
 <!-- NAVBAR WRAP -->
 <div class="navbar-wrap">
 <nav class="navbar">
   <a href="/index" class="logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
-  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">location Bhilwara</b></div>
   <div style="flex:1;"></div>
   <div class="nav-right">
     <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
-    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
-    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>user</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>cart</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
           <!-- Hamburger button -->
       <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -56,7 +56,7 @@
   <div class="navbar-search-row">
     <div class="sac-wrapper" style="flex:1;position:relative;">
       <input type="text" id="searchInput" class="sac-input" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
-      <button class="sac-search-btn" onclick="doSearchNav()">&#128269;</button>
+      <button class="sac-search-btn" onclick="doSearchNav()">search</button>
     </div>
   </div>
 </div><!-- end .navbar-wrap -->
@@ -66,30 +66,30 @@
 <div class="hm-drawer" id="hm-drawer">
   <div class="hm-drawer-head">
     <span class="hm-drawer-logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="hm-drawer-logo-img"/></span>
-    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+    <button class="hm-drawer-close" onclick="closeHamburger()"><span class="hm-icon" data-icon="close"></span></button>
   </div>
   <div class="hm-drawer-body">
-    <a href="/index" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <a href="/index" class="hm-item"><span class="ic" data-icon="home"></span> Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Categories</div>
-    <a href="/electronics"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
-    <a href="/smartphones"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
-    <a href="/laptops"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
-    <a href="/audio"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
-    <a href="/cameras"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
-    <a href="/gaming"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
-    <a href="/accessories"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
-    <a href="/smarthome"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <a href="/electronics"   class="hm-item"><span class="ic" data-icon="bolt"></span> Electronics</a>
+    <a href="/smartphones"   class="hm-item"><span class="ic" data-icon="phoneMobile"></span> Smartphones</a>
+    <a href="/laptops"       class="hm-item"><span class="ic" data-icon="laptop"></span> Laptops</a>
+    <a href="/audio"         class="hm-item"><span class="ic" data-icon="headphones"></span> Audio</a>
+    <a href="/cameras"       class="hm-item"><span class="ic" data-icon="camera"></span> Cameras</a>
+    <a href="/gaming"        class="hm-item"><span class="ic" data-icon="gamepad"></span> Gaming</a>
+    <a href="/accessories"   class="hm-item"><span class="ic" data-icon="wrench"></span> Accessories</a>
+    <a href="/smarthome"     class="hm-item"><span class="ic" data-icon="home"></span> Smart Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Offers</div>
-    <a href="/deals"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
-    <a href="/new-arrivals"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <a href="/deals"         class="hm-item"><span class="ic" data-icon="fire"></span> Today's Deals</a>
+    <a href="/new-arrivals"  class="hm-item"><span class="ic" data-icon="star"></span> New Arrivals</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Account</div>
-    <a href="/orders"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
-    <a href="/account"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
-    <a href="/customer-service" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
-    <a href="/login"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+    <a href="/orders"        class="hm-item"><span class="ic" data-icon="package"></span> My Orders</a>
+    <a href="/account"       class="hm-item"><span class="ic" data-icon="user"></span> My Account</a>
+    <a href="/customer-service" class="hm-item"><span class="ic" data-icon="phone"></span> Customer Service</a>
+    <a href="/login"         class="hm-item"><span class="ic" data-icon="lock"></span> Sign In / Register</a>
   </div>
 </div>
 
@@ -105,7 +105,7 @@
   <div class="nav-item"><a href="/accessories">Accessories</a></div>
   <div class="nav-item"><a href="/gaming">Gaming</a></div>
   <div class="nav-item"><a href="/smarthome">Smart Home</a></div>
-  <div class="nav-item"><a href="/deals" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="/deals" class="hot">fire Hot Deals</a></div>
   <div class="nav-item"><a href="/new-arrivals">New Arrivals</a></div>
   <div class="nav-item"><a href="/customer-service">Customer Service</a></div>
 </div></div>
@@ -114,18 +114,18 @@
     <div class="page-hero service-hero">
       <div class="hero-decor hd1"></div><div class="hero-decor hd2"></div>
       <div class="page-hero-content">
-        <div class="page-hero-tag" style="background:var(--sky);color:#0f2d4a">💬 Help Centre</div>
+        <div class="page-hero-tag" style="background:var(--sky);color:#0f2d4a">Help Centre</div>
         <h1 class="fade-up">How Can We Help?</h1>
         <p class="fade-up d1">We're here 24/7. Find answers fast or reach our team directly — your satisfaction is our priority.</p>
         <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;" class="fade-up d2">
           <button class="btn-primary" onclick="document.getElementById('contact-form').scrollIntoView({behavior:'smooth'})">Chat with Us</button>
-          <button class="btn-outline">📞 Call Support</button>
+          <button class="btn-outline">Call Support</button>
         </div>
       </div>
       <img class="page-hero-img" src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop" alt="Service"/>
-    </div><div class="section-header"><div class="section-title title-teal">How Can We Help You?</div></div><div class="service-grid"><div class="service-card"><div class="service-icon">📦</div><h3>Track Your Order</h3><p>Check live status of your current orders and delivery ETA.</p><a href="#">Track Now →</a></div><div class="service-card"><div class="service-icon">↩️</div><h3>Returns & Refunds</h3><p>Easy returns within 30 days. Full refund guaranteed.</p><a href="#">Start Return →</a></div><div class="service-card"><div class="service-icon">🔧</div><h3>Product Support</h3><p>Technical help, setup guides & warranty claims.</p><a href="#">Get Help →</a></div><div class="service-card"><div class="service-icon">💳</div><h3>Payment Issues</h3><p>Resolve billing errors, failed payments & EMI queries.</p><a href="#">Resolve Now →</a></div><div class="service-card"><div class="service-icon">🎁</div><h3>Cancellations</h3><p>Cancel orders before dispatch with one click.</p><a href="#">Cancel Order →</a></div><div class="service-card"><div class="service-icon">⭐</div><h3>Leave Feedback</h3><p>Rate your experience and help us improve.</p><a href="#">Give Feedback →</a></div></div><div class="section-header"><div class="section-title title-amber">Frequently Asked Questions</div></div><div class="faq-section"><div style="max-width:760px;margin:0 auto"><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I track my order?<span>+</span></div><div class="faq-a">Once your order is shipped, you will receive an email with a tracking link. You can also visit 'Your Orders' in your account and click 'Track Package' for real-time updates.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is BlueCart's return policy?<span>+</span></div><div class="faq-a">We offer a 30-day hassle-free return policy. Simply initiate a return from your account, drop the item at a courier point, and receive your refund within 5–7 business days.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I change or cancel my order?<span>+</span></div><div class="faq-a">Yes — you can cancel or modify your order within 1 hour of placing it. After that, if the order has been dispatched, you will need to wait for delivery and then initiate a return.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How long does delivery take?<span>+</span></div><div class="faq-a">Standard delivery takes 3–5 business days. Express delivery (available in select cities) takes 1–2 days. Orders above ₹999 qualify for free standard shipping.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is my payment information secure?<span>+</span></div><div class="faq-a">Absolutely. BlueCart uses 256-bit SSL encryption and never stores full card details on our servers. We are PCI-DSS compliant and support UPI, net banking, cards & EMI.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I contact customer support?<span>+</span></div><div class="faq-a">You can reach us via live chat (24/7), email at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="760503060619040236141a031315170402581f18">[email&#160;protected]</a>, or call 1800-000-BLUE (Mon–Sat, 9 AM–9 PM). Average response time is under 2 minutes.</div></div></div></div><div class="section-header"><div class="section-title title-coral">Send Us a Message</div></div>
+    </div><div class="section-header"><div class="section-title title-teal">How Can We Help You?</div></div><div class="service-grid"><div class="service-card"><div class="service-icon" data-icon="package"></div><h3>Track Your Order</h3><p>Check live status of your current orders and delivery ETA.</p><a href="#">Track Now →</a></div><div class="service-card"><div class="service-icon">↩️</div><h3>Returns & Refunds</h3><p>Easy returns within 30 days. Full refund guaranteed.</p><a href="#">Start Return →</a></div><div class="service-card"><div class="service-icon" data-icon="wrench"></div><h3>Product Support</h3><p>Technical help, setup guides & warranty claims.</p><a href="#">Get Help →</a></div><div class="service-card"><div class="service-icon" data-icon="creditCard"></div><h3>Payment Issues</h3><p>Resolve billing errors, failed payments & EMI queries.</p><a href="#">Resolve Now →</a></div><div class="service-card"><div class="service-icon" data-icon="gift"></div><h3>Cancellations</h3><p>Cancel orders before dispatch with one click.</p><a href="#">Cancel Order →</a></div><div class="service-card"><div class="service-icon">⭐</div><h3>Leave Feedback</h3><p>Rate your experience and help us improve.</p><a href="#">Give Feedback →</a></div></div><div class="section-header"><div class="section-title title-amber">Frequently Asked Questions</div></div><div class="faq-section"><div style="max-width:760px;margin:0 auto"><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I track my order?<span>+</span></div><div class="faq-a">Once your order is shipped, you will receive an email with a tracking link. You can also visit 'Your Orders' in your account and click 'Track Package' for real-time updates.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What is BlueCart's return policy?<span>+</span></div><div class="faq-a">We offer a 30-day hassle-free return policy. Simply initiate a return from your account, drop the item at a courier point, and receive your refund within 5–7 business days.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I change or cancel my order?<span>+</span></div><div class="faq-a">Yes — you can cancel or modify your order within 1 hour of placing it. After that, if the order has been dispatched, you will need to wait for delivery and then initiate a return.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How long does delivery take?<span>+</span></div><div class="faq-a">Standard delivery takes 3–5 business days. Express delivery (available in select cities) takes 1–2 days. Orders above ₹999 qualify for free standard shipping.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is my payment information secure?<span>+</span></div><div class="faq-a">Absolutely. BlueCart uses 256-bit SSL encryption and never stores full card details on our servers. We are PCI-DSS compliant and support UPI, net banking, cards & EMI.</div></div><div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I contact customer support?<span>+</span></div><div class="faq-a">You can reach us via live chat (24/7), email at <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="760503060619040236141a031315170402581f18">[email&#160;protected]</a>, or call 1800-000-BLUE (Mon–Sat, 9 AM–9 PM). Average response time is under 2 minutes.</div></div></div></div><div class="section-header"><div class="section-title title-coral">Send Us a Message</div></div>
     <div class="contact-form" id="contact-form">
-      <h3>📩 Contact Form</h3>
+      <h3>Contact Form</h3>
       <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your name"/></div>
       <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@email.com"/></div>
       <div class="form-group"><label>Order Number (optional)</label><input type="text" placeholder="BC-2024-XXXXXX"/></div>
@@ -150,8 +150,8 @@
 </footer>
 <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
 <div id="cart">
-  <div class="cart-header"><h3>🛒 Your Cart</h3><button class="cart-close" onclick="toggleCart()">✕</button></div>
-  <ul id="cart-items"><div class="empty-cart"><div class="icon">🛒</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-header"><h3>Your Cart</h3><button class="cart-close" onclick="toggleCart()"><span class="hm-icon" data-icon="close"></span></button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon" data-icon="cart"></div><p>Your cart is empty</p></div></ul>
   <div class="cart-footer">
     <div class="cart-total"><span>Total</span><span id="cart-total">₹0</span></div>
     <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout →</button>

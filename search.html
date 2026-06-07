@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -172,18 +172,18 @@
 <body>
 
 <!-- TOPBAR (desktop only) -->
-<div class="topbar"><span>&#128230; Free shipping over <b>₹999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<div class="topbar"><span>package Free shipping over <b>₹999</b></span><span>phone Support: <b>1800-000-BLUE</b></span><span>lock <b>Secure</b> &amp; Trusted</span></div>
 <!-- NAVBAR WRAP -->
 <div class="navbar-wrap">
 <nav class="navbar">
   <a href="/index" class="logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
-  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">location Bhilwara</b></div>
   <div style="flex:1;"></div>
   <div class="nav-right">
     <div class="nav-icon-btn wishlist-trigger" onmouseenter="showWishlistDropdown()" onclick="requireLogin(function(){toggleWishlistDropdown()})" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge" id="wishlist-count">0</span></div>
     <div id="wishlist-dropdown" class="wishlist-dropdown"></div>
-    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
-    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>user</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>cart</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
     <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -196,30 +196,30 @@
 <div class="hm-drawer" id="hm-drawer">
   <div class="hm-drawer-head">
     <span class="hm-drawer-logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="hm-drawer-logo-img"/></span>
-    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+    <button class="hm-drawer-close" onclick="closeHamburger()"><span class="hm-icon" data-icon="close"></span></button>
   </div>
   <div class="hm-drawer-body">
-    <a href="/index" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <a href="/index" class="hm-item"><span class="ic" data-icon="home"></span> Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Categories</div>
-    <a href="/electronics"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
-    <a href="/smartphones"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
-    <a href="/laptops"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
-    <a href="/audio"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
-    <a href="/cameras"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
-    <a href="/gaming"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
-    <a href="/accessories"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
-    <a href="/smarthome"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <a href="/electronics"   class="hm-item"><span class="ic" data-icon="bolt"></span> Electronics</a>
+    <a href="/smartphones"   class="hm-item"><span class="ic" data-icon="phoneMobile"></span> Smartphones</a>
+    <a href="/laptops"       class="hm-item"><span class="ic" data-icon="laptop"></span> Laptops</a>
+    <a href="/audio"         class="hm-item"><span class="ic" data-icon="headphones"></span> Audio</a>
+    <a href="/cameras"       class="hm-item"><span class="ic" data-icon="camera"></span> Cameras</a>
+    <a href="/gaming"        class="hm-item"><span class="ic" data-icon="gamepad"></span> Gaming</a>
+    <a href="/accessories"   class="hm-item"><span class="ic" data-icon="wrench"></span> Accessories</a>
+    <a href="/smarthome"     class="hm-item"><span class="ic" data-icon="home"></span> Smart Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Offers</div>
-    <a href="/deals"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
-    <a href="/new-arrivals"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <a href="/deals"         class="hm-item"><span class="ic" data-icon="fire"></span> Today's Deals</a>
+    <a href="/new-arrivals"  class="hm-item"><span class="ic" data-icon="star"></span> New Arrivals</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Account</div>
-    <a href="/orders"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
-    <a href="/account"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
-    <a href="/customer-service" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
-    <a href="/login"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+    <a href="/orders"        class="hm-item"><span class="ic" data-icon="package"></span> My Orders</a>
+    <a href="/account"       class="hm-item"><span class="ic" data-icon="user"></span> My Account</a>
+    <a href="/customer-service" class="hm-item"><span class="ic" data-icon="phone"></span> Customer Service</a>
+    <a href="/login"         class="hm-item"><span class="ic" data-icon="lock"></span> Sign In / Register</a>
   </div>
 </div>
 
@@ -245,7 +245,7 @@
   <span id="result-count" style="font-size:14px;color:rgba(255,255,255,.75);font-weight:700;margin-bottom:12px;"></span>
   <div class="sac-wrapper" style="width:100%;max-width:700px;position:relative;">
     <input type="text" id="bigSearch" class="sac-input" placeholder="Search products, brands and more..." style="height:52px;border-radius:12px;font-size:16px;box-shadow:0 4px 20px rgba(0,0,0,.3);" onkeydown="if(event.key==='Enter')runSearch(this.value)"/>
-    <button class="sac-search-btn" style="height:52px;width:52px;border-radius:0 12px 12px 0;background:var(--teal);font-size:20px;" onclick="runSearch(document.getElementById('bigSearch').value)">&#128269;</button>
+    <button class="sac-search-btn" style="height:52px;width:52px;border-radius:0 12px 12px 0;background:var(--teal);font-size:20px;" onclick="runSearch(document.getElementById('bigSearch').value)">search</button>
     <div id="bigSearch-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1.5px solid #d0e0ed;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.12);overflow:hidden;z-index:999999;max-height:340px;overflow-y:auto;margin-top:6px;">
       <ul style="list-style:none;padding:6px 0;margin:0;max-height:300px;overflow-y:auto;"></ul>
       <div style="padding:6px 16px 7px;font-size:11.5px;color:#a0b0c0;border-top:1px solid #f0f4f8;display:flex;gap:14px;">
@@ -259,7 +259,7 @@
 
 <!-- MOBILE STICKY TOOLBAR -->
 <div class="mobile-toolbar" id="mobile-toolbar">
-  <button class="mob-filter-btn" onclick="openFilterSheet()">&#127775; Filters</button>
+  <button class="mob-filter-btn" onclick="openFilterSheet()">star Filters</button>
   <select class="mob-sort-select" id="mob-sort-select" onchange="syncMobileSort(this.value)">
     <option value="relevance">Relevance</option>
     <option value="price-asc">Price: Low &#8594; High</option>
@@ -277,8 +277,8 @@
 <div class="filter-sheet" id="filter-sheet">
   <div class="filter-sheet-handle"></div>
   <div class="filter-sheet-head">
-    <span class="filter-sheet-title">&#127775; Filters</span>
-    <button class="filter-sheet-close" onclick="closeFilterSheet()">&#10005;</button>
+    <span class="filter-sheet-title">star Filters</span>
+    <button class="filter-sheet-close" onclick="closeFilterSheet()">close</button>
   </div>
   <div id="filter-sheet-body">
     <div class="fs-section">
@@ -344,7 +344,7 @@
   <!-- SIDEBAR -->
   <aside class="filter-sidebar" id="filter-sidebar">
     <div class="fs-header">
-      <span class="fs-title">&#127775; Filters</span>
+      <span class="fs-title">star Filters</span>
       <button class="fs-clear" onclick="clearAllFilters()">Clear All</button>
     </div>
 
@@ -428,7 +428,7 @@
 
     <!-- Mobile filter button -->
     <button class="mobile-filter-btn" onclick="openMobileFilter()" style="margin-bottom:14px;">
-      &#127775; Filters &amp; Sort
+      star Filters &amp; Sort
     </button>
 
     <!-- Popular Search Tags -->
@@ -465,7 +465,7 @@
 
     <!-- Similar Products -->
     <div class="similar-section" id="similar-section" style="display:none;">
-      <div class="similar-header">&#128161; You Might Also Like</div>
+      <div class="similar-header">lightbulb You Might Also Like</div>
       <div class="similar-scroll" id="similar-scroll"></div>
     </div>
 
@@ -475,8 +475,8 @@
 <!-- CART SIDEBAR -->
 <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
 <div id="cart">
-  <div class="cart-header"><h3>&#128722; Your Cart</h3><button class="cart-close" onclick="toggleCart()">&#10005;</button></div>
-  <ul id="cart-items"><div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-header"><h3><span data-icon="cart" style="margin-right:8px;font-size:18px;"></span>Your Cart</h3><button class="cart-close" onclick="toggleCart()"><span class="hm-icon" data-icon="close"></span></button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon">cart</div><p>Your cart is empty</p></div></ul>
   <div class="cart-footer">
     <div class="cart-total"><span>Total</span><span id="cart-total">₹0</span></div>
     <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout &#8594;</button>
@@ -488,8 +488,8 @@
 <div id="loc-overlay" onclick="closeLocationPanel()"></div>
 <div id="loc-panel">
   <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
-    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">&#128205; Set Delivery Location</div>
-    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">&#10005;</button>
+    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">location Set Delivery Location</div>
+    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">close</button>
   </div>
   <div style="padding:18px;">
     <div style="margin-bottom:16px;">
@@ -509,7 +509,7 @@
       <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
       <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
     </div>
-    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">&#128205; Set Location</button>
+    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">location Set Location</button>
   </div>
 </div>
 
@@ -587,6 +587,14 @@ var currentPage  = 1;
 var ITEMS_PER_PAGE = 12;
 var isListView   = false;
 
+// Populate results grid with skeletons immediately on page load
+(function() {
+  var grid = document.getElementById('results-grid');
+  if (grid && typeof Skeleton !== 'undefined') {
+    grid.innerHTML = Skeleton.productCardGrid(8);
+  }
+})();
+
 // ── CART ─────────────────────────────────────────────────────────────────────
 // Cart functions are provided by shared.js - cart auto-loads from localStorage on page init
 
@@ -642,7 +650,7 @@ var initProducts = function() {
     // Show error - no static fallback
     allProducts = [];
     var grid = document.getElementById('results-grid');
-    if(grid) grid.innerHTML = '<div class="no-results"><div class="icon">&#128269;</div><h3>Unable to load products</h3><p>Please try again later.</p></div>';
+    if(grid) grid.innerHTML = '<div class="no-results"><div class="icon">search</div><h3>Unable to load products</h3><p>Please try again later.</p></div>';
   });
 };
 
@@ -769,7 +777,7 @@ function renderResults() {
   var grid = document.getElementById('results-grid');
   if (!total) {
     grid.innerHTML = '<div class="no-results" style="grid-column:1/-1">' +
-      '<div class="icon">&#128269;</div>' +
+      '<div class="icon">search</div>' +
       '<h3>No results found</h3>' +
       '<p>Try different keywords or clear some filters.</p>' +
       '<button class="apply-filter-btn" style="width:auto;padding:11px 28px;" onclick="clearAllFilters()">Clear Filters</button>' +
@@ -792,13 +800,13 @@ function renderResults() {
     return '<div class="product-card" data-dbid="' + p.id + '">' +
       '<div class="prod-img-wrap" style="cursor:pointer" onclick="window.location.href=\''+viewUrl+'\'">' +
       badgeHtml +
-      '<button class="wishlist-btn" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+pImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">&#129293;</button>' +
+      '<button class="wishlist-btn" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+pImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">heart</button>' +
       '<img src="'+(p.img||'https://placehold.co/400x300?text=Product')+'" alt="'+p.name+'" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
       '</div>' +
       '<div class="prod-info">' +
         '<span class="prod-category">'+p.category+'</span>' +
         '<div class="prod-name" style="cursor:pointer" onclick="window.location.href=\''+viewUrl+'\'">'+p.name+'</div>' +
-        '<div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8</div>' +
+        '<div class="prod-rating"><span class="stars">starstarstarstarstar</span> 4.8</div>' +
         '<div class="prod-price"><span class="price-now">₹'+p.price.toLocaleString('en-IN')+'</span>'+oldHtml+offHtml+'</div>' +
         '<div class="add-to-cart">' +
           '<button class="btn-cart" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+pImg+'" onclick="handleAddToCart(this)">Add to Cart</button>' +
@@ -885,7 +893,7 @@ function renderActiveFilters(cats, brands, minP, maxP, disc) {
   if (disc>0) chips.push({label:disc+'%+ off',action:'resetDiscount()'});
 
   document.getElementById('active-filters').innerHTML = chips.map(function(ch){
-    return '<div class="active-chip">'+ch.label+'<button onclick="'+ch.action+'">&#10005;</button></div>';
+    return '<div class="active-chip">'+ch.label+'<button onclick="'+ch.action+'">close</button></div>';
   }).join('');
 }
 
@@ -1050,7 +1058,7 @@ function initBigSearch() {
       var regex = new RegExp('(' + safeValue + ')', 'gi');
       var highlighted = item.replace(regex, '<strong style="font-weight:800;color:#0c5f5c;">$1</strong>');
       
-      li.innerHTML = '<span style="font-size:14px;color:#a0b8c8;">&#128269;</span><span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + highlighted + '</span><span style="font-size:13px;color:#c0d0e0;opacity:0;transition:opacity .15s;">&#10140;</span>';
+      li.innerHTML = '<span style="font-size:14px;color:#a0b8c8;">search</span><span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + highlighted + '</span><span style="font-size:13px;color:#c0d0e0;opacity:0;transition:opacity .15s;">&#10140;</span>';
       
       li.addEventListener('mouseenter', function() {
         ul.querySelectorAll('li').forEach(function(l) { l.style.background = ''; l.querySelectorAll('span')[2].style.opacity = '0'; });

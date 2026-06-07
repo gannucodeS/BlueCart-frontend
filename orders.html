@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -107,18 +107,18 @@
 
 <!-- TOPBAR -->
 <!-- TOPBAR -->
-<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<div class="topbar"><span>package Free shipping over <b>&#8377;999</b></span><span>phone Support: <b>1800-000-BLUE</b></span><span>lock <b>Secure</b> &amp; Trusted</span></div>
 <!-- NAVBAR WRAP -->
 <div class="navbar-wrap">
 <nav class="navbar">
   <a href="/index" class="logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
-  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">location Bhilwara</b></div>
   <div style="flex:1;"></div>
   <div class="nav-right">
     <div class="nav-icon-btn wishlist-trigger" onmouseenter="showWishlistDropdown()" onclick="requireLogin(function(){toggleWishlistDropdown()})" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge" id="wishlist-count">0</span></div>
     <div id="wishlist-dropdown" class="wishlist-dropdown"></div>
-    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
-    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>user</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>cart</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
           <!-- Hamburger button -->
       <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -129,7 +129,7 @@
   <div class="navbar-search-row">
     <div class="sac-wrapper" style="flex:1;position:relative;">
       <input type="text" id="searchInput" class="sac-input" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
-      <button class="sac-search-btn" onclick="doSearchNav()">&#128269;</button>
+      <button class="sac-search-btn" onclick="doSearchNav()">search</button>
     </div>
   </div>
 </div><!-- end .navbar-wrap -->
@@ -139,30 +139,30 @@
 <div class="hm-drawer" id="hm-drawer">
   <div class="hm-drawer-head">
     <span class="hm-drawer-logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="hm-drawer-logo-img"/></span>
-    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+    <button class="hm-drawer-close" onclick="closeHamburger()"><span class="hm-icon" data-icon="close"></span></button>
   </div>
   <div class="hm-drawer-body">
-    <a href="/index" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <a href="/index" class="hm-item"><span class="hm-icon" data-icon="home"></span> Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Categories</div>
-    <a href="/electronics"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
-    <a href="/smartphones"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
-    <a href="/laptops"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
-    <a href="/audio"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
-    <a href="/cameras"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
-    <a href="/gaming"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
-    <a href="/accessories"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
-    <a href="/smarthome"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <a href="/electronics"   class="hm-item"><span class="hm-icon" data-icon="bolt"></span> Electronics</a>
+    <a href="/smartphones"   class="hm-item"><span class="hm-icon" data-icon="phoneMobile"></span> Smartphones</a>
+    <a href="/laptops"       class="hm-item"><span class="hm-icon" data-icon="laptop"></span> Laptops</a>
+    <a href="/audio"         class="hm-item"><span class="hm-icon" data-icon="headphones"></span> Audio</a>
+    <a href="/cameras"       class="hm-item"><span class="hm-icon" data-icon="camera"></span> Cameras</a>
+    <a href="/gaming"        class="hm-item"><span class="hm-icon" data-icon="gamepad"></span> Gaming</a>
+    <a href="/accessories"   class="hm-item"><span class="hm-icon" data-icon="wrench"></span> Accessories</a>
+    <a href="/smarthome"     class="hm-item"><span class="hm-icon" data-icon="home"></span> Smart Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Offers</div>
-    <a href="/deals"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
-    <a href="/new-arrivals"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <a href="/deals"         class="hm-item"><span class="hm-icon" data-icon="fire"></span> Today's Deals</a>
+    <a href="/new-arrivals"  class="hm-item"><span class="hm-icon" data-icon="star"></span> New Arrivals</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Account</div>
-    <a href="/orders"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
-    <a href="/account"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
-    <a href="/customer-service" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
-    <a href="/login"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+    <a href="/orders"        class="hm-item"><span class="hm-icon" data-icon="package"></span> My Orders</a>
+    <a href="/account"       class="hm-item"><span class="hm-icon" data-icon="user"></span> My Account</a>
+    <a href="/customer-service" class="hm-item"><span class="hm-icon" data-icon="phone"></span> Customer Service</a>
+    <a href="/login"         class="hm-item"><span class="hm-icon" data-icon="lock"></span> Sign In / Register</a>
   </div>
 </div>
 
@@ -178,7 +178,7 @@
   <div class="nav-item"><a href="/accessories">Accessories</a></div>
   <div class="nav-item"><a href="/gaming">Gaming</a></div>
   <div class="nav-item"><a href="/smarthome">Smart Home</a></div>
-  <div class="nav-item"><a href="/deals" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="/deals" class="hot">fire Hot Deals</a></div>
   <div class="nav-item"><a href="/new-arrivals">New Arrivals</a></div>
   <div class="nav-item"><a href="/customer-service">Customer Service</a></div>
 </div></div>
@@ -186,11 +186,11 @@
 <!-- HERO -->
 <div class="orders-hero">
   <div>
-    <h1>📦 My Orders</h1>
+    <h1><span data-icon="package" style="margin-right:8px;"></span>My Orders</h1>
     <p>Track, manage and return your orders</p>
   </div>
   <div class="orders-hero-right">
-    <div class="user-badge" id="user-badge">👤 Loading...</div>
+    <div class="user-badge" id="user-badge"><span data-icon="user" style="margin-right:4px;"></span>Loading...</div>
   </div>
 </div>
 
@@ -207,17 +207,17 @@
   <!-- FILTER TABS -->
   <div class="order-tabs">
     <button class="order-tab active" onclick="filterOrders('all',this)">All Orders</button>
-    <button class="order-tab" onclick="filterOrders('Pending',this)">⏳ Pending</button>
-    <button class="order-tab" onclick="filterOrders('Processing',this)">⚙️ Processing</button>
-    <button class="order-tab" onclick="filterOrders('Shipped',this)">🚚 Shipped</button>
-    <button class="order-tab" onclick="filterOrders('Out for Delivery',this)">🛵 Out for Delivery</button>
-    <button class="order-tab" onclick="filterOrders('Delivered',this)">✅ Delivered</button>
-    <button class="order-tab" onclick="filterOrders('Cancelled',this)">❌ Cancelled</button>
+    <button class="order-tab" onclick="filterOrders('Pending',this)">Pending</button>
+    <button class="order-tab" onclick="filterOrders('Processing',this)">Processing</button>
+    <button class="order-tab" onclick="filterOrders('Shipped',this)">Shipped</button>
+    <button class="order-tab" onclick="filterOrders('Out for Delivery',this)">Out for Delivery</button>
+    <button class="order-tab" onclick="filterOrders('Delivered',this)">Delivered</button>
+    <button class="order-tab" onclick="filterOrders('Cancelled',this)">Cancelled</button>
   </div>
 
   <!-- SEARCH -->
   <div class="order-search">
-    <input type="text" id="order-search-inp" placeholder="🔍 Search by order ID or product name..." oninput="renderOrders()"/>
+    <input type="text" id="order-search-inp" placeholder="Search by order ID or product name..." oninput="renderOrders()"/>
   </div>
 
   <!-- ORDERS LIST -->
@@ -244,7 +244,7 @@ var allOrders = [];
 var currentFilter = 'all';
 
 var DELIVERY_STEPS = ['Pending','Processing','Shipped','Out for Delivery','Delivered'];
-var STATUS_ICONS   = {'Pending':'⏳','Processing':'⚙️','Shipped':'🚚','Out for Delivery':'🛵','Delivered':'✅','Cancelled':'❌'};
+var STATUS_ICONS   = {'Pending':Icons.clock,'Processing':Icons.cog,'Shipped':Icons.truck,'Out for Delivery':Icons.truck,'Delivered':Icons.check,'Cancelled':Icons.x};
 var STATUS_CLASS   = {'Pending':'status-pending','Processing':'status-processing','Shipped':'status-shipped','Out for Delivery':'status-out_delivery','Delivered':'status-delivered','Cancelled':'status-cancelled'};
 
 // Auth guard
@@ -262,7 +262,7 @@ BC.ready.then(function() {
   var badge = document.getElementById('user-badge');
   if (greet) greet.textContent = 'Hello, ' + sess.name.split(' ')[0];
   if (label) label.textContent = 'My Account';
-  if (badge) badge.textContent = '👤 ' + sess.name + ' — ' + sess.email;
+  if (badge) badge.innerHTML = Icons.user + ' ' + sess.name + ' &mdash; ' + sess.email;
 
   // Load this user's orders
   return BC.getOrdersByUser(sess.email);
@@ -303,7 +303,7 @@ function renderOrders() {
   var container = document.getElementById('orders-list');
   if (!orders.length) {
     container.innerHTML = '<div class="empty-orders">' +
-      '<div class="icon">📦</div>' +
+      '<div class="icon" data-icon="package"></div>' +
       '<h2>' + (currentFilter==='all' ? 'No Orders Yet' : 'No ' + currentFilter + ' Orders') + '</h2>' +
       '<p>' + (currentFilter==='all' ? 'Looks like you haven\'t placed any orders yet. Start shopping!' : 'No orders in this status.') + '</p>' +
       '<button class="shop-btn" onclick="window.location.href=\'index.html\'">Start Shopping</button>' +
@@ -313,7 +313,7 @@ function renderOrders() {
 
   container.innerHTML = orders.map(function(order) {
     var sc = STATUS_CLASS[order.deliveryStatus] || 'status-pending';
-    var si = STATUS_ICONS[order.deliveryStatus] || '📦';
+    var si = STATUS_ICONS[order.deliveryStatus] || Icons.package;
     var date = new Date(order.placedAt).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
     var eta  = order.expectedBy ? 'Expected by ' + order.expectedBy : '';
 
@@ -335,7 +335,7 @@ function renderOrders() {
     if (order.deliveryStatus !== 'Cancelled') {
       var curIdx = DELIVERY_STEPS.indexOf(order.deliveryStatus);
       trackerHtml = '<div class="delivery-tracker" id="tracker-' + order.id + '">' +
-        '<div style="font-size:12.5px;font-weight:800;color:var(--navy);margin-bottom:12px;">📍 Delivery Progress</div>' +
+        '<div style="font-size:12.5px;font-weight:800;color:var(--navy);margin-bottom:12px;">Delivery Progress</div>' +
         '<div class="tracker-steps">' +
         DELIVERY_STEPS.map(function(step, idx) {
           var cls = idx < curIdx ? 'done' : idx === curIdx ? 'active' : '';
@@ -346,8 +346,8 @@ function renderOrders() {
           '</div>';
         }).join('') +
         '</div>' +
-        (order.deliveredAt ? '<div style="font-size:12.5px;color:var(--lime);font-weight:700;margin-top:10px;">✅ Delivered on ' + new Date(order.deliveredAt).toLocaleDateString('en-IN') + '</div>' : '') +
-        (eta && order.deliveryStatus !== 'Delivered' ? '<div style="font-size:12.5px;color:var(--muted);margin-top:8px;">🗓️ ' + eta + '</div>' : '') +
+        (order.deliveredAt ? '<div style="font-size:12.5px;color:var(--lime);font-weight:700;margin-top:10px;">Delivered on ' + new Date(order.deliveredAt).toLocaleDateString('en-IN') + '</div>' : '') +
+        (eta && order.deliveryStatus !== 'Delivered' ? '<div style="font-size:12.5px;color:var(--muted);margin-top:8px;">ETA: ' + eta + '</div>' : '') +
       '</div>';
     }
 
@@ -358,7 +358,7 @@ function renderOrders() {
         '<div>' +
           '<div class="order-id">' + order.id + '</div>' +
           '<div class="order-date">Placed on ' + date + '</div>' +
-          '<div class="order-date" style="margin-top:2px;">📍 ' + (order.address||'') + ' — ' + (order.pincode||'') + '</div>' +
+          '<div class="order-date" style="margin-top:2px;">' + (order.address||'') + ' &mdash; ' + (order.pincode||'') + '</div>' +
         '</div>' +
         '<div style="text-align:right">' +
           '<span class="order-status-badge ' + sc + '">' + si + ' ' + order.deliveryStatus + '</span>' +
@@ -374,10 +374,10 @@ function renderOrders() {
         '</div>' +
         '<div class="order-actions">' +
           (order.deliveryStatus !== 'Cancelled' && order.deliveryStatus !== 'Delivered'
-            ? '<button class="action-btn track" onclick="toggleTracker(\'' + order.id + '\')">📍 Track Order</button>' : '') +
+            ? '<button class="action-btn track" onclick="toggleTracker(\'' + order.id + '\')">Track Order</button>' : '') +
           (order.deliveryStatus === 'Delivered'
             ? '<button class="action-btn return" onclick="showToast(\'Return request initiated!\')">↩️ Return</button>' : '') +
-          '<button class="action-btn reorder" onclick="reorder(\'' + order.id + '\')">🔁 Reorder</button>' +
+          '<button class="action-btn reorder" onclick="reorder(\'' + order.id + '\')">Reorder</button>' +
         '</div>' +
       '</div>' +
     '</div>';

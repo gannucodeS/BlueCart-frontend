@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -115,17 +115,17 @@
 <body>
 
 <!-- TOPBAR -->
-<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<div class="topbar"><span>package Free shipping over <b>&#8377;999</b></span><span>phone Support: <b>1800-000-BLUE</b></span><span>lock <b>Secure</b> &amp; Trusted</span></div>
 <!-- NAVBAR WRAP -->
 <div class="navbar-wrap">
 <nav class="navbar">
   <a href="/index" class="logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
-  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">location Bhilwara</b></div>
   <div style="flex:1;"></div>
   <div class="nav-right">
     <a href="#" class="nav-icon-btn" onclick="return false;" title="Wishlist"><span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge">0</span></a>
-    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
-    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>user</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>cart</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
           <!-- Hamburger button -->
       <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -136,7 +136,7 @@
   <div class="navbar-search-row">
     <div class="sac-wrapper" style="flex:1;position:relative;">
       <input type="text" id="searchInput" class="sac-input" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
-      <button class="sac-search-btn" onclick="doSearchNav()">&#128269;</button>
+      <button class="sac-search-btn" onclick="doSearchNav()">search</button>
     </div>
   </div>
 </div><!-- end .navbar-wrap -->
@@ -146,30 +146,30 @@
 <div class="hm-drawer" id="hm-drawer">
   <div class="hm-drawer-head">
     <span class="hm-drawer-logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="hm-drawer-logo-img"/></span>
-    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+    <button class="hm-drawer-close" onclick="closeHamburger()"><span class="hm-icon" data-icon="close"></span></button>
   </div>
   <div class="hm-drawer-body">
-    <a href="/index" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <a href="/index" class="hm-item"><span class="ic" data-icon="home"></span> Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Categories</div>
-    <a href="/electronics"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
-    <a href="/smartphones"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
-    <a href="/laptops"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
-    <a href="/audio"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
-    <a href="/cameras"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
-    <a href="/gaming"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
-    <a href="/accessories"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
-    <a href="/smarthome"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <a href="/electronics"   class="hm-item"><span class="ic" data-icon="bolt"></span> Electronics</a>
+    <a href="/smartphones"   class="hm-item"><span class="ic" data-icon="phoneMobile"></span> Smartphones</a>
+    <a href="/laptops"       class="hm-item"><span class="ic" data-icon="laptop"></span> Laptops</a>
+    <a href="/audio"         class="hm-item"><span class="ic" data-icon="headphones"></span> Audio</a>
+    <a href="/cameras"       class="hm-item"><span class="ic" data-icon="camera"></span> Cameras</a>
+    <a href="/gaming"        class="hm-item"><span class="ic" data-icon="gamepad"></span> Gaming</a>
+    <a href="/accessories"   class="hm-item"><span class="ic" data-icon="wrench"></span> Accessories</a>
+    <a href="/smarthome"     class="hm-item"><span class="ic" data-icon="home"></span> Smart Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Offers</div>
-    <a href="/deals"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
-    <a href="/new-arrivals"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <a href="/deals"         class="hm-item"><span class="ic" data-icon="fire"></span> Today's Deals</a>
+    <a href="/new-arrivals"  class="hm-item"><span class="ic" data-icon="star"></span> New Arrivals</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Account</div>
-    <a href="/orders"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
-    <a href="/account"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
-    <a href="/customer-service" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
-    <a href="/login"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+    <a href="/orders"        class="hm-item"><span class="ic" data-icon="package"></span> My Orders</a>
+    <a href="/account"       class="hm-item"><span class="ic" data-icon="user"></span> My Account</a>
+    <a href="/customer-service" class="hm-item"><span class="ic" data-icon="phone"></span> Customer Service</a>
+    <a href="/login"         class="hm-item"><span class="ic" data-icon="lock"></span> Sign In / Register</a>
   </div>
 </div>
 
@@ -185,7 +185,7 @@
   <div class="nav-item"><a href="/accessories">Accessories</a></div>
   <div class="nav-item"><a href="/gaming">Gaming</a></div>
   <div class="nav-item"><a href="/smarthome">Smart Home</a></div>
-  <div class="nav-item"><a href="/deals" class="hot">&#128293; Hot Deals</a></div>
+  <div class="nav-item"><a href="/deals" class="hot">fire Hot Deals</a></div>
   <div class="nav-item"><a href="/new-arrivals">New Arrivals</a></div>
   <div class="nav-item"><a href="/customer-service">Customer Service</a></div>
 </div></div>
@@ -205,7 +205,7 @@
       <span class="acc-badge" id="hero-orders-badge">0 Orders</span>
     </div>
   </div>
-  <button class="acc-hero-logout" onclick="doLogout()">🚪 Sign Out</button>
+  <button class="acc-hero-logout" onclick="doLogout()">Sign Out</button>
 </div>
 
 <!-- LAYOUT -->
@@ -213,11 +213,11 @@
 
   <!-- SIDEBAR -->
   <div class="acc-sidebar">
-    <button class="acc-nav-btn active" onclick="showTab('profile',this)"><span class="ic">👤</span><span>Profile</span></button>
-    <button class="acc-nav-btn" onclick="showTab('security',this)"><span class="ic">🔒</span><span>Security</span></button>
-    <button class="acc-nav-btn" onclick="showTab('addresses',this)"><span class="ic">📍</span><span>Addresses</span></button>
+    <button class="acc-nav-btn active" onclick="showTab('profile',this)"><span class="ic" data-icon="user"></span><span>Profile</span></button>
+    <button class="acc-nav-btn" onclick="showTab('security',this)"><span class="ic" data-icon="lock"></span><span>Security</span></button>
+    <button class="acc-nav-btn" onclick="showTab('addresses',this)"><span class="ic" data-icon="location"></span><span>Addresses</span></button>
     <button class="acc-nav-btn" onclick="showTab('preferences',this)"><span class="ic">⚙️</span><span>Preferences</span></button>
-    <button class="acc-nav-btn" onclick="window.location.href='orders.html'"><span class="ic">📦</span><span>My Orders</span></button>
+    <button class="acc-nav-btn" onclick="window.location.href='orders.html'"><span class="ic" data-icon="package"></span><span>My Orders</span></button>
   </div>
 
   <!-- MAIN PANELS -->
@@ -436,7 +436,7 @@ function loadUserData() {
 
     // Security tab
     document.getElementById('sec-email-val').textContent  = user.email;
-    document.getElementById('sec-role-val').textContent   = user.role === 'admin' ? '🛡️ Administrator' : '👤 Customer';
+    document.getElementById('sec-role-val').innerHTML   = user.role === 'admin' ? Icons.shield + ' Administrator' : Icons.user + ' Customer';
     var joined = user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}) : '—';
     document.getElementById('sec-joined').textContent     = joined;
     document.getElementById('hero-joined').textContent    = 'Joined ' + joined;
@@ -559,7 +559,7 @@ function renderAddresses(addrs) {
   container.innerHTML = addrs.map(function(a, i) {
     return '<div class="addr-card' + (a.isDefault?' default':'') + '">' +
       '<h4>' + a.name + (a.isDefault?'<span class="addr-default-tag">Default</span>':'') + '</h4>' +
-      '<p>' + a.line1 + (a.line2?', '+a.line2:'') + '<br>' + a.city + ', ' + a.state + ' — ' + a.pincode + '<br>📞 ' + a.phone + '</p>' +
+      '<p>' + a.line1 + (a.line2?', '+a.line2:'') + '<br>' + a.city + ', ' + a.state + ' &mdash; ' + a.pincode + '<br>Phone: ' + a.phone + '</p>' +
       '<div class="addr-actions">' +
         (!a.isDefault?'<button class="addr-btn addr-default-btn" onclick="setDefaultAddr('+i+')">Set Default</button>':'') +
         '<button class="addr-btn addr-del" onclick="deleteAddr('+i+')">Delete</button>' +

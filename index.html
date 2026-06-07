@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -100,23 +100,23 @@
 
 <!-- TOP BAR -->
 <!-- TOPBAR -->
-<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<div class="topbar"><span><span data-icon="truck" style="margin-right:6px;"></span>Free shipping over <b>&#8377;999</b></span><span><span data-icon="phone" style="margin-right:6px;"></span>Support: <b>1800-000-BLUE</b></span><span><span data-icon="lock" style="margin-right:6px;"></span><b>Secure</b> &amp; Trusted</span></div>
 <!-- NAVBAR WRAP -->
 <div class="navbar-wrap">
 <nav class="navbar">
   <a href="/index" class="logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
-  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;"><span data-icon="location" style="margin-right:4px;"></span>Bhilwara</b></div>
   <div style="flex:1;"></div>
   <div class="nav-right">
     <div class="nav-icon-btn wishlist-trigger" onmouseenter="showWishlistDropdown()" onclick="requireLogin(function(){toggleWishlistDropdown()})" title="Wishlist">
-      <span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge" id="wishlist-count">0</span>
+      <span class="hm-icon" data-icon="heart"></span><span class="nav-icon-label">Wishlist</span><span class="nav-badge" id="wishlist-count">0</span>
     </div>
     <div id="wishlist-dropdown" class="wishlist-dropdown"></div>
-    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
-    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+    <a href="/login" class="nav-icon-btn" id="account-link" title="Account"><span class="hm-icon" data-icon="user"></span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span class="hm-icon" data-icon="cart"></span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
           <!-- Hamburger button -->
       <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
-        <span></span><span></span><span></span>
+        <span class="hm-icon" data-icon="menu"></span>
       </button>
     </div><!-- end .nav-right -->
   </nav>
@@ -124,7 +124,7 @@
   <div class="navbar-search-row">
     <div class="sac-wrapper" style="flex:1;position:relative;">
       <input type="text" id="searchInput" class="sac-input" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
-      <button class="sac-search-btn" onclick="doSearchNav()">&#128269;</button>
+      <button class="sac-search-btn" onclick="doSearchNav()"><span class="hm-icon" data-icon="search"></span></button>
     </div>
   </div>
 </div><!-- end .navbar-wrap -->
@@ -134,36 +134,36 @@
 <div class="hm-drawer" id="hm-drawer">
   <div class="hm-drawer-head">
     <span class="hm-drawer-logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="hm-drawer-logo-img"/></span>
-    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+    <button class="hm-drawer-close" onclick="closeHamburger()"><span class="hm-icon" data-icon="close"></span></button>
   </div>
   <div class="hm-drawer-body">
-    <a href="/index" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <a href="/index" class="hm-item"><span class="hm-icon" data-icon="home"></span> Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Categories</div>
-    <a href="/electronics"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
-    <a href="/smartphones"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
-    <a href="/laptops"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
-    <a href="/audio"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
-    <a href="/cameras"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
-    <a href="/gaming"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
-    <a href="/accessories"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
-    <a href="/smarthome"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <a href="/electronics"   class="hm-item"><span class="hm-icon" data-icon="bolt"></span> Electronics</a>
+    <a href="/smartphones"   class="hm-item"><span class="hm-icon" data-icon="phoneMobile"></span> Smartphones</a>
+    <a href="/laptops"       class="hm-item"><span class="hm-icon" data-icon="laptop"></span> Laptops</a>
+    <a href="/audio"         class="hm-item"><span class="hm-icon" data-icon="headphones"></span> Audio</a>
+    <a href="/cameras"       class="hm-item"><span class="hm-icon" data-icon="camera"></span> Cameras</a>
+    <a href="/gaming"        class="hm-item"><span class="hm-icon" data-icon="gamepad"></span> Gaming</a>
+    <a href="/accessories"   class="hm-item"><span class="hm-icon" data-icon="cog"></span> Accessories</a>
+    <a href="/smarthome"     class="hm-item"><span class="hm-icon" data-icon="home"></span> Smart Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Offers</div>
-    <a href="/deals"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
-    <a href="/new-arrivals"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <a href="/deals"         class="hm-item"><span class="hm-icon" data-icon="fire"></span> Today's Deals</a>
+    <a href="/new-arrivals"  class="hm-item"><span class="hm-icon" data-icon="bolt"></span> New Arrivals</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Account</div>
-    <a href="/orders"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
-    <a href="/account"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
-    <a href="/customer-service" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
-    <a href="/login"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+    <a href="/orders"        class="hm-item"><span class="hm-icon" data-icon="package"></span> My Orders</a>
+    <a href="/account"       class="hm-item"><span class="hm-icon" data-icon="user"></span> My Account</a>
+    <a href="/customer-service" class="hm-item"><span class="hm-icon" data-icon="phone"></span> Customer Service</a>
+    <a href="/login"         class="hm-item"><span class="hm-icon" data-icon="logOut"></span> Sign In / Register</a>
   </div>
 </div>
 
 <!-- NAV STRIP (desktop only) -->
 <div class="nav-strip"><div class="nav-strip-inner">
-  <div class="nav-item"><a href="/index">&#9776; All</a></div>
+  <div class="nav-item"><a href="/index"><span data-icon="menu" style="margin-right:4px;font-size:14px;"></span>All</a></div>
   <div class="nav-item"><a href="/deals">Today's Deals</a></div>
   <div class="nav-item"><a href="/electronics">Electronics</a></div>
   <div class="nav-item"><a href="/smartphones">Smartphones</a></div>
@@ -183,36 +183,36 @@
     <div class="slide slide-1">
       <div class="slide-decor decor-1"></div><div class="slide-decor decor-2"></div>
       <div class="slide-content fade-up">
-        <div class="slide-tag">&#128293; Limited Time Deal</div>
+        <div class="slide-tag"><span data-icon="fire" style="margin-right:4px;"></span>Limited Time Deal</div>
         <h1>Next-Gen Smartphones</h1>
         <p>Experience lightning-fast performance with our latest collection. Up to 40% off on top brands.</p>
-        <div class="slide-btns"><button class="btn-primary" onclick="window.location.href='/smartphones'">Buy Now &#9889;</button><button class="btn-outline" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">View All Deals</button></div>
+        <div class="slide-btns"><button class="btn-primary" onclick="window.location.href='/smartphones'">Buy Now bolt</button><button class="btn-outline" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">View All Deals</button></div>
       </div>
       <img class="slide-img" src="https://i.postimg.cc/90CW7TC0/16-pro.png" alt="Smartphone"/>
     </div>
     <div class="slide slide-2">
       <div class="slide-decor decor-1"></div><div class="slide-decor decor-2"></div>
       <div class="slide-content">
-        <div class="slide-tag">&#9889; New Arrival</div>
+        <div class="slide-tag"><span data-icon="bolt" style="margin-right:4px;"></span>New Arrival</div>
         <h1>Pro Laptops for Creators</h1>
         <p>Unleash your creativity with our powerful laptop lineup. Starting at just &#8377;45,999.</p>
-        <div class="slide-btns"><button class="btn-primary" onclick="window.location.href='/laptops'">Buy Now &#9889;</button><button class="btn-outline" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">Compare Models</button></div>
+        <div class="slide-btns"><button class="btn-primary" onclick="window.location.href='/laptops'">Buy Now bolt</button><button class="btn-outline" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">Compare Models</button></div>
       </div>
       <img class="slide-img" src="https://i.postimg.cc/X7NjNw24/laptop.png" alt="Laptop"/>
     </div>
     <div class="slide slide-3">
       <div class="slide-decor decor-1"></div><div class="slide-decor decor-2"></div>
       <div class="slide-content">
-        <div class="slide-tag">&#127911; Best Seller</div>
+        <div class="slide-tag"><span data-icon="headphones" style="margin-right:4px;"></span>Best Seller</div>
         <h1>Premium Audio Gear</h1>
         <p>Studio-quality sound for everyday life. Wireless headphones, earbuds &amp; more.</p>
-        <div class="slide-btns"><button class="btn-primary" onclick="window.location.href='/audio'">Buy Now &#9889;</button><button class="btn-outline" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">Listen & Compare</button></div>
+        <div class="slide-btns"><button class="btn-primary" onclick="window.location.href='/audio'">Buy Now bolt</button><button class="btn-outline" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">Listen & Compare</button></div>
       </div>
       <img class="slide-img" src="https://i.postimg.cc/J0M1kJMD/headphone.png" alt="Headphones"/>
     </div>
   </div>
-  <button class="slider-btn slider-prev" onclick="changeSlide(-1)">&#8249;</button>
-  <button class="slider-btn slider-next" onclick="changeSlide(1)">&#8250;</button>
+  <button class="slider-btn slider-prev" onclick="changeSlide(-1)"><span class="hm-icon" data-icon="chevronLeft"></span></button>
+  <button class="slider-btn slider-next" onclick="changeSlide(1)"><span class="hm-icon" data-icon="chevronRight"></span></button>
   <div class="slider-dots">
     <div class="dot active" onclick="goSlide(0)"></div>
     <div class="dot" onclick="goSlide(1)"></div>
@@ -222,14 +222,14 @@
 
 <!-- DEALS STRIP -->
 <div class="deals-strip">
-  <div class="deal-chip">&#9889; Flash Sale <span class="badge">6h left</span></div>
-  <div class="deal-chip">&#128241; Phones Under &#8377;10K <span class="badge">50% off</span></div>
-  <div class="deal-chip">&#128187; Laptops Under &#8377;40K <span class="badge">New</span></div>
-  <div class="deal-chip">&#127911; Earbuds Fest <span class="badge">60% off</span></div>
-  <div class="deal-chip">&#128247; Camera Week <span class="badge">Hot</span></div>
-  <div class="deal-chip">&#128250; Monitor Deals <span class="badge">40% off</span></div>
-  <div class="deal-chip">&#9000; PC Accessories <span class="badge">Bundle</span></div>
-  <div class="deal-chip">&#128267; Power Banks <span class="badge">&#8377;299+</span></div>
+  <div class="deal-chip"><span data-icon="bolt" style="margin-right:4px;"></span>Flash Sale <span class="badge">6h left</span></div>
+  <div class="deal-chip"><span data-icon="phoneMobile" style="margin-right:4px;"></span>Phones Under &#8377;10K <span class="badge">50% off</span></div>
+  <div class="deal-chip"><span data-icon="laptop" style="margin-right:4px;"></span>Laptops Under &#8377;40K <span class="badge">New</span></div>
+  <div class="deal-chip"><span data-icon="headphones" style="margin-right:4px;"></span>Earbuds Fest <span class="badge">60% off</span></div>
+  <div class="deal-chip"><span data-icon="camera" style="margin-right:4px;"></span>Camera Week <span class="badge">Hot</span></div>
+  <div class="deal-chip"><span data-icon="headphones" style="margin-right:4px;"></span>Monitor Deals <span class="badge">40% off</span></div>
+  <div class="deal-chip"><span data-icon="cog" style="margin-right:4px;"></span>PC Accessories <span class="badge">Bundle</span></div>
+  <div class="deal-chip"><span data-icon="bolt" style="margin-right:4px;"></span>Power Banks <span class="badge">&#8377;299+</span></div>
 </div>
 
 <!-- CATEGORIES -->
@@ -240,39 +240,27 @@
 <div class="categories-section">
   <div class="categories-grid" id="cat-grid">
     <a href="/smartphones" class="cat-card" style="text-decoration:none;">
-      <div class="cat-img-wrap" data-icon="&#128241;">
-        <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300&h=200&fit=crop" alt="Smartphones"/>
-      </div>
+      <div class="cat-img-wrap" data-icon="phoneMobile"></div>
       <div class="cat-info"><h4>Smartphones</h4><span>120+ products</span></div>
     </a>
     <a href="/laptops" class="cat-card" style="text-decoration:none;">
-      <div class="cat-img-wrap" data-icon="&#128187;">
-        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=200&fit=crop" alt="Laptops"/>
-      </div>
+      <div class="cat-img-wrap" data-icon="laptop"></div>
       <div class="cat-info"><h4>Laptops</h4><span>85+ products</span></div>
     </a>
     <a href="/audio" class="cat-card" style="text-decoration:none;">
-      <div class="cat-img-wrap" data-icon="&#127911;">
-        <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=300&h=200&fit=crop" alt="Audio"/>
-      </div>
+      <div class="cat-img-wrap" data-icon="headphones"></div>
       <div class="cat-info"><h4>Audio</h4><span>200+ products</span></div>
     </a>
     <a href="/electronics" class="cat-card" style="text-decoration:none;">
-      <div class="cat-img-wrap" data-icon="&#128250;">
-        <img src="https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=300&h=200&fit=crop" alt="Monitors"/>
-      </div>
+      <div class="cat-img-wrap" data-icon="desktop"></div>
       <div class="cat-info"><h4>Monitors</h4><span>60+ products</span></div>
     </a>
     <a href="/gaming" class="cat-card" style="text-decoration:none;">
-      <div class="cat-img-wrap" data-icon="&#127918;">
-        <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=300&h=200&fit=crop" alt="Gaming"/>
-      </div>
+      <div class="cat-img-wrap" data-icon="gamepad"></div>
       <div class="cat-info"><h4>Gaming</h4><span>150+ products</span></div>
     </a>
     <a href="/electronics" class="cat-card" id="cat-wearables" style="text-decoration:none;">
-      <div class="cat-img-wrap" data-icon="&#8987;">
-        <img src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=300&h=200&fit=crop" alt="Wearables"/>
-      </div>
+      <div class="cat-img-wrap" data-icon="cog"></div>
       <div class="cat-info"><h4>Wearables</h4><span>90+ products</span></div>
     </a>
   </div>
@@ -281,7 +269,7 @@
 <!-- DEAL OF THE DAY -->
 <div class="sec-wrap" id="products-section">
   <div class="dotd-header-bar">
-    <div class="dotd-title">&#128293; Deal of the Day <span>Limited Time</span></div>
+    <div class="dotd-title"><span class="dotd-icon" data-icon="fire"></span>Deal of the Day <span>Limited Time</span></div>
     <div class="countdown"><div class="countdown-label">Ends in:</div><div class="cd-boxes"><div class="cd-box"><b id="cd-h">05</b><span>Hrs</span></div><div class="cd-sep">:</div><div class="cd-box"><b id="cd-m">42</b><span>Min</span></div><div class="cd-sep">:</div><div class="cd-box"><b id="cd-s">18</b><span>Sec</span></div></div></div>
     <a href="/deals" class="see-all-btn" onclick="event.preventDefault();document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">See all deals &#8594;</a>
   </div>
@@ -289,6 +277,12 @@
     <div class="scroll-wrap">
       <button class="scroll-arrow left" onclick="scrollRow('dotd',-1)">&#8249;</button>
       <div class="h-scroll" id="dotd">
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
       </div>
       <button class="scroll-arrow right" onclick="scrollRow('dotd',1)">&#8250;</button>
     </div>
@@ -300,12 +294,18 @@
 <!-- NEW ARRIVALS -->
 <div class="sec-wrap">
   <div class="sec-header">
-    <div class="sec-title">&#10024; New Arrivals</div>
+    <div class="sec-title">star New Arrivals</div>
     <a href="/new-arrivals" class="see-all-btn" style="color:var(--teal);font-weight:700">View all new &#8594;</a>
   </div>
   <div class="scroll-wrap">
     <button class="scroll-arrow left" onclick="scrollRow('newarr',-1)">&#8249;</button>
     <div class="h-scroll" id="newarr">
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
+      <div class="deal-card" style="pointer-events:none;"><div class="skeleton" style="height:140px;border-radius:0"></div><div style="padding:10px 12px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div></div></div>
     </div>
     <button class="scroll-arrow right" onclick="scrollRow('newarr',1)">&#8250;</button>
   </div>
@@ -316,9 +316,9 @@
 <!-- MINI BANNERS -->
 <div style="padding:24px 4% 8px;">
   <div class="banner-row">
-    <div class="mini-banner mini-banner-1" onclick="window.location.href='laptops.html'" style="cursor:pointer"><span class="tag">New Launch</span><h3>Ultra-Thin Laptops</h3><p>Starting at &#8377;45,999</p><button class="banner-btn" onclick="event.stopPropagation();window.location.href='laptops.html'">Shop Now</button><span class="banner-icon">&#128187;</span></div>
-    <div class="mini-banner mini-banner-2" onclick="window.location.href='audio.html'" style="cursor:pointer"><span class="tag">Best Seller</span><h3>Wireless Earbuds</h3><p>40-60% off today only</p><button class="banner-btn" onclick="event.stopPropagation();window.location.href='audio.html'">Shop Now</button><span class="banner-icon">&#127911;</span></div>
-    <div class="mini-banner mini-banner-3" onclick="document.getElementById('cat-wearables').click()" style="cursor:pointer"><span class="tag">Limited Stock</span><h3>Smart Watches</h3><p>Track your fitness goals</p><button class="banner-btn" onclick="event.stopPropagation();document.getElementById('cat-wearables').click()">View Category</button><span class="banner-icon">&#8987;</span></div>
+    <div class="mini-banner mini-banner-1" onclick="window.location.href='laptops.html'" style="cursor:pointer"><span class="tag">New Launch</span><h3>Ultra-Thin Laptops</h3><p>Starting at &#8377;45,999</p><button class="banner-btn" onclick="event.stopPropagation();window.location.href='laptops.html'">Shop Now</button><span class="banner-icon" data-icon="laptop"></span></div>
+    <div class="mini-banner mini-banner-2" onclick="window.location.href='audio.html'" style="cursor:pointer"><span class="tag">Best Seller</span><h3>Wireless Earbuds</h3><p>40-60% off today only</p><button class="banner-btn" onclick="event.stopPropagation();window.location.href='audio.html'">Shop Now</button><span class="banner-icon" data-icon="headphones"></span></div>
+    <div class="mini-banner mini-banner-3" onclick="document.getElementById('cat-wearables').click()" style="cursor:pointer"><span class="tag">Limited Stock</span><h3>Smart Watches</h3><p>Track your fitness goals</p><button class="banner-btn" onclick="event.stopPropagation();document.getElementById('cat-wearables').click()">View Category</button><span class="banner-icon" data-icon="cog"></span></div>
   </div>
 </div>
 
@@ -327,17 +327,15 @@
   <div class="section-title title-coral">Featured Products</div>
   <a href="#" class="see-all">See all products &#8594;</a>
 </div>
-<div class="products-grid" id="featured-products">
-</div>
+<div class="products-grid" id="featured-products"><div class="product-card" style="pointer-events:none;background:white;"><div class="skeleton" style="height:200px;border-radius:0"></div><div style="padding:14px;display:flex;flex-direction:column;gap:8px;"><div class="skeleton s-line-md" style="width:60%;height:11px"></div><div class="skeleton s-line-lg" style="width:95%;height:14px"></div><div class="skeleton s-line-lg" style="width:80%;height:14px"></div><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:40%;height:16px;margin-top:6px"></div><div class="skeleton s-line-md" style="width:100%;height:32px;margin-top:10px;border-radius:8px"></div></div></div><div class="product-card" style="pointer-events:none;background:white;"><div class="skeleton" style="height:200px;border-radius:0"></div><div style="padding:14px;display:flex;flex-direction:column;gap:8px;"><div class="skeleton s-line-md" style="width:60%;height:11px"></div><div class="skeleton s-line-lg" style="width:95%;height:14px"></div><div class="skeleton s-line-lg" style="width:80%;height:14px"></div><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:40%;height:16px;margin-top:6px"></div><div class="skeleton s-line-md" style="width:100%;height:32px;margin-top:10px;border-radius:8px"></div></div></div><div class="product-card" style="pointer-events:none;background:white;"><div class="skeleton" style="height:200px;border-radius:0"></div><div style="padding:14px;display:flex;flex-direction:column;gap:8px;"><div class="skeleton s-line-md" style="width:60%;height:11px"></div><div class="skeleton s-line-lg" style="width:95%;height:14px"></div><div class="skeleton s-line-lg" style="width:80%;height:14px"></div><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:40%;height:16px;margin-top:6px"></div><div class="skeleton s-line-md" style="width:100%;height:32px;margin-top:10px;border-radius:8px"></div></div></div><div class="product-card" style="pointer-events:none;background:white;"><div class="skeleton" style="height:200px;border-radius:0"></div><div style="padding:14px;display:flex;flex-direction:column;gap:8px;"><div class="skeleton s-line-md" style="width:60%;height:11px"></div><div class="skeleton s-line-lg" style="width:95%;height:14px"></div><div class="skeleton s-line-lg" style="width:80%;height:14px"></div><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:40%;height:16px;margin-top:6px"></div><div class="skeleton s-line-md" style="width:100%;height:32px;margin-top:10px;border-radius:8px"></div></div></div><div class="product-card" style="pointer-events:none;background:white;"><div class="skeleton" style="height:200px;border-radius:0"></div><div style="padding:14px;display:flex;flex-direction:column;gap:8px;"><div class="skeleton s-line-md" style="width:60%;height:11px"></div><div class="skeleton s-line-lg" style="width:95%;height:14px"></div><div class="skeleton s-line-lg" style="width:80%;height:14px"></div><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:40%;height:16px;margin-top:6px"></div><div class="skeleton s-line-md" style="width:100%;height:32px;margin-top:10px;border-radius:8px"></div></div></div><div class="product-card" style="pointer-events:none;background:white;"><div class="skeleton" style="height:200px;border-radius:0"></div><div style="padding:14px;display:flex;flex-direction:column;gap:8px;"><div class="skeleton s-line-md" style="width:60%;height:11px"></div><div class="skeleton s-line-lg" style="width:95%;height:14px"></div><div class="skeleton s-line-lg" style="width:80%;height:14px"></div><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:40%;height:16px;margin-top:6px"></div><div class="skeleton s-line-md" style="width:100%;height:32px;margin-top:10px;border-radius:8px"></div></div></div><div class="product-card" style="pointer-events:none;background:white;"><div class="skeleton" style="height:200px;border-radius:0"></div><div style="padding:14px;display:flex;flex-direction:column;gap:8px;"><div class="skeleton s-line-md" style="width:60%;height:11px"></div><div class="skeleton s-line-lg" style="width:95%;height:14px"></div><div class="skeleton s-line-lg" style="width:80%;height:14px"></div><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:40%;height:16px;margin-top:6px"></div><div class="skeleton s-line-md" style="width:100%;height:32px;margin-top:10px;border-radius:8px"></div></div></div><div class="product-card" style="pointer-events:none;background:white;"><div class="skeleton" style="height:200px;border-radius:0"></div><div style="padding:14px;display:flex;flex-direction:column;gap:8px;"><div class="skeleton s-line-md" style="width:60%;height:11px"></div><div class="skeleton s-line-lg" style="width:95%;height:14px"></div><div class="skeleton s-line-lg" style="width:80%;height:14px"></div><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:40%;height:16px;margin-top:6px"></div><div class="skeleton s-line-md" style="width:100%;height:32px;margin-top:10px;border-radius:8px"></div></div></div></div>
 
 <!-- EXPLORE MORE -->
 <div class="sec-wrap">
   <div class="sec-header">
-    <div class="sec-title amber">&#128717; Explore More</div>
+    <div class="sec-title amber">Explore More</div>
     <a href="/electronics" class="see-all-btn" style="color:var(--teal);font-weight:700" onclick="event.preventDefault();document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">View all products &#8594;</a>
   </div>
-  <div class="explore-grid" id="explore-grid">
-  </div>
+  <div class="explore-grid" id="explore-grid"><div class="explore-card" style="pointer-events:none;"><div class="skeleton" style="height:170px;border-radius:0"></div><div style="padding:12px 13px 14px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div><div class="skeleton s-line-md" style="width:100%;height:30px;margin-top:6px;border-radius:8px"></div></div></div><div class="explore-card" style="pointer-events:none;"><div class="skeleton" style="height:170px;border-radius:0"></div><div style="padding:12px 13px 14px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div><div class="skeleton s-line-md" style="width:100%;height:30px;margin-top:6px;border-radius:8px"></div></div></div><div class="explore-card" style="pointer-events:none;"><div class="skeleton" style="height:170px;border-radius:0"></div><div style="padding:12px 13px 14px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div><div class="skeleton s-line-md" style="width:100%;height:30px;margin-top:6px;border-radius:8px"></div></div></div><div class="explore-card" style="pointer-events:none;"><div class="skeleton" style="height:170px;border-radius:0"></div><div style="padding:12px 13px 14px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div><div class="skeleton s-line-md" style="width:100%;height:30px;margin-top:6px;border-radius:8px"></div></div></div><div class="explore-card" style="pointer-events:none;"><div class="skeleton" style="height:170px;border-radius:0"></div><div style="padding:12px 13px 14px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div><div class="skeleton s-line-md" style="width:100%;height:30px;margin-top:6px;border-radius:8px"></div></div></div><div class="explore-card" style="pointer-events:none;"><div class="skeleton" style="height:170px;border-radius:0"></div><div style="padding:12px 13px 14px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div><div class="skeleton s-line-md" style="width:100%;height:30px;margin-top:6px;border-radius:8px"></div></div></div><div class="explore-card" style="pointer-events:none;"><div class="skeleton" style="height:170px;border-radius:0"></div><div style="padding:12px 13px 14px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div><div class="skeleton s-line-md" style="width:100%;height:30px;margin-top:6px;border-radius:8px"></div></div></div><div class="explore-card" style="pointer-events:none;"><div class="skeleton" style="height:170px;border-radius:0"></div><div style="padding:12px 13px 14px;display:flex;flex-direction:column;gap:6px;"><div class="skeleton s-line-sm" style="width:50%;height:10px"></div><div class="skeleton s-line-md" style="width:90%;height:13px"></div><div class="skeleton s-line-md" style="width:70%;height:13px"></div><div class="skeleton s-line-sm" style="width:60%;height:10px"></div><div class="skeleton s-line-md" style="width:50%;height:16px;margin-top:4px"></div><div class="skeleton s-line-md" style="width:100%;height:30px;margin-top:6px;border-radius:8px"></div></div></div></div>
 </div>
 
 <!-- FOOTER -->
@@ -358,14 +356,14 @@
 <!-- CART SIDEBAR -->
 <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
 <div id="cart">
-  <div class="cart-header"><h3>&#128722; Your Cart</h3><button class="cart-close" onclick="toggleCart()">&#10005;</button></div>
-  <ul id="cart-items"><div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-header"><h3><span data-icon="cart" style="margin-right:8px;font-size:18px;"></span>Your Cart</h3><button class="cart-close" onclick="toggleCart()"><span class="hm-icon" data-icon="close"></span></button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon" data-icon="cart"></div><p>Your cart is empty</p></div></ul>
   <div class="cart-footer">
     <div class="cart-total"><span>Total</span><span id="cart-total">&#8377;0</span></div>
     <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout &#8594;</button>
   </div>
   <div class="cart-clear-wrap" style="padding:0 16px 16px;display:none;" id="cart-clear-wrap">
-    <button class="cart-clear-btn" onclick="clearCart()" style="width:100%;padding:10px;background:#fee2e2;border:1.5px solid #fecaca;border-radius:8px;color:#dc2626;font-weight:700;font-size:14px;cursor:pointer;">&#128465; Remove All</button>
+    <button class="cart-clear-btn" onclick="clearCart()" style="width:100%;padding:10px;background:#fee2e2;border:1.5px solid #fecaca;border-radius:8px;color:#dc2626;font-weight:700;font-size:14px;cursor:pointer;"><span data-icon="trash" style="margin-right:6px;font-size:14px;"></span>Remove All</button>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -374,8 +372,8 @@
 <div id="loc-overlay" onclick="closeLocationPanel()"></div>
 <div id="loc-panel">
   <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
-    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">&#128205; Set Delivery Location</div>
-    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">&#10005;</button>
+    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;"><span data-icon="location" style="margin-right:8px;"></span>Set Delivery Location</div>
+    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;"><span class="hm-icon" data-icon="close"></span></button>
   </div>
   <div style="padding:18px;">
     <div style="margin-bottom:16px;">
@@ -395,7 +393,7 @@
       <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
       <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
     </div>
-    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">&#128205; Set Location</button>
+    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">location Set Location</button>
     <div style="margin-top:18px;">
       <div style="font-size:11px;font-weight:800;color:#6b7a8d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Popular Cities</div>
       <div style="display:flex;flex-wrap:wrap;gap:7px;">
@@ -469,13 +467,13 @@ function renderProductCard(p) {
   
   return '<div class="product-card fade-up" data-dbid="' + p.id + '" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
     '<div class="prod-img-wrap">' + badgeHtml +
-    '<button class="wishlist-btn" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+mainImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">&#129293;</button>' +
+    '<button class="wishlist-btn" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+mainImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">heart</button>' +
     '<img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
     '</div>' +
     '<div class="prod-info">' +
     '<span class="prod-category">' + (p.category || '') + '</span>' +
     '<div class="prod-name">' + p.name + '</div>' +
-    '<div class="prod-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> ' + (p.rating || '4.5') + ' (' + (p.reviews || '0') + ' reviews)</div>' +
+    '<div class="prod-rating"><span class="stars">starstarstarstarstar</span> ' + (p.rating || '4.5') + ' (' + (p.reviews || '0') + ' reviews)</div>' +
     '<div class="prod-price">' +
     '<span class="price-now">&#8377;' + p.price.toLocaleString('en-IN') + '</span>' +
     (p.mrp > p.price ? '<span class="price-old">&#8377;' + p.mrp.toLocaleString('en-IN') + '</span>' : '') +
@@ -507,7 +505,7 @@ function renderDealProducts() {
       var viewUrl = '/product?id=' + encodeURIComponent(p.id);
       return '<div class="deal-card" data-dbid="' + p.id + '" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
         '<img class="deal-img" src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/>' +
-        '<button class="deal-wishlist" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+pImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">&#129293;</button>' +
+        '<button class="deal-wishlist" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+pImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">heart</button>' +
         '<div class="deal-info"><div class="deal-cat">' + (p.category || '') + '</div>' +
         '<div class="deal-name">' + p.name + '</div>' +
         (disc > 0 ? '<div class="deal-off">-' + disc + '% OFF</div>' : '') +
@@ -536,14 +534,14 @@ function renderNewArrivals() {
       else if (badgeClass === 'trend') badgeText = 'Trending';
       return '<div class="new-card" data-dbid="' + p.id + '" style="cursor:pointer" onclick="window.location.href=\'' + viewUrl + '\'">' +
         '<span class="new-badge">' + badgeText + '</span>' +
-        '<button class="new-wishlist" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+pImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">&#129293;</button>' +
+        '<button class="new-wishlist" data-id="'+p.id+'" data-name="'+pName+'" data-price="'+p.price+'" data-img="'+pImg+'" onclick="event.stopPropagation();handleWishlistToggle(this)">heart</button>' +
         '<div class="new-img-wrap"><img src="' + mainImg + '" alt="' + p.name + '" onerror="this.src=\'https://placehold.co/400x300?text=Product\'"/></div>' +
         '<div class="new-info"><div class="new-cat">' + (p.brand || '') + '</div>' +
         '<div class="new-name">' + p.name + '</div>' +
-        '<div class="new-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span>4.9</span></div>' +
+        '<div class="new-stars">starstarstarstarstar <span>4.9</span></div>' +
         '<div class="new-price-row"><span class="new-price-now">&#8377;' + p.price.toLocaleString('en-IN') + '</span>' +
         '<span class="new-price-off">New</span></div>' +
-        '<button class="new-add-btn" onclick="event.stopPropagation();buyNow(\'' + p.id + '\',\'' + pName + '\',\'' + pImg + '\',' + p.price + ')">Buy Now &#9889;</button>' +
+        '<button class="new-add-btn" onclick="event.stopPropagation();buyNow(\'' + p.id + '\',\'' + pName + '\',\'' + pImg + '\',' + p.price + ')">Buy Now bolt</button>' +
         '<button class="new-add-btn-cart" onclick="event.stopPropagation();addToCart(\'' + pName + '\',' + p.price + ',1,\'' + pImg + '\')">Add to Cart</button></div></div>';
     }).join('');
   }
@@ -572,13 +570,13 @@ function renderExploreProducts() {
         '</div>' +
         '<div class="explore-info"><div class="explore-cat">' + (p.category || '') + '</div>' +
         '<div class="explore-name">' + p.name + '</div>' +
-        '<div class="explore-stars">&#9733;&#9733;&#9733;&#9733;&#9733; <em>' + (p.rating || '4.5') + ' (' + (p.reviews || '0') + ')</em></div>' +
+        '<div class="explore-stars">starstarstarstarstar <em>' + (p.rating || '4.5') + ' (' + (p.reviews || '0') + ')</em></div>' +
         '<div class="explore-price-row"><span class="exp-now">&#8377;' + p.price.toLocaleString('en-IN') + '</span>' +
         (p.mrp > p.price ? '<span class="exp-old">&#8377;' + p.mrp.toLocaleString('en-IN') + '</span>' : '') +
         (disc > 0 ? '<span class="exp-off">' + disc + '% off</span>' : '') + '</div>' +
         '<div class="explore-btns">' +
         '<button class="exp-cart" data-name="' + pName + '" data-price="' + p.price + '" data-img="' + mainImg + '" onclick="event.stopPropagation();handleAddToCart(this)">Add to Cart</button>' +
-        '<button class="exp-buy" data-id="' + p.id + '" data-name="' + pName + '" data-img="' + pImg + '" data-price="' + p.price + '" onclick="event.stopPropagation();handleBuyNow(this)">&#9889;</button>' +
+        '<button class="exp-buy" data-id="' + p.id + '" data-name="' + pName + '" data-img="' + pImg + '" data-price="' + p.price + '" onclick="event.stopPropagation();handleBuyNow(this)">bolt</button>' +
         '</div></div></div>';
     }).join('');
   }

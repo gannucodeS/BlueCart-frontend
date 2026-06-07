@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -177,20 +177,20 @@
 
 <!-- TOPBAR -->
 <!-- TOPBAR -->
-<div class="topbar"><span>&#128230; Free shipping over <b>&#8377;999</b></span><span>&#128222; Support: <b>1800-000-BLUE</b></span><span>&#128274; <b>Secure</b> &amp; Trusted</span></div>
+<div class="topbar"><span>package Free shipping over <b>&#8377;999</b></span><span>phone Support: <b>1800-000-BLUE</b></span><span>lock <b>Secure</b> &amp; Trusted</span></div>
 <!-- NAVBAR WRAP -->
 <div class="navbar-wrap">
 <nav class="navbar">
   <a href="index.html" class="logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="logo-img"/></a>
-  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">&#128205; Bhilwara</b></div>
+  <div class="location-box" onclick="toggleLocationPanel()" style="flex-shrink:0;margin-left:8px;"><span style="font-size:11px;opacity:.7;">Deliver to</span><b id="location-display" style="font-size:13px;">location Bhilwara</b></div>
   <div style="flex:1;"></div>
   <div class="nav-right">
     <div class="nav-icon-btn wishlist-trigger" onmouseenter="showWishlistDropdown()" onclick="requireLogin(function(){toggleWishlistDropdown()})" title="Wishlist">
       <span>&#9825;</span><span class="nav-icon-label">Wishlist</span><span class="nav-badge" id="wishlist-count">0</span>
     </div>
     <div id="wishlist-dropdown" class="wishlist-dropdown"></div>
-    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>&#128100;</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
-    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>&#128722;</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
+    <a href="login.html" class="nav-icon-btn" id="account-link" title="Account"><span>user</span><span class="nav-icon-label" id="account-greeting">Sign in</span></a>
+    <a href="#" class="nav-icon-btn" onclick="toggleCart();return false;" title="Cart"><span>cart</span><span class="nav-icon-label">Cart</span><span class="nav-badge" id="cart-count">0</span></a>
           <!-- Hamburger button -->
       <button class="hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -201,7 +201,7 @@
   <div class="navbar-search-row">
     <div class="sac-wrapper" style="flex:1;position:relative;">
       <input type="text" id="searchInput" class="sac-input" placeholder="Search products, brands and more..." onkeydown="if(event.key==='Enter')doSearchNav()"/>
-      <button class="sac-search-btn" onclick="doSearchNav()">&#128269;</button>
+      <button class="sac-search-btn" onclick="doSearchNav()">search</button>
     </div>
   </div>
 </div><!-- end .navbar-wrap -->
@@ -211,30 +211,30 @@
 <div class="hm-drawer" id="hm-drawer">
   <div class="hm-drawer-head">
     <span class="hm-drawer-logo"><img src="https://i.postimg.cc/Y9fJwHxY/bluecart-logo-removebg-preview.png" alt="BlueCart" class="hm-drawer-logo-img"/></span>
-    <button class="hm-drawer-close" onclick="closeHamburger()">&#10005;</button>
+    <button class="hm-drawer-close" onclick="closeHamburger()"><span class="hm-icon" data-icon="close"></span></button>
   </div>
   <div class="hm-drawer-body">
-    <a href="index.html" class="hm-item"><span class="hm-icon">&#127968;</span> Home</a>
+    <a href="index.html" class="hm-item"><span class="hm-icon" data-icon="home"></span> Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Categories</div>
-    <a href="electronics.html"   class="hm-item"><span class="hm-icon">&#9889;</span> Electronics</a>
-    <a href="smartphones.html"   class="hm-item"><span class="hm-icon">&#128241;</span> Smartphones</a>
-    <a href="laptops.html"       class="hm-item"><span class="hm-icon">&#128187;</span> Laptops</a>
-    <a href="audio.html"         class="hm-item"><span class="hm-icon">&#127911;</span> Audio</a>
-    <a href="cameras.html"       class="hm-item"><span class="hm-icon">&#128247;</span> Cameras</a>
-    <a href="gaming.html"        class="hm-item"><span class="hm-icon">&#127918;</span> Gaming</a>
-    <a href="accessories.html"   class="hm-item"><span class="hm-icon">&#128298;</span> Accessories</a>
-    <a href="smarthome.html"     class="hm-item"><span class="hm-icon">&#127968;</span> Smart Home</a>
+    <a href="electronics.html"   class="hm-item"><span class="hm-icon" data-icon="bolt"></span> Electronics</a>
+    <a href="smartphones.html"   class="hm-item"><span class="hm-icon" data-icon="phoneMobile"></span> Smartphones</a>
+    <a href="laptops.html"       class="hm-item"><span class="hm-icon" data-icon="laptop"></span> Laptops</a>
+    <a href="audio.html"         class="hm-item"><span class="hm-icon" data-icon="headphones"></span> Audio</a>
+    <a href="cameras.html"       class="hm-item"><span class="hm-icon" data-icon="camera"></span> Cameras</a>
+    <a href="gaming.html"        class="hm-item"><span class="hm-icon" data-icon="gamepad"></span> Gaming</a>
+    <a href="accessories.html"   class="hm-item"><span class="hm-icon" data-icon="wrench"></span> Accessories</a>
+    <a href="smarthome.html"     class="hm-item"><span class="hm-icon" data-icon="home"></span> Smart Home</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Offers</div>
-    <a href="deals.html"         class="hm-item"><span class="hm-icon">&#128293;</span> Today's Deals</a>
-    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon">&#10024;</span> New Arrivals</a>
+    <a href="deals.html"         class="hm-item"><span class="hm-icon" data-icon="fire"></span> Today's Deals</a>
+    <a href="new-arrivals.html"  class="hm-item"><span class="hm-icon" data-icon="star"></span> New Arrivals</a>
     <div class="hm-divider"></div>
     <div class="hm-section-label">Account</div>
-    <a href="orders.html"        class="hm-item"><span class="hm-icon">&#128230;</span> My Orders</a>
-    <a href="account.html"       class="hm-item"><span class="hm-icon">&#128100;</span> My Account</a>
-    <a href="customer-service.html" class="hm-item"><span class="hm-icon">&#128222;</span> Customer Service</a>
-    <a href="login.html"         class="hm-item"><span class="hm-icon">&#128274;</span> Sign In / Register</a>
+    <a href="orders.html"        class="hm-item"><span class="hm-icon" data-icon="package"></span> My Orders</a>
+    <a href="account.html"       class="hm-item"><span class="hm-icon" data-icon="user"></span> My Account</a>
+    <a href="customer-service.html" class="hm-item"><span class="hm-icon" data-icon="phone"></span> Customer Service</a>
+    <a href="login.html"         class="hm-item"><span class="hm-icon" data-icon="lock"></span> Sign In / Register</a>
   </div>
 </div>
 
@@ -278,8 +278,8 @@
 <!-- CART SIDEBAR -->
 <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
 <div id="cart">
-  <div class="cart-header"><h3>&#128722; Your Cart</h3><button class="cart-close" onclick="toggleCart()">&#10005;</button></div>
-  <ul id="cart-items"><div class="empty-cart"><div class="icon">&#128722;</div><p>Your cart is empty</p></div></ul>
+  <div class="cart-header"><h3><span data-icon="cart" style="margin-right:8px;font-size:18px;"></span>Your Cart</h3><button class="cart-close" onclick="toggleCart()"><span class="hm-icon" data-icon="close"></span></button></div>
+  <ul id="cart-items"><div class="empty-cart"><div class="icon">cart</div><p>Your cart is empty</p></div></ul>
   <div class="cart-footer">
     <div class="cart-total"><span>Total</span><span id="cart-total">&#8377;0</span></div>
     <button class="checkout-btn" onclick="checkoutCart()">Proceed to Checkout &#8594;</button>
@@ -294,8 +294,8 @@
 <div id="loc-overlay" onclick="closeLocationPanel()"></div>
 <div id="loc-panel">
   <div style="background:linear-gradient(90deg,#0f2d4a,#1a4a6e);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;">
-    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">&#128205; Set Delivery Location</div>
-    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">&#10005;</button>
+    <div style="font-family:Syne,sans-serif;font-size:17px;color:white;font-weight:700;">location Set Delivery Location</div>
+    <button onclick="closeLocationPanel()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:28px;height:28px;border-radius:7px;font-size:15px;cursor:pointer;">close</button>
   </div>
   <div style="padding:18px;">
     <div style="margin-bottom:16px;">
@@ -315,7 +315,7 @@
       <label style="display:block;font-size:11px;font-weight:800;color:#0f2d4a;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">City</label>
       <select id="loc-city" style="width:100%;padding:10px 12px;border:1.5px solid #e0e7ef;border-radius:9px;font-size:13.5px;font-family:Nunito,sans-serif;outline:none;color:#0f2d4a;background:white;"><option value="">Select state first</option></select>
     </div>
-    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">&#128205; Set Location</button>
+    <button onclick="applyStateCity()" style="width:100%;padding:12px;background:linear-gradient(90deg,#0ea5a0,#0891b2);color:white;border:none;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;">location Set Location</button>
     <div style="margin-top:18px;">
       <div style="font-size:11px;font-weight:800;color:#6b7a8d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Popular Cities</div>
       <div style="display:flex;flex-wrap:wrap;gap:7px;">
@@ -453,7 +453,7 @@ var SAMPLE_REVIEWS = [
   {name:'Sneha T.',stars:5,date:'25 Feb 2026',text:'Bought this as a gift and the recipient loved it. Premium feel all around.'},
 ];
 
-function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'&#9733;':'&#9734;';return s;}
+function renderStars(n){var s='';for(var i=0;i<5;i++)s+=i<n?'star':'starOutline';return s;}
 
 // ── MAIN: LOAD AND RENDER PRODUCT ────────────────────────────────────────────
 // Start loading immediately without waiting for BC.ready (prevents hanging)
@@ -589,9 +589,9 @@ function renderProduct(p) {
   // Stock status
   var stock = p.stock !== undefined ? p.stock : 10;
   var stockHtml, stockClass;
-  if(stock <= 0){ stockHtml='&#10060; Out of Stock'; stockClass='pv-outstock'; }
+  if(stock <= 0){ stockHtml='x Out of Stock'; stockClass='pv-outstock'; }
   else if(stock < 5){ stockHtml='&#9888; Only '+stock+' left'; stockClass='pv-lowstock'; }
-  else { stockHtml='&#10003; In Stock'; stockClass='pv-instock'; }
+  else { stockHtml='check In Stock'; stockClass='pv-instock'; }
 
   // Badge
   var badgeHtml = '';
@@ -617,7 +617,7 @@ function renderProduct(p) {
   var specRows = buildSpecRows(p);
   console.log('specRows:', specRows);
   var specsHtml = '<table class="pv-specs-table">';
-  specsHtml += '<tr><td class="pv-spec-section" colspan="2">&#128203; Product Specifications</td></tr>';
+  specsHtml += '<tr><td class="pv-spec-section" colspan="2">clipboard Product Specifications</td></tr>';
   specRows.forEach(function(row){ specsHtml += '<tr><td>'+row[0]+'</td><td>'+row[1]+'</td></tr>'; });
   specsHtml += '</table>';
 
@@ -633,12 +633,12 @@ function renderProduct(p) {
   var reviewsHtml = '<div class="pv-review-summary">' +
     '<div>' +
       '<div class="pv-big-rating">4.8</div>' +
-      '<div class="pv-stars" style="color:#ffb703;font-size:20px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' +
+      '<div class="pv-stars" style="color:#ffb703;font-size:20px;">starstarstarstarstar</div>' +
       '<div style="font-size:13px;color:#6b7a8d;margin-top:4px;">Based on '+Math.floor(Math.random()*5000+500)+' reviews</div>' +
     '</div>' +
     '<div class="pv-rating-detail">' +
       [['5',85],['4',10],['3',3],['2',1],['1',1]].map(function(r){
-        return '<div class="pv-rating-bar"><span class="pv-bar-label">'+r[0]+' &#9733;</span><div class="pv-bar-track"><div class="pv-bar-fill" style="width:'+r[1]+'%"></div></div><span class="pv-bar-count">'+r[1]+'%</span></div>';
+        return '<div class="pv-rating-bar"><span class="pv-bar-label">'+r[0]+' star</span><div class="pv-bar-track"><div class="pv-bar-fill" style="width:'+r[1]+'%"></div></div><span class="pv-bar-count">'+r[1]+'%</span></div>';
       }).join('') +
     '</div>' +
   '</div>' +
@@ -691,7 +691,7 @@ function renderProduct(p) {
       '<div class="pv-gallery">' +
         '<div class="pv-main-img-wrap">' +
           '<div class="pv-badge-wrap">'+badgeHtml+'</div>' +
-          '<button class="pv-wish" id="pv-wish-btn" onclick="toggleWish()">&#129293;</button>' +
+          '<button class="pv-wish" id="pv-wish-btn" onclick="toggleWish()">heart</button>' +
           '<img class="pv-main-img" id="pv-main-img" src="'+mainImg+'" alt="'+pName+'"/>' +
         '</div>' +
         '<div class="pv-thumbs" id="pv-thumbs">' + thumbsHtml +
@@ -707,7 +707,7 @@ function renderProduct(p) {
         '</div>' +
         '<h1 class="pv-name">'+pName+'</h1>' +
         '<div class="pv-rating-row">' +
-          '<span class="pv-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>' +
+          '<span class="pv-stars">starstarstarstarstar</span>' +
           '<span class="pv-rating-num">4.8</span>' +
           '<a class="pv-reviews" onclick="switchTab(\'reviews\',document.querySelector(\'.pv-tab[data-tab=reviews]\'))">See all reviews</a>' +
         '</div>' +
@@ -735,20 +735,20 @@ function renderProduct(p) {
 
         '<div class="pv-cta">' +
           (p.stock>0
-            ? '<button class="pv-btn-cart" data-name="'+pNameJs+'" data-price="'+(p.price||0)+'" data-img="'+pImgJs+'" onclick="handleAddToCart(this)">&#128722; Add to Cart</button>' +
-              '<button class="pv-btn-buy"  data-id="'+(p.id||'')+'" data-name="'+pNameJs+'" data-img="'+pImgJs+'" data-price="'+(p.price||0)+'" onclick="handleBuyNow(this)">&#9889; Buy Now</button>'
-            : '<button class="pv-btn-cart pv-btn-disabled">&#128722; Add to Cart</button>' +
+            ? '<button class="pv-btn-cart" data-name="'+pNameJs+'" data-price="'+(p.price||0)+'" data-img="'+pImgJs+'" onclick="handleAddToCart(this)">cart Add to Cart</button>' +
+              '<button class="pv-btn-buy"  data-id="'+(p.id||'')+'" data-name="'+pNameJs+'" data-img="'+pImgJs+'" data-price="'+(p.price||0)+'" onclick="handleBuyNow(this)">bolt Buy Now</button>'
+            : '<button class="pv-btn-cart pv-btn-disabled">cart Add to Cart</button>' +
               '<button class="pv-btn-buy pv-btn-disabled">Out of Stock</button>'
           ) +
         '</div>' +
 
         '<div class="pv-trust">' +
-          '<div class="pv-trust-item"><span class="ic">&#128666;</span>Free Delivery<br>above &#8377;999</div>' +
+          '<div class="pv-trust-item"><span class="hm-icon" data-icon="bike"></span>Free Delivery<br>above &#8377;999</div>' +
           '<div class="pv-trust-item"><span class="ic">&#8617;&#65039;</span>Easy Returns<br>7-day policy</div>' +
-          '<div class="pv-trust-item"><span class="ic">&#128274;</span>Secure<br>Payment</div>' +
-          '<div class="pv-trust-item"><span class="ic">&#9989;</span>Genuine<br>Product</div>' +
-          '<div class="pv-trust-item"><span class="ic">&#128296;</span>Warranty<br>'+(p.warranty||'1 Year')+'</div>' +
-          '<div class="pv-trust-item"><span class="ic">&#9993;&#65039;</span>24/7<br>Support</div>' +
+          '<div class="pv-trust-item"><span class="hm-icon" data-icon="lock"></span>Secure<br>Payment</div>' +
+          '<div class="pv-trust-item"><span class="hm-icon" data-icon="check"></span>Genuine<br>Product</div>' +
+          '<div class="pv-trust-item"><span class="hm-icon" data-icon="wrench"></span>Warranty<br>'+(p.warranty||'1 Year')+'</div>' +
+          '<div class="pv-trust-item"><span class="ic">mail&#65039;</span>24/7<br>Support</div>' +
         '</div>' +
 
       '</div>' + // end .pv-info
@@ -757,9 +757,9 @@ function renderProduct(p) {
     // TABS
     '<div class="pv-tabs-wrap" style="max-width:1200px;margin:0 auto 40px;padding:0 4%;">' +
       '<div class="pv-tabs">' +
-        '<button class="pv-tab active" data-tab="desc" onclick="switchTab(\'desc\',this)">&#128218; Description</button>' +
-        '<button class="pv-tab" data-tab="specs" onclick="switchTab(\'specs\',this)">&#128203; Specifications</button>' +
-        '<button class="pv-tab" data-tab="reviews" onclick="switchTab(\'reviews\',this)">&#11088; Reviews</button>' +
+        '<button class="pv-tab active" data-tab="desc" onclick="switchTab(\'desc\',this)">book Description</button>' +
+        '<button class="pv-tab" data-tab="specs" onclick="switchTab(\'specs\',this)">clipboard Specifications</button>' +
+        '<button class="pv-tab" data-tab="reviews" onclick="switchTab(\'reviews\',this)">star Reviews</button>' +
       '</div>' +
       '<div class="pv-tab-content active" id="tab-desc">' +
         '<p class="pv-desc">'+(p.description||'High quality product from '+p.brand+'. '+p.name+' offers excellent performance and value for money.')+'</p>' +

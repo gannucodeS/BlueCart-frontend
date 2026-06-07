@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -88,11 +88,11 @@
         <div class="divider"><span>or</span></div>
         
         <div class="fg"><label>Email Address</label><input type="email" id="l-email" placeholder="you@email.com" autocomplete="email" oninput="validateEmailField(this)" onblur="validateEmailField(this)"/><div class="fg-error" id="l-email-error"></div><div class="fg-success" id="l-email-success"></div></div>
-        <div class="fg"><label>Password</label><div class="pw-wrap"><input type="password" id="l-pass" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/><button class="pw-eye" type="button" onclick="togglePw('l-pass',this)">&#128065;</button></div></div>
+        <div class="fg"><label>Password</label><div class="pw-wrap"><input type="password" id="l-pass" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/><button class="pw-eye" type="button" onclick="togglePw('l-pass',this)">eye</button></div></div>
         
         <div class="admin-login-toggle"><a onclick="toggleAdminLogin()">Admin Login</a></div>
         <div class="admin-fields" id="admin-fields">
-          <div class="fg"><label>Admin Secret Key</label><div class="pw-wrap"><input type="password" id="l-admin-key" placeholder="Enter admin secret key"/><button class="pw-eye" type="button" onclick="togglePw('l-admin-key',this)">&#128065;</button></div></div>
+          <div class="fg"><label>Admin Secret Key</label><div class="pw-wrap"><input type="password" id="l-admin-key" placeholder="Enter admin secret key"/><button class="pw-eye" type="button" onclick="togglePw('l-admin-key',this)">eye</button></div></div>
         </div>
         
         <button class="submit-btn" id="login-btn" onclick="doLogin()">Sign In</button>
@@ -120,8 +120,8 @@
         </div>
         <div class="fg"><label>Email *</label><input type="email" id="r-email" placeholder="you@email.com" oninput="validateEmailField(this)" onblur="validateEmailField(this)"/><div class="fg-error" id="r-email-error"></div><div class="fg-success" id="r-email-success"></div></div>
         <div class="fg"><label>Phone * (10-digit Indian number)</label><input type="tel" id="r-phone" placeholder="+91 98765 43210" maxlength="14" oninput="formatPhoneInput(this);validatePhoneField(this)" onblur="validatePhoneField(this)"/><div class="fg-error" id="r-phone-error"></div><div class="fg-success" id="r-phone-success"></div></div>
-        <div class="fg"><label>Password * (min 8 chars)</label><div class="pw-wrap"><input type="password" id="r-pass" placeholder="Create a strong password" oninput="validatePasswordField(this)"/><button class="pw-eye" type="button" onclick="togglePw('r-pass',this)">&#128065;</button></div><div class="fg-error" id="r-pass-error"></div><div class="fg-success" id="r-pass-success"></div></div>
-        <div class="fg"><label>Confirm Password *</label><div class="pw-wrap"><input type="password" id="r-confirm" placeholder="Re-enter password" oninput="validateConfirmField(this)"/><button class="pw-eye" type="button" onclick="togglePw('r-confirm',this)">&#128065;</button></div><div class="fg-error" id="r-confirm-error"></div><div class="fg-success" id="r-confirm-success"></div></div>
+        <div class="fg"><label>Password * (min 8 chars)</label><div class="pw-wrap"><input type="password" id="r-pass" placeholder="Create a strong password" oninput="validatePasswordField(this)"/><button class="pw-eye" type="button" onclick="togglePw('r-pass',this)">eye</button></div><div class="fg-error" id="r-pass-error"></div><div class="fg-success" id="r-pass-success"></div></div>
+        <div class="fg"><label>Confirm Password *</label><div class="pw-wrap"><input type="password" id="r-confirm" placeholder="Re-enter password" oninput="validateConfirmField(this)"/><button class="pw-eye" type="button" onclick="togglePw('r-confirm',this)">eye</button></div><div class="fg-error" id="r-confirm-error"></div><div class="fg-success" id="r-confirm-success"></div></div>
         <button class="submit-btn" id="reg-btn" onclick="doRegister()">Create Account</button>
       </div>
       <div class="note">Already have an account? <a onclick="switchTab('login')">Sign in here</a></div>
@@ -150,8 +150,8 @@ function toggleAdminLogin() {
 
 function togglePw(id, btn) {
   var inp = document.getElementById(id);
-  if (inp.type==='password'){ inp.type='text'; btn.innerHTML='&#128584;'; }
-  else { inp.type='password'; btn.innerHTML='&#128065;'; }
+  if (inp.type==='password'){ inp.type='text'; btn.innerHTML='eyeOff'; }
+  else { inp.type='password'; btn.innerHTML='eye'; }
 }
 
 function formatPhoneInput(inp) {

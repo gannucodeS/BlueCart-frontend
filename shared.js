@@ -150,7 +150,7 @@ function renderWishlistItems(dropdown) {
       '<div class="wishlist-item-actions">' +
         '<button class="wishlist-btn-action buy" data-id="' + (item.id || '') + '" data-name="' + (item.name || '') + '" data-img="' + (item.imageUrl || '') + '" data-price="' + (item.price || 0) + '">Buy Now</button>' +
         '<button class="wishlist-btn-action cart" data-name="' + (item.name || '') + '" data-price="' + (item.price || 0) + '" data-img="' + (item.imageUrl || '') + '">Add to Cart</button>' +
-        '<button class="wishlist-btn-remove" onclick="removeFromWishlist(' + i + ')">✕</button>' +
+        '<button class="wishlist-btn-remove" onclick="removeFromWishlist(' + i + ')">' + Icons.close + '</button>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -712,7 +712,7 @@ function showSearchSuggestions() {
     html += '<div class="suggest-section"><div class="suggest-label">Brands</div>';
     suggestionsData.brands.forEach(function(brand) {
       html += '<a class="suggest-item suggest-item-brand" href="/search?q=' + encodeURIComponent(brand) + '">';
-      html += '<span class="suggest-icon">★</span>';
+      html += '<span class="suggest-icon ic">' + Icons.star + '</span>';
       html += '<span>' + brand + '</span>';
       html += '</a>';
     });
@@ -723,7 +723,7 @@ function showSearchSuggestions() {
   if (suggestionsData.products && suggestionsData.products.length) {
     html += '<div class="suggest-section"><div class="suggest-label">Products</div>';
     suggestionsData.products.forEach(function(p) {
-      var img = p.imageUrl || 'https://via.placeholder.com/44x44?text=📦';
+      var img = p.imageUrl || 'https://via.placeholder.com/44x44?text=Product';
       html += '<a class="suggest-item suggest-product" href="/product?id=' + encodeURIComponent(p.id) + '">';
       html += '<img src="' + img + '" alt=""/>';
       html += '<div class="suggest-prod-info"><span class="suggest-prod-name">' + p.name + '</span>';
@@ -737,9 +737,9 @@ function showSearchSuggestions() {
   // Trending searches (when no results or minimal)
   if (!html) {
     html += '<div class="suggest-section"><div class="suggest-label">Trending</div>';
-    html += '<a class="suggest-item" href="/search?q=iPhone"><span class="suggest-icon">📱</span><span>iPhone 15 Pro</span></a>';
-    html += '<a class="suggest-item" href="/search?q=MacBook"><span class="suggest-icon">💻</span><span>MacBook Air</span></a>';
-    html += '<a class="suggest-item" href="/search?q=Headphones"><span class="suggest-icon">🎧</span><span>Wireless Headphones</span></a>';
+    html += '<a class="suggest-item" href="/search?q=iPhone"><span class="suggest-icon ic">' + Icons.phoneMobile + '</span><span>iPhone 15 Pro</span></a>';
+    html += '<a class="suggest-item" href="/search?q=MacBook"><span class="suggest-icon ic">' + Icons.laptop + '</span><span>MacBook Air</span></a>';
+    html += '<a class="suggest-item" href="/search?q=Headphones"><span class="suggest-icon ic">' + Icons.headphones + '</span><span>Wireless Headphones</span></a>';
     html += '</div>';
   }
   
@@ -749,19 +749,19 @@ function showSearchSuggestions() {
 
 function getCategoryIcon(category) {
   var icons = {
-    'Smartphones': '📱',
-    'Laptops': '💻',
-    'Audio': '🎧',
-    'Cameras': '📷',
-    'Gaming': '🎮',
-    'Accessories': '⌚',
-    'Wearables': '⌚',
-    'Smart Home': '🏠',
-    'Tablets': '📱',
-    'Televisions': '📺',
-    'Electronics': '⚡'
+    'Smartphones': Icons.phoneMobile,
+    'Laptops': Icons.laptop,
+    'Audio': Icons.headphones,
+    'Cameras': Icons.camera,
+    'Gaming': Icons.gamepad,
+    'Accessories': Icons.cog,
+    'Wearables': Icons.cog,
+    'Smart Home': Icons.home,
+    'Tablets': Icons.phoneMobile,
+    'Televisions': Icons.headphones,
+    'Electronics': Icons.bolt
   };
-  return icons[category] || '📦';
+  return icons[category] || Icons.package;
 }
 
 function hideSearchSuggestions() {
@@ -1217,3 +1217,207 @@ function scrollRow(id, dir) {
   var scrollAmount = 220;
   el.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
 }
+
+
+// -- SKELETON HELPERS --------------------------------------
+var Skeleton = {
+  text: function(w, h) {
+    return '<div class="skeleton s-line-md" style="width:'+w+';height:'+(h||14)+'px"></div>';
+  },
+  circle: function(s) {
+    return '<div class="skeleton s-circle" style="width:'+s+'px;height:'+s+'px"></div>';
+  },
+  img: function(w, h) {
+    return '<div class="skeleton" style="width:'+w+';height:'+h+'px;border-radius:8px"></div>';
+  },
+  productCard: function() {
+    return '<div class="product-card" style="pointer-events:none;background:white;">' +
+      '<div class="skeleton" style="height:200px;border-radius:0"></div>' +
+      '<div style="padding:14px;display:flex;flex-direction:column;gap:8px;">' +
+        '<div class="skeleton s-line-md" style="width:60%;height:11px"></div>' +
+        '<div class="skeleton s-line-lg" style="width:95%;height:14px"></div>' +
+        '<div class="skeleton s-line-lg" style="width:80%;height:14px"></div>' +
+        '<div class="skeleton s-line-sm" style="width:50%;height:10px"></div>' +
+        '<div class="skeleton s-line-md" style="width:40%;height:16px;margin-top:6px"></div>' +
+        '<div class="skeleton s-line-md" style="width:100%;height:32px;margin-top:10px;border-radius:8px"></div>' +
+      '</div>' +
+    '</div>';
+  },
+  productCardGrid: function(count) {
+    count = count || 8;
+    var html = '';
+    for (var i=0; i<count; i++) html += this.productCard();
+    return html;
+  },
+  productDetail: function() {
+    return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:40px 4%;">' +
+      '<div class="skeleton" style="height:480px;border-radius:14px"></div>' +
+      '<div style="display:flex;flex-direction:column;gap:14px;">' +
+        '<div class="skeleton s-line-md" style="width:30%;height:11px"></div>' +
+        '<div class="skeleton s-line-lg" style="width:90%;height:24px"></div>' +
+        '<div class="skeleton s-line-lg" style="width:70%;height:24px"></div>' +
+        '<div class="skeleton s-line-md" style="width:40%;height:30px;margin-top:8px"></div>' +
+        '<div class="skeleton s-line-sm" style="width:60%;height:10px;margin-top:8px"></div>' +
+        '<div class="skeleton s-line-sm" style="width:100%;height:12px;margin-top:16px"></div>' +
+        '<div class="skeleton s-line-sm" style="width:100%;height:12px"></div>' +
+        '<div class="skeleton s-line-sm" style="width:90%;height:12px"></div>' +
+        '<div style="display:flex;gap:10px;margin-top:20px;">' +
+          '<div class="skeleton" style="flex:1;height:46px;border-radius:10px"></div>' +
+          '<div class="skeleton" style="flex:1;height:46px;border-radius:10px"></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  },
+  cartItem: function() {
+    return '<li style="display:flex;gap:12px;padding:12px;border-bottom:1px solid #e5eaf0;">' +
+      '<div class="skeleton" style="width:60px;height:60px;border-radius:8px;flex-shrink:0"></div>' +
+      '<div style="flex:1;display:flex;flex-direction:column;gap:6px;justify-content:center;">' +
+        '<div class="skeleton s-line-md" style="width:80%;height:13px"></div>' +
+        '<div class="skeleton s-line-sm" style="width:50%;height:10px"></div>' +
+        '<div class="skeleton s-line-md" style="width:30%;height:14px;margin-top:4px"></div>' +
+      '</div>' +
+    '</li>';
+  },
+  cartList: function(count) {
+    count = count || 3;
+    var html = '';
+    for (var i=0; i<count; i++) html += this.cartItem();
+    return html;
+  },
+  wishlistItem: function() {
+    return '<li style="display:flex;gap:10px;padding:10px;border-bottom:1px solid #e5eaf0;">' +
+      '<div class="skeleton" style="width:44px;height:44px;border-radius:6px;flex-shrink:0"></div>' +
+      '<div style="flex:1;display:flex;flex-direction:column;gap:5px;justify-content:center;">' +
+        '<div class="skeleton s-line-md" style="width:90%;height:12px"></div>' +
+        '<div class="skeleton s-line-sm" style="width:60%;height:10px"></div>' +
+      '</div>' +
+    '</li>';
+  },
+  orderCard: function() {
+    return '<div style="background:white;border:1.5px solid #e5eaf0;border-radius:12px;padding:18px;margin-bottom:14px;">' +
+      '<div style="display:flex;justify-content:space-between;margin-bottom:14px;">' +
+        '<div style="flex:1;display:flex;flex-direction:column;gap:6px;">' +
+          '<div class="skeleton s-line-md" style="width:35%;height:14px"></div>' +
+          '<div class="skeleton s-line-sm" style="width:25%;height:10px"></div>' +
+        '</div>' +
+        '<div class="skeleton" style="width:80px;height:24px;border-radius:20px"></div>' +
+      '</div>' +
+      '<div style="display:flex;gap:10px;margin-bottom:14px;">' +
+        '<div class="skeleton" style="width:60px;height:60px;border-radius:8px"></div>' +
+        '<div class="skeleton" style="width:60px;height:60px;border-radius:8px"></div>' +
+        '<div class="skeleton" style="width:60px;height:60px;border-radius:8px"></div>' +
+      '</div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '<div class="skeleton s-line-md" style="width:30%;height:14px"></div>' +
+        '<div class="skeleton" style="width:120px;height:32px;border-radius:8px"></div>' +
+      '</div>' +
+    '</div>';
+  },
+  addressCard: function() {
+    return '<div style="background:#f4f7fb;border:1.5px solid #e5eaf0;border-radius:12px;padding:16px 18px;margin-bottom:12px;">' +
+      '<div class="skeleton s-line-md" style="width:40%;height:14px;margin-bottom:8px"></div>' +
+      '<div class="skeleton s-line-sm" style="width:90%;height:12px;margin-bottom:4px"></div>' +
+      '<div class="skeleton s-line-sm" style="width:70%;height:12px;margin-bottom:4px"></div>' +
+      '<div class="skeleton s-line-sm" style="width:50%;height:12px"></div>' +
+    '</div>';
+  },
+  profileHero: function() {
+    return '' +
+      '<div class="skeleton s-circle shimmer-dark" style="width:88px;height:88px"></div>' +
+      '<div style="display:flex;flex-direction:column;gap:8px;">' +
+        '<div class="skeleton shimmer-dark s-line-lg" style="width:220px;height:24px"></div>' +
+        '<div class="skeleton shimmer-dark s-line-md" style="width:280px;height:14px"></div>' +
+        '<div style="display:flex;gap:8px;margin-top:8px;">' +
+          '<div class="skeleton shimmer-dark" style="width:110px;height:22px;border-radius:20px"></div>' +
+          '<div class="skeleton shimmer-dark" style="width:100px;height:22px;border-radius:20px"></div>' +
+          '<div class="skeleton shimmer-dark" style="width:90px;height:22px;border-radius:20px"></div>' +
+        '</div>' +
+      '</div>';
+  },
+  statBlock: function() {
+    return '<div class="skeleton s-line-lg" style="width:60%;height:24px;margin:0 auto"></div>';
+  },
+  minDelay: function(promise, ms) {
+    ms = ms || 200;
+    return new Promise(function(resolve) {
+      var done = false;
+      promise.then(function(v){ if(!done){ done=true; resolve(v); }});
+      setTimeout(function(){ if(!done){ done=true; resolve(null); }}, ms);
+    });
+  }
+};
+
+
+// -- ICONS (Heroicons-style inline SVG) ----------------------
+var Icons = {
+  cart: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg>',
+  search: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+  user: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+  heart: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>',
+  close: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  location: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  package: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><line x1="3.27" y1="6.96" x2="12" y2="12.01"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+  lock: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>',
+  phone: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>',
+  refresh: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>',
+  clock: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+  check: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+  x: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+  cog: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>',
+  desktop: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+  shield: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  truck: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+  home: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  phoneMobile: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>',
+  laptop: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+  headphones: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>',
+  camera: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+  gamepad: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="6" y1="11" x2="10" y2="11"/><line x1="8" y1="9" x2="8" y2="13"/><line x1="15" y1="12" x2="15.01" y2="12"/><line x1="18" y1="10" x2="18.01" y2="10"/><path d="M17.32 5H6.68a4 4 0 00-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 003 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 019.828 16h4.344a2 2 0 011.414.586L17 18c.5.5 1 1 2 1a3 3 0 003-3c0-1.545-.604-6.584-.685-7.258A4 4 0 0017.32 5z"/></svg>',
+  bolt: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  fire: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>',
+  star: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+  starOutline: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+  chevronRight: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>',
+  chevronLeft: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>',
+  menu: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+  shoppingBag: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>',
+  creditCard: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+  mail: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+  chat: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>',
+  arrowRight: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+  arrowLeft: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+  edit: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+  trash: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>',
+  plus: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  eye: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  eyeOff: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>',
+  logOut: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+  bell: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>',
+  tag: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
+  grid: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+  list: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
+  truckOutline: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+  gift: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>',
+  money: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>',
+  bank: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="3" y1="21" x2="21" y2="21"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="5 6 12 3 19 6"/><line x1="4" y1="10" x2="4" y2="21"/><line x1="20" y1="10" x2="20" y2="21"/><line x1="8" y1="14" x2="8" y2="17"/><line x1="12" y1="14" x2="12" y2="17"/><line x1="16" y1="14" x2="16" y2="17"/></svg>',
+  chart: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+  users: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
+  wrench: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>',
+  pencil: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+  fileText: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+  clipboard: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>',
+  lightbulb: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 00-4 12.74V17a1 1 0 001 1h6a1 1 0 001-1v-2.26A7 7 0 0012 2z"/></svg>',
+  bike: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 100-2 1 1 0 000 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></svg>'
+};
+
+
+// -- DATA-ICON PROCESSOR (replaces <span data-icon="X"> with SVG) --
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('[data-icon]').forEach(function(el) {
+    var name = el.getAttribute('data-icon');
+    if (Icons[name]) {
+      el.innerHTML = Icons[name];
+      el.classList.add('ic');
+    }
+  });
+});
