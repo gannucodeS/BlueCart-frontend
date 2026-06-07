@@ -1412,7 +1412,7 @@ var Icons = {
 
 
 // -- DATA-ICON PROCESSOR (replaces <span data-icon="X"> with SVG) --
-document.addEventListener('DOMContentLoaded', function() {
+function initIcons() {
   document.querySelectorAll('[data-icon]').forEach(function(el) {
     var name = el.getAttribute('data-icon');
     if (Icons[name]) {
@@ -1420,4 +1420,9 @@ document.addEventListener('DOMContentLoaded', function() {
       el.classList.add('ic');
     }
   });
-});
+}
+document.addEventListener('DOMContentLoaded', initIcons);
+document.addEventListener('instantclick:change', initIcons);
+
+// -- SERVICE WORKER REGISTRATION --
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
