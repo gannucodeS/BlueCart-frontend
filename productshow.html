@@ -576,18 +576,18 @@ function renderProduct(p) {
         '<div class="pv-cta">' +
           (p.stock>0
             ? '<button class="pv-btn-cart" data-name="'+pNameJs+'" data-price="'+(p.price||0)+'" data-img="'+pImgJs+'" onclick="handleAddToCart(this)">cart Add to Cart</button>' +
-              '<button class="pv-btn-buy"  data-id="'+(p.id||'')+'" data-name="'+pNameJs+'" data-img="'+pImgJs+'" data-price="'+(p.price||0)+'" onclick="handleBuyNow(this)"><span data-icon="bolt"></span> Buy Now</button>'
+              '<button class="pv-btn-buy"  data-id="'+(p.id||'')+'" data-name="'+pNameJs+'" data-img="'+pImgJs+'" data-price="'+(p.price||0)+'" onclick="handleBuyNow(this)"><span class="ic">' + Icons.bolt + '</span> Buy Now</button>'
             : '<button class="pv-btn-cart pv-btn-disabled">cart Add to Cart</button>' +
               '<button class="pv-btn-buy pv-btn-disabled">Out of Stock</button>'
           ) +
         '</div>' +
 
         '<div class="pv-trust">' +
-          '<div class="pv-trust-item"><span class="hm-icon" data-icon="bike"></span>Free Delivery<br>above &#8377;999</div>' +
+          '<div class="pv-trust-item"><span class="hm-icon">' + Icons.bike + '</span>Free Delivery<br>above &#8377;999</div>' +
           '<div class="pv-trust-item"><span class="ic">&#8617;&#65039;</span>Easy Returns<br>7-day policy</div>' +
-          '<div class="pv-trust-item"><span class="hm-icon" data-icon="lock"></span>Secure<br>Payment</div>' +
-          '<div class="pv-trust-item"><span class="hm-icon" data-icon="check"></span>Genuine<br>Product</div>' +
-          '<div class="pv-trust-item"><span class="hm-icon" data-icon="wrench"></span>Warranty<br>'+(p.warranty||'1 Year')+'</div>' +
+          '<div class="pv-trust-item"><span class="hm-icon">' + Icons.lock + '</span>Secure<br>Payment</div>' +
+          '<div class="pv-trust-item"><span class="hm-icon">' + Icons.check + '</span>Genuine<br>Product</div>' +
+          '<div class="pv-trust-item"><span class="hm-icon">' + Icons.wrench + '</span>Warranty<br>'+(p.warranty||'1 Year')+'</div>' +
           '<div class="pv-trust-item"><span class="ic">mail&#65039;</span>24/7<br>Support</div>' +
         '</div>' +
 

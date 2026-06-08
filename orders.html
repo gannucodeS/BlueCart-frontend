@@ -214,7 +214,7 @@ function renderOrders() {
   var container = document.getElementById('orders-list');
   if (!orders.length) {
     container.innerHTML = '<div class="empty-orders">' +
-      '<div class="icon" data-icon="package"></div>' +
+      '<div class="icon">' + Icons.package + '</div>' +
       '<h2>' + (currentFilter==='all' ? 'No Orders Yet' : 'No ' + currentFilter + ' Orders') + '</h2>' +
       '<p>' + (currentFilter==='all' ? 'Looks like you haven\'t placed any orders yet. Start shopping!' : 'No orders in this status.') + '</p>' +
       '<button class="shop-btn" onclick="window.location.href=\'index.html\'">Start Shopping</button>' +
